@@ -9,7 +9,7 @@ function Footer() {
   return (
     <footer>
       <nav className="bottom-nav">
-        <div className="nav-item" onClick={() => navigate('/home')}> {/* Navigate to home */}
+        <div className="nav-item" onClick={() => navigate('/')}> {/* Navigate to home */}
           <HomeIcon className="footer-icon" />
           <span className="nav-label">ホーム</span>
         </div>

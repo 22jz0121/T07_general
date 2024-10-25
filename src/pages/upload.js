@@ -1,18 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
 import Footer from '../components/Footer'; // Correct relative path for Footer
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';  // Import Arrow Back icon from Material UI
 import ImageIcon from '@mui/icons-material/Image';  // Import Image icon from Material UI
 import '../css/upload.css'; // Ensure you have appropriate CSS for custom styling
 
 const Upload = () => {
+  const navigate = useNavigate();  // Initialize the navigation hook
+
   return (
-    <div className="h-screen flex flex-col justify-between bg-white">
+    <div className="upload-container">
       {/* Top navigation */}
-      <div className="items-center justify-start p-4 border-b">
-        <button className="mr-4">
-          <ArrowBackIcon className="text-gray-700" /> {/* Use Material UI ArrowBackIcon */}
+      <div className="top-navigation">
+        <button className="back-button" onClick={() => navigate('/')}> {/* Navigate to "/" on click */}
+          <ArrowBackIcon className="back-icon" /> {/* Use Material UI ArrowBackIcon */}
         </button>
-        <h1 className="text-lg ">出品</h1>
+        <h1 className="page-title">出品</h1>
       </div>
 
       {/* Main content */}
@@ -32,7 +35,7 @@ const Upload = () => {
         ></textarea>
 
         {/* Image upload button */}
-        <div className="w-full p-3 border rounded-lg flex items-center justify-center text-gray-500">
+        <div className="upload-button">
           <ImageIcon className="mr-2" /> {/* Use Material UI ImageIcon */}
           画像を追加してください
         </div>
@@ -42,32 +45,36 @@ const Upload = () => {
           <label className="block mb-2 text-gray-700">
             希望取引方法を選んでください(複数選択可)
           </label>
-          <div className="flex space-x-2">
-            <button className="flex-grow p-3 bg-green-100 text-green-600 rounded-lg">
+          <div className="transaction-method-buttons">
+            <button className="transaction-button giveaway">
               譲渡
             </button>
-            <button className="flex-grow p-3 bg-blue-100 text-blue-600 rounded-lg">
+            <button className="transaction-button rental">
               レンタル
             </button>
-            <button className="flex-grow p-3 bg-orange-100 text-orange-600 rounded-lg">
+            <button className="transaction-button exchange">
               交換
             </button>
           </div>
         </div>
 
         {/* Input for optional location */}
-        <input
-          type="text"
-          placeholder="受け渡し場所を入力してください(任意)"
-          className="w-full p-3 border rounded-lg"
-        />
-      </div>
+        <div>
+          <label className="label">受け渡し場所を選択してください</label>
+          <select className="location-select">
+            <option value="">選択してください</option>
+            {Array.from({ length: 13 }, (_, i) => (
+              <option key={i} value={`${i + 1}号館`}>{`${i + 1}号館`}</option>
+            ))}
+          </select>
+        </div>
 
-      {/* Confirm button */}
-      <div className="p-4">
-        <button className="w-full p-3 bg-white text-blue-500 border border-blue-500 rounded-lg">
-          確認画面へ
-        </button>
+        {/* Confirm button */}
+        <div className="p-4">
+          <button className="confirm-button">
+            確認画面へ
+          </button>
+        </div>
       </div>
 
       {/* Footer */}

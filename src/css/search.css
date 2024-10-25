@@ -1,0 +1,141 @@
+/* General Styles */
+html {
+  font-family: 'Noto Sans JP', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding-bottom: 60px;
+  /* Ensure content doesn't get hidden behind the footer */
+}
+
+.upload-container {
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: white;
+}
+
+/* Top Navigation */
+.top-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensure the arrow is on the left and title is centered */
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative; /* Make the container relative for easy centering */
+  margin-top: 10px;
+}
+
+.back-button {
+  background: none; /* Remove button background */
+  border: none; /* Remove button border */
+  padding: 0; /* Remove padding to make it minimal */
+  margin-left: 0; /* Align to the left */
+  cursor: pointer;
+}
+
+.back-icon {
+  color: #374151;
+  font-size: 1.5rem; /* Ensure the icon is the right size */
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* Center the title */
+  font-size: 1.25rem;
+  color: #374151;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px; 
+  padding: 0 1rem; /* Add padding to match design */
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: #999;
+}
+
+/* Dropdown styling */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+}
+
+.dropdown-select:focus {
+  border-color: #4299e1;
+}
+
+.dropdown-container::after {
+  content: '▼';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 1rem;
+  color: #999;
+}
+
+/* Search Button */
+.search-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  background-color: #4299e1;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 1.5rem;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #3182ce;
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: white;
+  margin-right: 8px; /* Add some space between the icon and the text */
+}
+
+.search-text {
+  font-size: 1.25rem;
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: white;
+}

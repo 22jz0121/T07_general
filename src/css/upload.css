@@ -1,3 +1,4 @@
+/* General Styles */
 html {
   font-family: 'Noto Sans JP', sans-serif;
   scroll-behavior: smooth;
@@ -5,13 +6,51 @@ html {
 
 body {
   margin: 0;
-  background-color: #f0f0f0;
-  padding-bottom: 60px; /* Ensure content doesn't get hidden behind the footer */
+  padding-bottom: 60px;
+  /* Ensure content doesn't get hidden behind the footer */
 }
 
-h1 {
-text-align: center;}
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: white;
+}
 
+/* Top Navigation */
+.top-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensure the arrow is on the left and title is centered */
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative; /* Make the container relative for easy centering */
+  margin-top: 10px;
+}
+
+.back-button {
+  background: none; /* Remove button background */
+  border: none; /* Remove button border */
+  padding: 0; /* Remove padding to make it minimal */
+  margin-left: 0; /* Align to the left */
+  cursor: pointer;
+}
+
+.back-icon {
+  color: #374151;
+  font-size: 1.5rem; /* Ensure the icon is the right size */
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* Center the title */
+  font-size: 1.25rem;
+  color: #374151;
+}
+
+/* Layout & Spacing */
 .h-screen {
   height: 100vh;
 }
@@ -36,25 +75,34 @@ text-align: center;}
   justify-content: flex-start;
 }
 
+.mr-2{
+  color: #1D9BF0;
+}
+
 .p-4 {
-  padding: 1rem;
+  padding: 1.25rem;
+  display: block;
 }
 
 .border-b {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e5e7eb;
+  /* Lighter border */
 }
 
+/* Typography */
 .text-lg {
   font-size: 1.125rem;
-  text-align: center
+  text-align: center;
 }
 
 .font-semibold {
   font-weight: 600;
 }
 
-.space-y-4 > * + * {
-  margin-top: 1rem;
+/* Space between elements */
+.space-y-4>*+* {
+  margin-top: 1.5rem;
+  /* More spacing between form elements */
 }
 
 .w-full {
@@ -62,80 +110,106 @@ text-align: center;}
 }
 
 .p-3 {
-  padding: 0.75rem;
+  padding: 0.875rem;
+  /* Slightly increased padding */
 }
 
 .border {
-  border: 1px solid #ddd;
+  border: 1px solid #e5e7eb;
+  /* Lighter border color */
 }
 
 .rounded-lg {
+  border-radius: 0.75rem;
+  /* Increased border-radius for a more modern look */
+}
+
+/* Button Styles */
+.transaction-method-buttons {
+  display: flex;
+  justify-content: space-between;
+  /* Ensure equal spacing between buttons */
+  gap: 1.5rem;
+  /* Adds consistent spacing between the buttons */
+}
+
+.transaction-button {
+  flex-grow: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  text-align: center;
   border-radius: 0.5rem;
+  transition: box-shadow 0.3s ease;
 }
 
-.bg-white {
-  background-color: white;
+.transaction-button:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Add subtle hover effect */
 }
 
-.bg-blue-500 {
-  background-color: #4299e1;
-}
-
-.text-white {
-  color: white;
-}
-
-.text-gray-500 {
-  color: #6b7280;
-}
-
-.text-gray-700 {
-  color: #374151;
-}
-
-.text-green-600 {
+.transaction-button.giveaway {
+  background-color: #d1fae5;
+  /* Green background for 譲渡 */
   color: #16a34a;
 }
 
-.bg-green-100 {
-  background-color: #d1fae5;
-}
-
-.text-blue-600 {
+.transaction-button.rental {
+  background-color: #dbf4ff;
+  /* Blue background for レンタル */
   color: #2563eb;
 }
 
-.bg-blue-100 {
-  background-color: #dbf4ff;
-}
-
-.text-orange-600 {
+.transaction-button.exchange {
+  background-color: #fed7aa;
+  /* Orange background for 交換 */
   color: #ea580c;
 }
 
-.bg-orange-100 {
-  background-color: #fed7aa;
-}
-
-/* Styles for "確認画面へ" Button */
-.bg-white {
+/* Confirm Button Styles */
+.confirm-button {
+  width: 100%;
+  padding: 0.875rem;
   background-color: white;
-}
-
-.text-blue-500 {
   color: #4299e1;
+  border: 2px solid #4299e1;
+  /* Blue border */
+  border-radius: 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.border-blue-500 {
+.confirm-button:hover {
+  background-color: #ebf8ff;
+  color: #3182ce;
+  border-color: #3182ce;
+}
+
+/* Upload Image Button */
+.upload-button {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px dashed #9ca3af;
+  /* Dashed border for upload button */
+  background-color: #f9fafb;
+  border-radius: 0.75rem;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.upload-button:hover {
   border-color: #4299e1;
+  background-color: #ebf8ff;
+  /* Light blue background on hover */
 }
 
-.button:hover {
-  background-color: #ebf8ff; /* Slight hover effect for the button */
-  color: #3182ce; /* Darker blue on hover */
-}
-
-button {
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* Dropdown Styling */
+.location-select {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  color: #374151;
 }
