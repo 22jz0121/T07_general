@@ -1,0 +1,141 @@
+html {
+  font-family: 'Noto Sans JP', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: #f0f0f0;
+  padding-bottom: 60px; /* Ensure content doesn't get hidden behind the footer */
+}
+
+h1 {
+text-align: center;}
+
+.h-screen {
+  height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.border-b {
+  border-bottom: 1px solid #ddd;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  text-align: center
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.p-3 {
+  padding: 0.75rem;
+}
+
+.border {
+  border: 1px solid #ddd;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.bg-blue-500 {
+  background-color: #4299e1;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.text-gray-700 {
+  color: #374151;
+}
+
+.text-green-600 {
+  color: #16a34a;
+}
+
+.bg-green-100 {
+  background-color: #d1fae5;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.bg-blue-100 {
+  background-color: #dbf4ff;
+}
+
+.text-orange-600 {
+  color: #ea580c;
+}
+
+.bg-orange-100 {
+  background-color: #fed7aa;
+}
+
+/* Styles for "確認画面へ" Button */
+.bg-white {
+  background-color: white;
+}
+
+.text-blue-500 {
+  color: #4299e1;
+}
+
+.border-blue-500 {
+  border-color: #4299e1;
+}
+
+.button:hover {
+  background-color: #ebf8ff; /* Slight hover effect for the button */
+  color: #3182ce; /* Darker blue on hover */
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
