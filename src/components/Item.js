@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@mui/icons-material'; // Import Material UI heart icons
-import avatar1 from '../img/avatar1.png';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';  // Import AccountCircle for avatars
 import '../css/top.css';
 
 function Item({ name, time, imageSrc, title, description, location }) {
@@ -14,7 +14,7 @@ function Item({ name, time, imageSrc, title, description, location }) {
   return (
     <div className="item">
       <div className="profile">
-        <img src={avatar1} alt="Avatar" className="avatar" />
+      <AccountCircleIcon className="avatar-icon"  style={{ fontSize: '36px' }} /> {/* Use Material UI Icon instead of image */}
         <div className="profile-info">
           <span className="name">{name}</span>
           <span className="time">{time}</span>

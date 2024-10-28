@@ -57,10 +57,10 @@ const Messages = () => {
       <div className='messages-list'>
         {messages.map((msg, index) => (
           <div key={index} className="message-item">
-            <AccountCircleIcon className="avatar-icon" /> {/* Use Material UI Icon instead of image */}
+            <AccountCircleIcon className="avatar-icon"  style={{ fontSize: '36px' }} /> {/* Use Material UI Icon instead of image */}
             <div className="message-info">
               <div className="message-header">
-                <span className="name">{msg.name}</span>
+                <span className="names">{msg.name}</span>
                 <span className="time">{msg.time}</span>
               </div>
               {/* Call the helper function to truncate the message */}

@@ -11,6 +11,7 @@ body {
 }
 
 .upload-container {
+  padding-top: 60px;
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
@@ -19,13 +20,18 @@ body {
 
 /* Top Navigation */
 .top-navigation {
+  position: fixed;
+  margin-top: 6px;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between; /* Ensure the arrow is on the left and title is centered */
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
-  position: relative; /* Make the container relative for easy centering */
-  margin-top: 10px;
+  background-color: #fff; /* 背景色を追加して視認性向上 */
+  z-index: 1000; /* 前面に表示 */
 }
 
 .back-button {
@@ -48,6 +54,7 @@ body {
   font-size: 1.25rem;
   color: #374151;
 }
+
 
 /* Layout & Spacing */
 .h-screen {
@@ -212,3 +219,4 @@ body {
   background-color: white;
   color: #374151;
 }
+

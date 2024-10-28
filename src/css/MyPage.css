@@ -10,77 +10,98 @@ body {
 
 /* Ensure content doesn't get hidden behind the footer */
 .mypage-container {
+    padding-top: 60px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background-color: white;
 }
 
+/* Top Navigation */
 .top-navigation {
+    margin-top: 6px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* Ensure the arrow is on the left and title is centered */
     padding: 1rem;
     border-bottom: 1px solid #e5e7eb;
-    position: relative;
-    margin-top: 10px;
+    background-color: #fff;
+    /* 背景色を追加して視認性向上 */
+    z-index: 1000;
+    /* 前面に表示 */
 }
 
 .back-button {
     background: none;
+    /* Remove button background */
     border: none;
+    /* Remove button border */
     padding: 0;
+    /* Remove padding to make it minimal */
+    margin-left: 0;
+    /* Align to the left */
     cursor: pointer;
 }
 
 .back-icon {
     color: #374151;
     font-size: 1.5rem;
+    /* Ensure the icon is the right size */
 }
 
 .page-title {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    /* Center the title */
     font-size: 1.25rem;
     color: #374151;
 }
+
 
 /* Profile Section */
 .profile-section {
     display: flex;
     align-items: center;
-    padding: 16px 16px 0 16px;
+    padding: 22px 16px 0 16px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .profile-section:hover {
+}
+
+.profile-section:hover {
     background-color: #f9f9f9;
-  }
-  
-  /* Profile Icon */
-  .profile-icon {
-    font-size: 36px; /* Balanced size with text */
+}
+
+/* Profile Icon */
+.profile-icon {
+    font-size: 36px;
+    /* Balanced size with text */
     color: gray;
     margin-right: 12px;
     margin-left: 12px;
-  }
-  
-  /* Profile Name */
-  .profile-name {
-    font-size: 1.5rem; /* Slightly larger font size */
+}
+
+/* Profile Name */
+.profile-name {
+    font-size: 1.5rem;
+    /* Slightly larger font size */
     font-weight: 500;
     color: #374151;
     margin-right: 8px;
-  }
-  
-  /* Right Arrow Icon */
-  .right-arrow-icon {
-    font-size: 30px; /* Increased size for better balance */
+}
+
+/* Right Arrow Icon */
+.right-arrow-icon {
+    font-size: 30px;
+    /* Increased size for better balance */
     color: #9ca3af;
-  }
-  
+}
+
 
 /* Menu Grid */
 .menu-grid {

@@ -34,7 +34,7 @@ const MyPage = () => {
             <div className="profile-section" onClick={handleProfileClick}>
                 <AccountCircleIcon className="profile-icon" style={{ fontSize: '36px' }} /> {/* アイコンのサイズを変更 */}
                 <span className="profile-name">日本電子</span>
-                <ChevronRightIcon className="right-arrow-icon" style={{ fontSize: '32px' }} /> {/* アイコンのサイズを変更 */}
+                <ChevronRightIcon className="right-arrow-icon" style={{ fontSize: '20px' }} /> {/* アイコンのサイズを変更 */}
             </div>
 
             {/* Menu Grid */}
