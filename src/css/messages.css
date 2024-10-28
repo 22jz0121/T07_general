@@ -6,13 +6,16 @@ html {
 
 body {
   margin: 0;
-  padding-bottom: 60px; /* Ensure content doesn't get hidden behind the footer */
+  padding-bottom: 60px;
+  
+  /* Ensure content doesn't get hidden behind the footer */
 }
 
 .message-list {
   flex-direction: column;
   height: 100vh;
-  background-color: white;
+  background-color: #f4f4f8;
+
 }
 
 .top-navigation {
@@ -22,6 +25,7 @@ body {
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
   position: relative;
+  background-color: white;
 }
 
 .back-button {
@@ -50,13 +54,15 @@ body {
   flex-direction: column;
   padding: 10px;
   background-color: #f4f4f8;
-  overflow-y: auto; /* Scrollable area */
+  overflow-y: auto;
+  /* Scrollable area */
 }
 
 /* Individual Message Item */
 .message-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  /* Vertically align all elements within the item */
   background-color: white;
   padding: 12px;
   margin-bottom: 12px;
@@ -72,12 +78,12 @@ body {
 
 /* Avatar Icon */
 .avatar-icon {
-  font-size: 36px; /* Set size of icon to 36px */
+  font-size: 40px; /* Increased size for better balance */
   color: #9ca3af;
-  margin-right: 12px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
-/* Message Info */
 .message-info {
   flex-grow: 1;
 }

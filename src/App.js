@@ -5,6 +5,7 @@ import RequestPage from './pages/RequestPage';  // Request page
 import Upload from './pages/upload';  // Upload page
 import Search from './pages/search';  // Search page
 import Messages from './pages/messages';  // Messages page
+import MyPage from './pages/MyPage';  // MyPage component
 import Footer from './components/Footer'; // Import Footer component
 import './css/top.css';  // Global CSS
 
@@ -19,7 +20,7 @@ function App() {
           <Route path="/upload" element={<Upload />} /> {/* Upload page */}
           <Route path="/search" element={<Search />} /> {/* Search page */}
           <Route path="/messages" element={<Messages />} /> {/* Messages page */}
-          <Route path="/mypage" element={<div>MyPage</div>} /> {/* Placeholder */}
+          <Route path="/mypage" element={<MyPage />} /> {/* MyPage component */}
         </Routes>
 
         {/* Add the Footer at the bottom, outside of the Routes */}
