@@ -9,6 +9,16 @@ body {
     padding-bottom: 60px; /* Ensure content doesn't get hidden behind the footer */
 }
 
+/* Wrapper to keep top-bar and tab-bar together */
+.top-section-wrapper {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
 
 .top-bar {
     margin-top: 10px;
@@ -98,6 +108,7 @@ body {
 
 .listing {
     padding: 10px;
+    padding-top: 130px;
 }
 
 .item {
