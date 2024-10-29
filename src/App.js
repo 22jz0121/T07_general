@@ -1,29 +1,28 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Top from './pages/top';  // Home page (top.js)
-import RequestPage from './pages/RequestPage';  // Request page
-import Upload from './pages/upload';  // Upload page
-import Search from './pages/search';  // Search page
-import Messages from './pages/messages';  // Messages page
-import MyPage from './pages/MyPage';  // MyPage component
+import Top from './pages/top';
+import RequestPage from './pages/RequestPage';
+import Upload from './pages/upload';
+import Search from './pages/search';
+import Messages from './pages/messages';
+import MyPage from './pages/MyPage'
+import DirectMessage from './pages/DirectMessage'; // Import the DM page
 import Footer from './components/Footer'; // Import Footer component
-import './css/top.css';  // Global CSS
+import './css/top.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        {/* Define Routes for navigation */}
         <Routes>
-          <Route path="/" element={<Top />} />  {/* "/" renders Top */}
+          <Route path="/" element={<Top />} />
           <Route path="/request" element={<RequestPage />} />
-          <Route path="/upload" element={<Upload />} /> {/* Upload page */}
-          <Route path="/search" element={<Search />} /> {/* Search page */}
-          <Route path="/messages" element={<Messages />} /> {/* Messages page */}
-          <Route path="/mypage" element={<MyPage />} /> {/* MyPage component */}
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/MyPage" element={<MyPage />} />
+          <Route path="/dm/:id" element={<DirectMessage />} /> {/* Dynamic route for each DM */}
         </Routes>
-
-        {/* Add the Footer at the bottom, outside of the Routes */}
         <Footer />
       </div>
     </Router>

@@ -17,9 +17,10 @@ body {
     background-color: white;
 }
 
+
+
 /* Top Navigation */
 .top-navigation {
-    margin-top: 6px;
     position: fixed;
     top: 0;
     left: 0;
@@ -28,7 +29,7 @@ body {
     align-items: center;
     justify-content: space-between;
     /* Ensure the arrow is on the left and title is centered */
-    padding: 1rem;
+    padding: 22px 16px 16px 16px;
     border-bottom: 1px solid #e5e7eb;
     background-color: #fff;
     /* 背景色を追加して視認性向上 */

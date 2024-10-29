@@ -1,0 +1,118 @@
+/* General Container */
+.dm-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+    padding-top: 60px;
+}
+
+/* Messages Section */
+.dm-messages {
+    flex-grow: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #f4f4f8;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message Bubbles */
+.message-bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    display: inline-block;
+    position: relative;
+}
+
+.message-bubble.user {
+    background-color: #dcf8c6;
+    color: #333;
+    align-self: flex-end;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 20px;
+}
+
+.message-bubble.other {
+    background-color: #fff;
+    color: #333;
+    align-self: flex-start;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.message-text {
+    margin: 0;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+    display: block;
+    text-align: right;
+}
+
+/* Message Input */
+.dm-input {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    padding-bottom: 15px;
+    border-top: 1px solid #e5e7eb;
+    background-color: #fff;
+    z-index: 1000;
+}
+
+.image-upload-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 12px;
+    margin-left: 8px;
+}
+
+.add-icon {
+    font-size: 24px;
+    color: #48a9f8;
+}
+
+.input-box {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+}
+
+.send-button {
+    margin-left: 20px;
+    margin-right: 5px;
+    padding: 8px;
+    background-color: #48a9f8;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.send-button:disabled {
+    background-color: #bbb; /* Greyed out when disabled */
+    cursor: not-allowed;
+}
+
+.send-icon {
+    font-size: 24px;
+}

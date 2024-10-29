@@ -9,50 +9,7 @@ body {
   padding-bottom: 60px;
 }
 
-.upload-container {
-  padding-top: 60px;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
-  background-color: white;
-}
 
-/* Top Navigation */
-.top-navigation {
-  margin-top: 6px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Ensure the arrow is on the left and title is centered */
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #fff; /* 背景色を追加して視認性向上 */
-  z-index: 1000; /* 前面に表示 */
-}
-
-.back-button {
-  background: none; /* Remove button background */
-  border: none; /* Remove button border */
-  padding: 0; /* Remove padding to make it minimal */
-  margin-left: 0; /* Align to the left */
-  cursor: pointer;
-}
-
-.back-icon {
-  color: #374151;
-  font-size: 1.5rem; /* Ensure the icon is the right size */
-}
-
-.page-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%); /* Center the title */
-  font-size: 1.25rem;
-  color: #374151;
-}
 
 .search-form {
   display: flex;
