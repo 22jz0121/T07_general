@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';  // For navigation and route parameters
+import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';  // Import Add and Send icons
+import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
 import '../css/directMessage.css';
 
 const messages = [
-  { sender: 'other', text: 'こんにちは！よろしくお願いします。', time: '1:20 PM' },
+  { sender: 'other', text: 'こんにちは！よろしくお願いします。 あああああああああああああああああああああああああああああああああああああああああああああああああああ', time: '1:20 PM' },
   { sender: 'user', text: 'はい、よろしくお願いします！', time: '1:22 PM' },
   { sender: 'other', text: 'この件について教えてもらえますか？', time: '1:23 PM' },
   { sender: 'user', text: 'もちろんです。まず、...', time: '1:25 PM' },
@@ -24,13 +23,12 @@ function DirectMessage() {
   const handleSendMessage = () => {
     if (inputValue.trim()) {
       console.log('Message sent:', inputValue);
-      setInputValue(''); // Clear the input after sending
+      setInputValue('');
     }
   };
 
   return (
     <div className="dm-container">
-      {/* Top Navigation */}
       <div className="top-navigation">
         <button className="back-button" onClick={() => navigate('/messages')}>
           <ArrowBackIcon className="back-icon" />
@@ -38,7 +36,6 @@ function DirectMessage() {
         <h1 className="page-title">ユーザーID: {id}</h1>
       </div>
 
-      {/* Messages List */}
       <div className="dm-messages">
         {messages.map((msg, index) => (
           <div
@@ -51,7 +48,6 @@ function DirectMessage() {
         ))}
       </div>
 
-      {/* Input section with image upload and send button */}
       <div className="dm-input">
         <button className="image-upload-button">
           <AddIcon className="add-icon" />
@@ -66,9 +62,9 @@ function DirectMessage() {
         <button
           className="send-button"
           onClick={handleSendMessage}
-          disabled={!inputValue.trim()} // Disable button if input is empty
+          disabled={!inputValue.trim()}
         >
-          <SendIcon className="send-icon" /> {/* Material UI Send Icon */}
+          <SendIcon className="send-icon" />
         </button>
       </div>
     </div>
