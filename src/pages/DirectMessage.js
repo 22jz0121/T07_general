@@ -15,10 +15,12 @@ function DirectMessage() {
   const messagesEndRef = useRef(null);
   const [isDeliverySet, setIsDeliverySet] = useState(false);
 
+  const longPressTimeoutRef = useRef(null);
+  const LONG_PRESS_DURATION = 700;
+
   const formatDate = (date) => {
     const today = new Date();
     const messageDate = new Date(date);
-
     const isToday = today.toDateString() === messageDate.toDateString();
     const isYesterday = new Date(today.setDate(today.getDate() - 1)).toDateString() === messageDate.toDateString();
 
@@ -42,10 +44,56 @@ function DirectMessage() {
   const handleSendMessage = () => {
     if (inputValue.trim()) {
       const time = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false });
-      const newMessage = { sender: 'user', text: inputValue, time, date: new Date() };
+      const newMessage = { id: Date.now(), sender: 'user', text: inputValue, time, date: new Date() };
       setMessages([...messages, newMessage]);
       setInputValue('');
     }
+  };
+
+  const isWithinUnsendLimit = (messageDate) => {
+    const now = new Date();
+    const sentDate = new Date(messageDate);
+    const timeDifference = now - sentDate;
+    const hoursDifference = timeDifference / (1000 * 60 * 60);
+    return hoursDifference <= 24;
+  };
+
+  const handleLongPress = (index) => {
+    const message = messages[index];
+    if (message.sender === 'system') {
+      if (window.confirm('このシステムメッセージを削除しますか？')) {
+        handleDeleteMessage(index);
+      }
+    } else if (message.sender === 'user') {
+      const options = ['削除'];
+      if (isWithinUnsendLimit(message.date)) options.unshift('送信取消');
+
+      const selectedOption = window.confirm(options.join(' / '));
+      if (selectedOption) {
+        if (options[0] === '送信取消' && isWithinUnsendLimit(message.date)) {
+          handleUnsendMessage(index);
+        } else {
+          handleDeleteMessage(index);
+        }
+      }
+    }
+  };
+
+  const handlePressEnd = () => clearTimeout(longPressTimeoutRef.current);
+
+  const handleUnsendMessage = (index) => {
+    const updatedMessages = [...messages];
+    updatedMessages[index] = {
+      ...messages[index],
+      text: 'あなたがメッセージを取り消しました',
+      sender: 'system',
+    };
+    setMessages(updatedMessages);
+  };
+
+  const handleDeleteMessage = (index) => {
+    const updatedMessages = messages.filter((_, i) => i !== index);
+    setMessages(updatedMessages);
   };
 
   const handleSetDelivery = () => {
@@ -105,7 +153,7 @@ function DirectMessage() {
 
       <div className="dm-messages">
         {messages.map((msg, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={msg.id}>
             {index === 0 || formatDate(messages[index - 1].date) !== formatDate(msg.date) ? (
               <div className="talk date">
                 <p>{formatDate(msg.date)}</p>
@@ -113,6 +161,10 @@ function DirectMessage() {
             ) : null}
             <div
               className={`message-container ${msg.sender === 'user' ? 'user' : msg.sender === 'system' ? 'system' : 'other'}`}
+              onMouseDown={() => longPressTimeoutRef.current = setTimeout(() => handleLongPress(index), LONG_PRESS_DURATION)}
+              onMouseUp={handlePressEnd}
+              onTouchStart={() => longPressTimeoutRef.current = setTimeout(() => handleLongPress(index), LONG_PRESS_DURATION)}
+              onTouchEnd={handlePressEnd}
             >
               <div className={`message-bubble ${msg.sender}`}>
                 <p className="message-text">{msg.text}</p>
