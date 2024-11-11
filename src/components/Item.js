@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
-import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@mui/icons-material'; // Import Material UI heart icons
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';  // Import AccountCircle for avatars
+import { useNavigate } from 'react-router-dom';
+import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../css/top.css';
 
-function Item({ name, time, imageSrc, title, description, location }) {
-  const [liked, setLiked] = useState(false); // State to track if the heart is clicked
+function Item({ itemId, name, time, imageSrc, title, description, location }) {
+  const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
 
-  // Toggle the liked state
   const handleLike = () => {
     setLiked(!liked);
   };
 
+  const handleItemClick = () => {
+    navigate(`/item/${itemId}`);
+  };
+
   return (
-    <div className="item">
+    <div className="item" onClick={handleItemClick} style={{ cursor: 'pointer' }}>
       <div className="profile">
-      <AccountCircleIcon className="avatar-icon"  style={{ fontSize: '36px' }} /> {/* Use Material UI Icon instead of image */}
+        <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
         <div className="profile-info">
           <span className="name">{name}</span>
           <span className="time">{time}</span>
@@ -29,9 +34,7 @@ function Item({ name, time, imageSrc, title, description, location }) {
             <button className="button trade">譲渡</button>
           </div>
           <span className="location">{location}</span>
-          
-          {/* Heart icon that toggles color when clicked */}
-          <span onClick={handleLike} className="heart">
+          <span onClick={(e) => { e.stopPropagation(); handleLike(); }} className="heart">
             {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
           </span>
         </div>

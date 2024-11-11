@@ -13,7 +13,23 @@ function DirectMessage() {
     return savedMessages ? JSON.parse(savedMessages) : [];
   });
   const messagesEndRef = useRef(null);
-  const [isDeliverySet, setIsDeliverySet] = useState(false);
+
+  const [transactionStatus, setTransactionStatus] = useState(() => {
+    return JSON.parse(localStorage.getItem(`transaction-status-${id}`)) || 'none';
+  });
+  const [isSeller, setIsSeller] = useState(false); // For seller role check
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const response = await fetch('/api/user-role', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+      });
+      const data = await response.json();
+      setIsSeller(data.isSeller);
+    };
+
+    fetchUserRole();
+  }, []);
 
   const longPressTimeoutRef = useRef(null);
   const LONG_PRESS_DURATION = 700;
@@ -35,74 +51,38 @@ function DirectMessage() {
 
   useEffect(() => {
     localStorage.setItem(`dm-messages-${id}`, JSON.stringify(messages));
-  }, [messages, id]);
+    localStorage.setItem(`transaction-status-${id}`, JSON.stringify(transactionStatus));
+  }, [messages, id, transactionStatus]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (inputValue.trim()) {
-      const time = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false });
-      const newMessage = { id: Date.now(), sender: 'user', text: inputValue, time, date: new Date() };
-      setMessages([...messages, newMessage]);
-      setInputValue('');
-    }
-  };
+      const newMessage = { text: inputValue, recipient_id: id };
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        },
+        body: JSON.stringify(newMessage)
+      });
 
-  const isWithinUnsendLimit = (messageDate) => {
-    const now = new Date();
-    const sentDate = new Date(messageDate);
-    const timeDifference = now - sentDate;
-    const hoursDifference = timeDifference / (1000 * 60 * 60);
-    return hoursDifference <= 24;
-  };
-
-  const handleLongPress = (index) => {
-    const message = messages[index];
-    if (message.sender === 'system') {
-      if (window.confirm('このシステムメッセージを削除しますか？')) {
-        handleDeleteMessage(index);
-      }
-    } else if (message.sender === 'user') {
-      const options = ['削除'];
-      if (isWithinUnsendLimit(message.date)) options.unshift('送信取消');
-
-      const selectedOption = window.confirm(options.join(' / '));
-      if (selectedOption) {
-        if (options[0] === '送信取消' && isWithinUnsendLimit(message.date)) {
-          handleUnsendMessage(index);
-        } else {
-          handleDeleteMessage(index);
-        }
+      if (response.ok) {
+        const savedMessage = await response.json();
+        setMessages([...messages, { ...savedMessage, sender: 'user', time: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false }) }]);
+        setInputValue('');
       }
     }
-  };
-
-  const handlePressEnd = () => clearTimeout(longPressTimeoutRef.current);
-
-  const handleUnsendMessage = (index) => {
-    const updatedMessages = [...messages];
-    updatedMessages[index] = {
-      ...messages[index],
-      text: 'あなたがメッセージを取り消しました',
-      sender: 'system',
-    };
-    setMessages(updatedMessages);
-  };
-
-  const handleDeleteMessage = (index) => {
-    const updatedMessages = messages.filter((_, i) => i !== index);
-    setMessages(updatedMessages);
   };
 
   const handleSetDelivery = () => {
-    if (!isDeliverySet) {
+    if (transactionStatus === 'none') {
       const confirmation = window.confirm('受け渡し予定者に設定しますか？');
       if (confirmation) {
-        const systemMessage = { sender: 'system', text: '受け渡し予定者に設定されました', time: '', date: new Date() };
-        setMessages([...messages, systemMessage]);
-        setIsDeliverySet(true);
+        setTransactionStatus('deliverySet');
       }
     }
   };
@@ -110,18 +90,14 @@ function DirectMessage() {
   const handleCancelTransaction = () => {
     const confirmation = window.confirm('取引を中断しますか？');
     if (confirmation) {
-      const systemMessage = { sender: 'system', text: '取引が中断されました', time: '', date: new Date() };
-      setMessages([...messages, systemMessage]);
-      setIsDeliverySet(false);
+      setTransactionStatus('canceled');
     }
   };
 
   const handleCompleteTransaction = () => {
     const confirmation = window.confirm('取引を完了しますか？');
     if (confirmation) {
-      const systemMessage = { sender: 'system', text: '取引が完了しました', time: '', date: new Date() };
-      setMessages([...messages, systemMessage]);
-      setIsDeliverySet(false);
+      setTransactionStatus('completed');
     }
   };
 
@@ -134,14 +110,15 @@ function DirectMessage() {
         <h1 className="page-title">ユーザーID: {id}</h1>
       </div>
 
-      {!isDeliverySet ? (
-        <div className="set-delivery-container">
+      {!isSeller && transactionStatus === 'none' && (
+        <div className="set-delivery-container fixed">
           <button className="set-delivery-button" onClick={handleSetDelivery}>
             受け渡し予定者に設定
           </button>
         </div>
-      ) : (
-        <div className="transaction-buttons">
+      )}
+      {!isSeller && transactionStatus === 'deliverySet' && (
+        <div className="transaction-buttons fixed">
           <button className="cancel-transaction-button" onClick={handleCancelTransaction}>
             取引中断
           </button>
@@ -159,13 +136,7 @@ function DirectMessage() {
                 <p>{formatDate(msg.date)}</p>
               </div>
             ) : null}
-            <div
-              className={`message-container ${msg.sender === 'user' ? 'user' : msg.sender === 'system' ? 'system' : 'other'}`}
-              onMouseDown={() => longPressTimeoutRef.current = setTimeout(() => handleLongPress(index), LONG_PRESS_DURATION)}
-              onMouseUp={handlePressEnd}
-              onTouchStart={() => longPressTimeoutRef.current = setTimeout(() => handleLongPress(index), LONG_PRESS_DURATION)}
-              onTouchEnd={handlePressEnd}
-            >
+            <div className={`message-container ${msg.sender === 'user' ? 'user' : msg.sender === 'system' ? 'system' : 'other'}`}>
               <div className={`message-bubble ${msg.sender}`}>
                 <p className="message-text">{msg.text}</p>
               </div>

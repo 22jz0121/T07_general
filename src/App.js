@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Top from './pages/top';
+import ItemList from './components/ItemList';
+import ListingDetail from './components/ListingDetail'; // Import the detail component
 import RequestPage from './pages/RequestPage';
 import Upload from './pages/upload';
 import Search from './pages/search';
@@ -16,6 +18,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Top />} />
+          <Route path="/" element={<ItemList />} /> {/* Item list page */}
+          <Route path="/listing/:listingId" element={<ListingDetail />} /> {/* Detail page */}
           <Route path="/request" element={<RequestPage />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/search" element={<Search />} />

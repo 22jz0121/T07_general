@@ -192,3 +192,10 @@
     margin: 0 auto;
     font-size: 14px;
 }
+.set-delivery-container, .transaction-buttons {
+    position: sticky;
+    top: 60px; /* Position it just below the top navigation */
+    z-index: 1000;
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
