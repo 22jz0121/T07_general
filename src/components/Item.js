@@ -13,7 +13,7 @@ function Item({ itemId, name, time, imageSrc, title, description, location }) {
   };
 
   const handleItemClick = () => {
-    navigate(`/item/${itemId}`);
+    navigate(`/listing/${itemId}`); // Navigate to the listing detail page with listingId
   };
 
   return (

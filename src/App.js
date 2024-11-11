@@ -2,14 +2,14 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Top from './pages/top';
 import ItemList from './components/ItemList';
-import ListingDetail from './components/ListingDetail'; // Import the detail component
+import ListingDetail from './components/ListingDetail';
 import RequestPage from './pages/RequestPage';
 import Upload from './pages/upload';
 import Search from './pages/search';
 import Messages from './pages/messages';
-import MyPage from './pages/MyPage'
-import DirectMessage from './pages/DirectMessage'; // Import the DM page
-import Footer from './components/Footer'; // Import Footer component
+import MyPage from './pages/MyPage';
+import DirectMessage from './pages/DirectMessage';
+import Footer from './components/Footer';
 import './css/top.css';
 
 function App() {
@@ -18,14 +18,14 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Top />} />
-          <Route path="/" element={<ItemList />} /> {/* Item list page */}
-          <Route path="/listing/:listingId" element={<ListingDetail />} /> {/* Detail page */}
+          <Route path="/listings" element={<ItemList />} /> {/* Route for item list */}
+          <Route path="/listing/:listingId" element={<ListingDetail />} /> {/* Dynamic route for listing details */}
           <Route path="/request" element={<RequestPage />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/search" element={<Search />} />
           <Route path="/messages" element={<Messages />} />
-          <Route path="/MyPage" element={<MyPage />} />
-          <Route path="/dm/:id" element={<DirectMessage />} /> {/* Dynamic route for each DM */}
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/dm/:id" element={<DirectMessage />} /> {/* DM route */}
         </Routes>
         <Footer />
       </div>
