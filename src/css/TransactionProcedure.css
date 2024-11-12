@@ -1,0 +1,78 @@
+/* TransactionProcedure.css */
+
+.transaction-procedure-container {
+    padding: 20px;
+    padding-top:80px  
+  }
+  
+  .transaction-procedure-listing-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .transaction-procedure-listing-image {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .transaction-procedure-listing-details {
+    flex-direction: column;
+  }
+  
+  .transaction-procedure-item-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .badge {
+    background-color: #48a9f8;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    margin-left: 4px;
+    margin-bottom: 4px;
+  }
+  
+  .transaction-procedure-location {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .transaction-procedure-message-input {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+  }
+
+
+  .transaction-procedure-send-message-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff7f7f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .transaction-procedure-send-message-button:hover {
+    background-color: #ff5252;
+  }
+  

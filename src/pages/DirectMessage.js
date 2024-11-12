@@ -6,13 +6,16 @@ import '../css/directMessage.css';
 
 function DirectMessage() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams(); // id represents the conversation ID
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem(`dm-messages-${id}`);
     return savedMessages ? JSON.parse(savedMessages) : [];
   });
   const messagesEndRef = useRef(null);
+
+  // Flag to indicate if the current user is the seller
+  const isSeller = false; // Replace this with actual logic to determine if the user is the seller
 
   const [transactionStatus, setTransactionStatus] = useState(() => {
     return JSON.parse(localStorage.getItem(`transaction-status-${id}`)) || 'none';
@@ -138,14 +141,14 @@ function DirectMessage() {
         <h1 className="page-title">ユーザーID: {id}</h1>
       </div>
 
-      {transactionStatus === 'none' ? (
+      {isSeller && transactionStatus === 'none' ? (
         <div className="set-delivery-container fixed">
           <button className="set-delivery-button" onClick={handleSetDelivery}>
             受け渡し予定者に設定
           </button>
         </div>
       ) : (
-        transactionStatus === 'deliverySet' && (
+        isSeller && transactionStatus === 'deliverySet' && (
           <div className="transaction-buttons fixed">
             <button className="cancel-transaction-button" onClick={handleCancelTransaction}>
               取引中断

@@ -35,7 +35,7 @@ function ListingDetail() {
 
         <div className="listing-details">
           <h2>55インチのスマートテレビ</h2>
-          <p className='ppp'>最新の4K対応で、55インチのスマートテレビです。親に言って来いと言われたのでほしい人がいればお譲りします。</p>
+          <p>最新の4K対応で、55インチのスマートテレビです。親に言って来いと言われたのでほしい人がいればお譲りします。</p>
 
           <div className="transaction-details">
             <span>希望取引方法:</span>
@@ -44,11 +44,16 @@ function ListingDetail() {
 
           <div className="location-details">
             <span>受け渡し場所:</span>
-            <span>12号館前</span>
+            <span>12号館</span>
           </div>
 
           <div className="transaction-button-container">
-            <button className="transaction-button">取引手続きへ</button>
+            <button
+              className="transaction-button"
+              onClick={() => navigate(`/transaction/${listingId}`)}
+            >
+              取引手続きへ
+            </button>
             <span onClick={handleLike} className="heart-icon">
               {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
             </span>

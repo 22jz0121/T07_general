@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Top from './pages/top';
 import ItemList from './components/ItemList';
 import ListingDetail from './components/ListingDetail';
+import TransactionProcedure from './components/TransactionProcedure'; // Import the new component
 import RequestPage from './pages/RequestPage';
 import Upload from './pages/upload';
 import Search from './pages/search';
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Top />} />
           <Route path="/listings" element={<ItemList />} /> {/* Route for item list */}
           <Route path="/listing/:listingId" element={<ListingDetail />} /> {/* Dynamic route for listing details */}
+          <Route path="/transaction/:listingId" element={<TransactionProcedure />} /> {/* New route for transaction procedure */}
           <Route path="/request" element={<RequestPage />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/search" element={<Search />} />
