@@ -4,28 +4,60 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Item from '../components/Item';
+import tvImage from '../img/tv-image.png';
 import '../css/searchResults.css';
 
+// Sample data
 const sampleData = [
   {
-    itemId: 1,
-    name: '電子太郎',
-    time: '1:20 PM',
-    imageSrc: 'path/to/image1.jpg',
+    itemId: '1',
+    name: '日本電子',
+    time: '3秒前',
+    imageSrc: tvImage,
     title: '55インチのスマートテレビ',
     description: '最新の4K対応で、55インチのスマートテレビです。',
     category: 'electronics',
-    location: '12号館'
+    location: '受け渡し場所：12号館'
   },
   {
-    itemId: 2,
-    name: '日本電子',
-    time: '3:40 PM',
-    imageSrc: 'path/to/image2.jpg',
-    title: '木製のダイニングテーブル',
-    description: '木製で非常に頑丈なダイニングテーブルです。',
+    itemId: '2',
+    name: '電子太郎',
+    time: '5分前',
+    imageSrc: tvImage,
+    title: '高性能ノートパソコン',
+    description: '16GB RAMと1TB SSDを搭載したノートパソコンです。',
+    category: 'electronics',
+    location: '受け渡し場所：10号館'
+  },
+  {
+    itemId: '3',
+    name: '電子次郎',
+    time: '10分前',
+    imageSrc: tvImage,
+    title: 'デスクチェア',
+    description: 'エルゴノミックデザインの快適なデスクチェアです。',
     category: 'furniture',
-    location: '10号館'
+    location: '受け渡し場所：8号館'
+  },
+  {
+    itemId: '4',
+    name: '菅原大翼',
+    time: '15分前',
+    imageSrc: tvImage,
+    title: '本棚',
+    description: 'たくさんの本を収納できる、丈夫な木製の本棚です。',
+    category: 'furniture',
+    location: '受け渡し場所：C棟ロビー'
+  },
+  {
+    itemId: '5',
+    name: 'マサトシ',
+    time: '20分前',
+    imageSrc: tvImage,
+    title: 'ギター',
+    description: '初心者にも最適なアコースティックギターです。',
+    category: 'music',
+    location: '受け渡し場所：スタジオ部屋'
   },
   // Add more items as needed
 ];
@@ -37,7 +69,9 @@ function SearchResults() {
 
   // Filter sample data based on search query and category
   const filteredResults = sampleData.filter(item => {
-    const matchesQuery = searchQuery ? item.title.includes(searchQuery) || item.description.includes(searchQuery) : true;
+    const matchesQuery = searchQuery
+      ? item.title.includes(searchQuery) || item.description.includes(searchQuery)
+      : true;
     const matchesCategory = category ? item.category === category : true;
     return matchesQuery && matchesCategory;
   });
@@ -53,7 +87,7 @@ function SearchResults() {
 
       <div className="items-list">
         {filteredResults.length > 0 ? (
-          filteredResults.map((item) => (
+          filteredResults.map(item => (
             <Item
               key={item.itemId}
               itemId={item.itemId}
