@@ -1,0 +1,39 @@
+/* src/css/searchResults.css */
+
+.search-results-container {
+    margin-top: 70px;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .top-navigation {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .page-title {
+    margin-left: 10px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .no-results {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    margin-top: 30px;
+  }
+  

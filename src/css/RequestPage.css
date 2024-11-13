@@ -12,7 +12,6 @@ body {
 .search-container {
     position: relative;
     flex-grow: 1;
-    max-width: 300px;
 }
 
 .search-box {

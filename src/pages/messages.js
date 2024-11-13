@@ -4,39 +4,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../css/messages.css';
 
-const initialMessages = [
-  {
-    id: 1,
-    name: '日本電子',
-    message: '初めまして！リクエストありがとうございます。高度情報処理科の電子太郎です。',
-    time: '1:20 PM'
-  },
-  {
-    id: 2,
-    name: '電子太郎',
-    message: '初めまして！リクエストありがとうございます。高度情報処理科の電子太郎です。',
-    time: '11:44 AM'
-  },
-  {
-    id: 3,
-    name: '電子次郎',
-    message: '初めまして！リクエストありがとうございます。高度情報処理科の電子太郎です。',
-    time: '11:24 AM'
-  },
-  {
-    id: 4,
-    name: '菅原大翼',
-    message: '初めまして！リクエストありがとうございます。高度情報処理科の電子太郎です。',
-    time: '8:14 AM'
-  },
-  {
-    id: 5,
-    name: 'マサトシ',
-    message: '初めまして！リクエストありがとうございます。高度情報処理科の電子太郎です。',
-    time: '11:30 PM'
-  }
-];
-
 // Helper function to truncate message at 25 characters and append "..."
 const truncateMessage = (message) => {
   if (message.length > 25) {
@@ -51,7 +18,7 @@ const Messages = () => {
 
   // Load messages from localStorage on component mount
   useEffect(() => {
-    const savedMessages = JSON.parse(localStorage.getItem('messages')) || initialMessages;
+    const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
     setMessages(savedMessages);
   }, []);
 

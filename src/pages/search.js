@@ -1,49 +1,66 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';  // Import Arrow Back icon from Material UI
-import SearchIcon from '@mui/icons-material/Search';  // Import Search icon from Material UI
-import '../css/search.css';  // Ensure the correct path for your CSS file
+// src/pages/Search.js
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SearchIcon from '@mui/icons-material/Search';
+import '../css/search.css';
 
 const Search = () => {
-  const navigate = useNavigate();  // Initialize the navigation hook
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [category, setCategory] = useState('');
+
+  const handleSearch = () => {
+    if (searchQuery.trim() || category) {
+      navigate('/search-results', {
+        state: { searchQuery, category },
+      });
+    } else {
+      alert('Please enter a keyword or select a category.');
+    }
+  };
 
   return (
-    <div className="upload-container">
-      {/* Top navigation */}
+    <div className="search-container">
       <div className="top-navigation">
-        <button className="back-button" onClick={() => navigate('/')}> {/* Navigate to "/" on click */}
-          <ArrowBackIcon className="back-icon" /> {/* Use Material UI ArrowBackIcon */}
+        <button className="back-button" onClick={() => navigate('/')}>
+          <ArrowBackIcon className="back-icon" />
         </button>
         <h1 className="page-title">探す</h1>
       </div>
 
-      {/* Search form */}
       <div className="search-form">
-        {/* Input field */}
+        {/* Input Field */}
         <input
           type="text"
           placeholder="キーワードを入力"
           className="input-field"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        {/* Category dropdown */}
+        {/* Dropdown for Category */}
         <div className="dropdown-container">
-          <select className="dropdown-select">
+          <select
+            className="dropdown-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
             <option value="">カテゴリ</option>
-            <option value="category1">カテゴリー 1</option>
-            <option value="category2">カテゴリー 2</option>
-            <option value="category3">カテゴリー 3</option>
+            <option value="electronics">電子機器</option>
+            <option value="furniture">家具</option>
+            <option value="books">本</option>
           </select>
         </div>
 
-        {/* Search button */}
-        <button className="search-button">
+        {/* Search Button */}
+        <button className="search-button" onClick={handleSearch}>
           <SearchIcon className="search-icon" />
           <span className="search-text">探す</span>
         </button>
       </div>
     </div>
-
   );
 };
 

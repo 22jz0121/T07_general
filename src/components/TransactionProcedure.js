@@ -26,6 +26,27 @@ function TransactionProcedure() {
       // Store the updated messages in localStorage
       localStorage.setItem(`dm-messages-${conversationId}`, JSON.stringify(updatedMessages));
 
+      // Save/update the latest message for the DM list in 'messages'
+      const summaryMessages = JSON.parse(localStorage.getItem('messages')) || [];
+      const summaryIndex = summaryMessages.findIndex((msg) => msg.id === conversationId);
+
+      const summaryMessage = {
+        id: conversationId,
+        name: '日本電子', // Set the name appropriately
+        message: message, // Display the full message text here
+        time: initialMessage.time
+      };
+
+      if (summaryIndex > -1) {
+        // Update existing conversation in summary
+        summaryMessages[summaryIndex] = summaryMessage;
+      } else {
+        // Add new conversation to summary
+        summaryMessages.push(summaryMessage);
+      }
+
+      localStorage.setItem('messages', JSON.stringify(summaryMessages));
+
       setMessage(''); // Clear the input field
       navigate(`/dm/${conversationId}`); // Navigate to DirectMessage page for the conversation
     }
