@@ -1,0 +1,133 @@
+
+  
+  
+  .confirmation-content-card {
+    background-color: #fff;
+    padding: 20px;
+    padding-top: 80px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .confirmation-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .confirmation-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 50%;
+  }
+  
+  .confirmation-user-name {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .confirmation-time-stamp {
+    color: #aaa;
+    font-size: 14px;
+  }
+  
+  .confirmation-item-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+    margin-top: 0;
+  }
+  
+  .confirmation-item-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    margin-left: 15px;
+  }
+  
+  .confirmation-item-description {
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0;
+    text-align: left;
+    margin-left: 16px;
+
+  }
+  
+  .confirmation-transaction-details {
+    text-align: left;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .confirmation-transaction-method-label,
+  .confirmation-location-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    margin-left: 15px;
+  }
+  
+  .confirmation-transaction-method {
+    background-color: #e0f7fa;
+    color: #00796b;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-left: 5px;
+  }
+  
+  .confirmation-location {
+    color: #2563eb;
+    font-weight: 500;
+    margin-left: 5px;
+  }
+  
+  .confirmation-instruction-text {
+    margin: 20px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .confirmation-button-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .confirmation-submit-button {
+    padding: 10px 20px;
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    border-radius: 24px;
+    font-weight: 600;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .confirmation-submit-button:hover {
+    background-color: #2563eb;
+    color: #fff;
+  }
+  
+  .confirmation-edit-button {
+    padding: 10px 20px;
+    border: 1px solid #e11d48;
+    color: #e11d48;
+    border-radius: 24px;
+    font-weight: 600;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .confirmation-edit-button:hover {
+    background-color: #e11d48;
+    color: #fff;
+  }
+  

@@ -15,6 +15,7 @@ function TopSection() {
     'リクエストが承認されました'
   ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('listing'); // New state for active tab
   const notificationRef = useRef(null);
 
   const handleKeyPress = (event) => {
@@ -23,12 +24,10 @@ function TopSection() {
     }
   };
 
-  // Toggle the notification bar
   const toggleNotificationBar = () => {
     setIsNotificationOpen((prev) => !prev);
   };
 
-  // Close the notification bar if clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
@@ -47,6 +46,16 @@ function TopSection() {
     };
   }, [isNotificationOpen]);
 
+  // Updated click handlers
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);  // Update active tab state first
+    if (tab === 'listing') {
+      navigate('/');      // Navigate to the listing page
+    } else if (tab === 'request') {
+      navigate('/request'); // Navigate to the request page
+    }
+  };
+
   return (
     <header>
       <div className="top-section-wrapper">
@@ -59,7 +68,7 @@ function TopSection() {
               placeholder="欲しいものを探す"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPress} // Trigger search on Enter key press
+              onKeyPress={handleKeyPress}
             />
           </div>
           <div className="notification-container" ref={notificationRef}>
@@ -82,8 +91,18 @@ function TopSection() {
           </div>
         </div>
         <div className="tab-bar">
-          <button className="tab" onClick={() => navigate('/')}>出品物一覧</button>
-          <button className="tab" onClick={() => navigate('/request')}>リクエスト</button>
+          <button
+            className={`tab ${activeTab === 'listing' ? 'active' : ''}`}
+            onClick={() => handleTabClick('listing')}
+          >
+            出品物一覧
+          </button>
+          <button
+            className={`tab ${activeTab === 'request' ? 'active' : ''}`}
+            onClick={() => handleTabClick('request')}
+          >
+            リクエスト
+          </button>
         </div>
       </div>
     </header>

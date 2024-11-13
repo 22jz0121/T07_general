@@ -1,0 +1,139 @@
+/* src/css/RequestDetail.css */
+
+.request-detail-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .top-navigation {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+  }
+  
+  .back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .page-title {
+    font-size: 1.2rem;
+    margin-left: 10px;
+  }
+  
+  .request-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
+  }
+  
+  .profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .avatar-icon {
+    font-size: 36px;
+  }
+  
+  .profile-info {
+    margin-left: 10px;
+  }
+  
+  .name {
+    font-weight: bold;
+  }
+  
+  .time {
+    font-size: 0.875rem;
+    color: #999;
+  }
+  
+  .content {
+    margin-top: 10px;
+  }
+  
+  .request-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .interaction-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .heart-icon {
+    cursor: pointer;
+    color: #e57373;
+  }
+  
+  .comments-section {
+    margin-top: 15px;
+  }
+  
+  .comment {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .comment .profile {
+    margin-right: 10px;
+  }
+  
+  .small-avatar {
+    font-size: 24px;
+  }
+  
+  .comment-text {
+    font-size: 0.9rem;
+    color: #333;
+    background: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 15px;
+  }
+  
+  .comment-input-container {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comment-input {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    margin: 0 10px;
+    outline: none;
+  }
+  
+  .send-button {
+    background: none;
+    border: none;
+    color: #48a9f8;
+    cursor: pointer;
+  }
+  
+  .image-icon {
+    color: #48a9f8;
+    cursor: pointer;
+  }
+  

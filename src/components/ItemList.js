@@ -1,38 +1,35 @@
-import React from 'react';
+// src/components/ItemList.js
+
+import React, { useEffect, useState } from 'react';
 import Item from './Item';
-import tvImage from '../img/tv-image.png';
 
 function ItemList() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem('items')) || [];
+    setItems(storedItems);
+  }, []);
+
   return (
     <div className="listing">
-      <Item
-        itemId="1"
-        name="日本電子"
-        time="3秒前"
-        imageSrc={tvImage}
-        title="55インチのスマートテレビ"
-        description="最新の4K対応で、55インチのスマートテレビです。"
-        location="受け渡し場所：12号館"
-      />
-      <Item
-        itemId="2"
-        name="日本電子"
-        time="3秒前"
-        imageSrc={tvImage}
-        title="55インチのスマートテレビ"
-        description="最新の4K対応で、55インチのスマートテレビです。"
-        location="受け渡し場所：12号館"
-      />
-      <Item
-        itemId="3"
-        name="日本電子"
-        time="3秒前"
-        imageSrc={tvImage}
-        title="55インチのスマートテレビ"
-        description="最新の4K対応で、55インチのスマートテレビです。"
-        location="受け渡し場所：12号館"
-      />
-      {/* Add additional items with different `itemId`s */}
+      {items.length > 0 ? (
+        items.map(item => (
+          <Item
+            key={item.id}
+            itemId={item.id}
+            name={item.name}
+            time={item.timestamp}
+            imageSrc={item.image}
+            title={item.name}
+            description={item.description}
+            location={`取引場所：${item.location}`}
+            transactionMethods={item.transactionMethods}  // Pass transaction methods
+          />
+        ))
+      ) : (
+        <p>現在、出品物はありません。</p>
+      )}
     </div>
   );
 }

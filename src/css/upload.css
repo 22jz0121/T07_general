@@ -103,6 +103,14 @@ body {
   /* Adds consistent spacing between the buttons */
 }
 
+.transaction-method-buttons {
+  display: flex;
+  justify-content: space-between;
+  /* Ensure equal spacing between buttons */
+  gap: 1.5rem;
+  /* Adds consistent spacing between the buttons */
+}
+
 .transaction-button {
   flex-grow: 1;
   padding: 0.5rem 0.75rem;
@@ -117,21 +125,19 @@ body {
   /* Add subtle hover effect */
 }
 
+/* Adjusted background colors */
 .transaction-button.giveaway {
-  background-color: #d1fae5;
-  /* Green background for 譲渡 */
-  color: #16a34a;
-}
-
-.transaction-button.rental {
-  background-color: #dbf4ff;
-  /* Blue background for レンタル */
+  background-color: #dbf4ff; /* Blue background for 譲渡 */
   color: #2563eb;
 }
 
+.transaction-button.rental {
+  background-color: #d1fae5; /* Green background for レンタル */
+  color: #16a34a;
+}
+
 .transaction-button.exchange {
-  background-color: #fed7aa;
-  /* Orange background for 交換 */
+  background-color: #fed7aa; /* Orange background for 交換 */
   color: #ea580c;
 }
 
@@ -184,3 +190,49 @@ body {
   color: #374151;
 }
 
+/* src/css/upload.css */
+
+/* Error message for invalid uploads */
+.upload-error {
+  color: #e11d48;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+/* Styling for image preview */
+.image-preview-container {
+  margin-top: 10px;
+}
+
+.image-preview {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+/* Selected state for transaction buttons */
+.transaction-button.selected {
+  border: 2px solid #2563eb; /* Darker border to highlight selection */
+  background-color: #bfdbfe; /* Light blue background to indicate selection */
+  color: #1d4ed8; /* Darker text color */
+}
+
+.transaction-button.giveaway.selected {
+  background-color: #bfdbfe; /* Slightly darker blue for selected */
+  color: #1e40af; /* Darker blue text color */
+  border-color: #2563eb;
+}
+
+.transaction-button.rental.selected {
+  background-color: #bbf7d0; /* Slightly darker green for selected */
+  color: #15803d; /* Darker green text color */
+  border-color: #16a34a;
+}
+
+.transaction-button.exchange.selected {
+  background-color: #fec89a; /* Slightly darker orange for selected */
+  color: #c2410c; /* Darker orange text color */
+  border-color: #ea580c;
+}

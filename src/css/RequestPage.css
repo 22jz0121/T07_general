@@ -55,39 +55,22 @@ body {
     opacity: 0.7;
 }
 
-/* Tab Bar */
-.tab-bar {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+ /* Add color inversion and underline styling */
+ .tab.active {
+  color: #000000;
+  font-weight: bold;
+  border-bottom: 2px solid #48a9f8;
 }
 
 .tab {
-    background: none;
-    border: none;
-    font-size: 16px;
-    color: #888;
-    cursor: pointer;
-    padding: 10px;
-    transition: all 0.2s ease-in-out;
+  color: #888; /* default inactive color */
 }
 
-.tab.active {
-    color: #000;
-    font-weight: bold;
-    border-bottom: 2px solid #48a9f8;
-}
-
-.tab:hover {
-    color: #48a9f8;
-}
 
 /* Request List */
 .request-list {
     padding: 10px;
-    padding-top: 130px;
+    padding-top: 145px;
 }
 
 /* Request Item Styles */
