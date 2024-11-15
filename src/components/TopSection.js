@@ -1,13 +1,14 @@
 // src/components/TopSection.js
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Search as SearchIcon, NotificationsNone as NotificationsIcon } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
 import '../css/top.css';
 
 function TopSection() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([
     '新しいメッセージが届きました',
@@ -15,7 +16,7 @@ function TopSection() {
     'リクエストが承認されました'
   ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('listing'); // New state for active tab
+  const [activeTab, setActiveTab] = useState('listing');
   const notificationRef = useRef(null);
 
   const handleKeyPress = (event) => {
@@ -46,11 +47,18 @@ function TopSection() {
     };
   }, [isNotificationOpen]);
 
-  // Updated click handlers
+  // Sync active tab based on the current URL path
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setActiveTab('listing');
+    } else if (location.pathname === '/request') {
+      setActiveTab('request');
+    }
+  }, [location.pathname]);
+
   const handleTabClick = (tab) => {
-    setActiveTab(tab);  // Update active tab state first
     if (tab === 'listing') {
-      navigate('/');      // Navigate to the listing page
+      navigate('/'); // Navigate to the listing page
     } else if (tab === 'request') {
       navigate('/request'); // Navigate to the request page
     }

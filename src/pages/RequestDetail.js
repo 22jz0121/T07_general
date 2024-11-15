@@ -1,19 +1,33 @@
 // src/pages/RequestDetail.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { FavoriteBorder, Reply as ReplyIcon, Send as SendIcon, Image as ImageIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import {
+  FavoriteBorder,
+  Send as SendIcon,
+  ArrowBack as ArrowBackIcon,
+  Add as AddIcon
+} from '@mui/icons-material';
 import tvImage from '../img/tv-image.png';
 import '../css/RequestDetail.css';
 
 function RequestDetail() {
   const navigate = useNavigate();
-  const [comments, setComments] = useState([
-    { id: 1, name: '電子太郎', text: '欲しいかもしれない', time: '3秒前' },
-    { id: 2, name: 'マサトシ', text: '売価', time: '1秒前' }
-  ]);
+
+  // Load comments from localStorage or initialize with default comments
+  const initialComments = JSON.parse(localStorage.getItem('comments')) || [
+    { id: 1, name: '電子太郎', text: '欲しいかもしれない', time: '3秒前', isUser: false },
+    { id: 2, name: 'マサトシ', text: '売価', time: '1秒前', isUser: false }
+  ];
+
+  const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState('');
+
+  // Save comments to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('comments', JSON.stringify(comments));
+  }, [comments]);
 
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
@@ -21,7 +35,8 @@ function RequestDetail() {
         id: Date.now(),
         name: '自分の名前', // Replace with the logged-in user's name
         text: newComment,
-        time: '今'
+        time: '今',
+        isUser: true
       };
       setComments([...comments, newCommentEntry]);
       setNewComment('');
@@ -59,32 +74,48 @@ function RequestDetail() {
 
       {/* Comments Section */}
       <div className="comments-section">
-        {comments.map((comment) => (
-          <div key={comment.id} className="comment">
-            <div className="profile">
-              <AccountCircleIcon className="avatar-icon small-avatar" />
-              <div className="profile-info">
-                <span className="name">{comment.name}</span>
-                <span className="time">{comment.time}</span>
+        {/* Top divider */}
+        <div className="divider"></div>
+
+        {comments.map((comment, index) => (
+          <React.Fragment key={comment.id}>
+            <div className={`comment ${comment.isUser ? 'user-comment' : 'other-comment'}`}>
+              <div className="comment-header-wrapper">
+                {/* Order: Avatar, Name, Time */}
+                <AccountCircleIcon className="avatar-icon small-avatar" />
+                <div className="comment-header">
+                  <span className="name">{comment.name}</span>
+                  <span className="time">{comment.time}</span>
+                </div>
+              </div>
+              <div className="comment-content">
+                <p className="comment-text">{comment.text}</p>
               </div>
             </div>
-            <p className="comment-text">{comment.text}</p>
-          </div>
+            {/* Conditional divider between comments */}
+            {index < comments.length - 1 && <div className="divider"></div>}
+          </React.Fragment>
         ))}
       </div>
 
-      {/* Comment Input */}
-      <div className="comment-input-container">
-        <ImageIcon className="image-icon" />
+      {/* Input Section */}
+      <div className="dm-input">
+        <button className="image-upload-button">
+          <AddIcon className="add-icon" />
+        </button>
         <input
           type="text"
-          placeholder="コメントを入力..."
+          placeholder="メッセージを入力..."
+          className="input-box"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          className="comment-input"
         />
-        <button onClick={handleCommentSubmit} className="send-button" disabled={!newComment.trim()}>
-          <SendIcon />
+        <button
+          className="send-button"
+          onClick={handleCommentSubmit}
+          disabled={!newComment.trim()}
+        >
+          <SendIcon className="send-icon" />
         </button>
       </div>
     </div>
