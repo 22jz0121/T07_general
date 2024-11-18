@@ -15,6 +15,7 @@ import Messages from './pages/messages';
 import MyPage from './pages/MyPage';
 import DirectMessage from './pages/DirectMessage';
 import Confirmation from './pages/Confirmation';
+import PostAddPage from './pages/PostAddPage'; // Import PostAddPage component
 import Footer from './components/Footer';
 import './css/top.css';
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/dm/:id" element={<DirectMessage />} />
+          <Route path="/post-add" element={<PostAddPage />} /> {/* New route for post add page */}
         </Routes>
         <Footer />
       </div>

@@ -1,10 +1,8 @@
 // src/components/RequestList.js
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Reply as ReplyIcon } from '@mui/icons-material';
-import tvImage from '../img/tv-image.png';
 import PostButton from './PostButton';
 import '../css/RequestPage.css';
 
@@ -34,27 +32,26 @@ function RequestItem({ id, name, time, description, imageSrc }) {
 }
 
 function RequestList() {
+  const [requests, setRequests] = useState([]);
+
+  // Load posts from localStorage
+  useEffect(() => {
+    const storedRequests = JSON.parse(localStorage.getItem('requests')) || [];
+    setRequests(storedRequests);
+  }, []);
+
   return (
     <div className="request-list">
-      <RequestItem
-        id="1"
-        name="電子太郎"
-        time="12時間前"
-        description="最新の4K対応で、55インチのスマートテレビが欲しいなあ。高画質で映画とかゲームを楽しみたいし、音質もいいモデルがいいなあ。あと、AIアシスタントが搭載されてたら嬉しい！"
-      />
-      <RequestItem
-        id="2"
-        name="日本電子"
-        time="3秒前"
-        description="お前が欲しい"
-        imageSrc={tvImage}
-      />
-      <RequestItem
-        id="3"
-        name="電子太郎"
-        time="1日前"
-        description="最新の4K対応で、55インチのスマートテレビが欲しいなあ。高画質で映画とかゲームを楽しみたいし、音質もいいモデルがいいなあ。あと、AIアシスタントが搭載されてたら嬉しい！"
-      />
+      {requests.map((request) => (
+        <RequestItem
+          key={request.id}
+          id={request.id}
+          name={request.name}
+          time={request.time}
+          description={request.description}
+          imageSrc={request.imageSrc}
+        />
+      ))}
       <PostButton />
     </div>
   );

@@ -1,11 +1,14 @@
 // src/components/PostButton.js
 import React from 'react';
-import { Add as AddIcon } from '@mui/icons-material'; // Import Material UI Add icon
-import '../css/RequestPage.css'; // Assuming the CSS file for styling exists
+import { Add as AddIcon } from '@mui/icons-material'; // Material UI Add icon
+import { useNavigate } from 'react-router-dom';
+import '../css/RequestPage.css';
 
 function PostButton() {
+  const navigate = useNavigate();
+
   const handlePostClick = () => {
-    alert("Starting a new post!");
+    navigate('/post-add'); // Navigate to the "Post Add" page
   };
 
   return (
