@@ -3,13 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import Item from './Item';
 
-function ItemList() {
+function ItemList({ userId }) { // Accept userId as a prop
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     const storedItems = JSON.parse(localStorage.getItem('items')) || [];
-    setItems(storedItems);
-  }, []);
+    // Filter items by userId
+    const userItems = storedItems.filter(item => item.userId === userId);
+    setItems(userItems);
+  }, [userId]);
 
   return (
     <div className="listing">
@@ -24,11 +26,11 @@ function ItemList() {
             title={item.name}
             description={item.description}
             location={`取引場所：${item.location}`}
-            transactionMethods={item.transactionMethods}  // Pass transaction methods
+            transactionMethods={item.transactionMethods} // Pass transaction methods
           />
         ))
       ) : (
-        <p>現在、出品物はありません。</p>
+        <p className='p'>出品物はありません。</p>
       )}
     </div>
   );

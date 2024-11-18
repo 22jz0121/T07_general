@@ -103,6 +103,10 @@ body {
     padding-top: 145px;
 }
 
+.p {
+    text-align: center;
+}
+
 .item {
     background-color: white;
     margin-bottom: 10px;

@@ -1,4 +1,5 @@
 // src/components/RequestList.js
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -31,28 +32,32 @@ function RequestItem({ id, name, time, description, imageSrc }) {
   );
 }
 
-function RequestList() {
+function RequestList({ userId, showPostButton = true }) { // Add showPostButton prop
   const [requests, setRequests] = useState([]);
 
-  // Load posts from localStorage
   useEffect(() => {
     const storedRequests = JSON.parse(localStorage.getItem('requests')) || [];
-    setRequests(storedRequests);
-  }, []);
+    const userRequests = storedRequests.filter(request => request.userId === userId);
+    setRequests(userRequests);
+  }, [userId]);
 
   return (
     <div className="request-list">
-      {requests.map((request) => (
-        <RequestItem
-          key={request.id}
-          id={request.id}
-          name={request.name}
-          time={request.time}
-          description={request.description}
-          imageSrc={request.imageSrc}
-        />
-      ))}
-      <PostButton />
+      {requests.length > 0 ? (
+        requests.map((request) => (
+          <RequestItem
+            key={request.id}
+            id={request.id}
+            name={request.name}
+            time={request.time}
+            description={request.description}
+            imageSrc={request.imageSrc}
+          />
+        ))
+      ) : (
+        <p className='p'>リクエストはありません。</p>
+      )}
+      {showPostButton && <PostButton />} {/* Conditionally render PostButton */}
     </div>
   );
 }
