@@ -47,9 +47,16 @@
     font-size: 1.5rem;
   }
   
-  .transaction-details,
-  .location-details {
+  .transaction-details {
     margin-top: 8px;
+  }
+
+  .location-details {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: 16px;
+    margin-right: 16px;
   }
   
   .badge {
@@ -81,10 +88,5 @@
   
   /* Heart Icon Positioning */
   .heart-icon {
-    position: absolute;
-    top: -50px;
-    right: 16px;
-    font-size: 28px;
-    cursor: pointer;
   }
   

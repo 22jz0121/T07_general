@@ -1,14 +1,19 @@
-// src/components/RequestList.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Reply as ReplyIcon } from '@mui/icons-material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import PostButton from './PostButton';
 import '../css/RequestPage.css';
 
 function RequestItem({ id, name, time, description, imageSrc }) {
   const navigate = useNavigate();
+  const [liked, setLiked] = useState(false); // Manage the like state
+
+  const handleLikeClick = (e) => {
+    e.stopPropagation(); // Prevent navigation when liking
+    setLiked(!liked);
+  };
 
   const handleClick = () => {
     navigate(`/request/${id}`);
@@ -27,7 +32,13 @@ function RequestItem({ id, name, time, description, imageSrc }) {
         <p>{description}</p>
         {imageSrc && <img src={imageSrc} alt="Request" className="request-image" />}
       </div>
-      <ReplyIcon className="reply-icon" />
+      <div className="like-button" onClick={handleLikeClick}>
+        {liked ? (
+          <FavoriteIcon className="liked-icon" style={{ color: 'red' }} />
+        ) : (
+          <FavoriteBorderIcon className="like-icon" />
+        )}
+      </div>
     </div>
   );
 }
@@ -37,7 +48,7 @@ function RequestList({ userId, showPostButton = true }) { // Add showPostButton 
 
   useEffect(() => {
     const storedRequests = JSON.parse(localStorage.getItem('requests')) || [];
-    const userRequests = storedRequests.filter(request => request.userId === userId);
+    const userRequests = storedRequests.filter((request) => request.userId === userId);
     setRequests(userRequests);
   }, [userId]);
 
@@ -55,7 +66,7 @@ function RequestList({ userId, showPostButton = true }) { // Add showPostButton 
           />
         ))
       ) : (
-        <p className='p'>リクエストはありません。</p>
+        <p className="p">リクエストはありません。</p>
       )}
       {showPostButton && <PostButton />} {/* Conditionally render PostButton */}
     </div>

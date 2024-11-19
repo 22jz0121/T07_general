@@ -1,13 +1,12 @@
-// src/pages/RequestDetail.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {
+  Favorite,
   FavoriteBorder,
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
-  Add as AddIcon
+  Add as AddIcon,
 } from '@mui/icons-material';
 import tvImage from '../img/tv-image.png';
 import '../css/RequestDetail.css';
@@ -15,16 +14,18 @@ import '../css/RequestDetail.css';
 function RequestDetail() {
   const navigate = useNavigate();
 
-  // Load comments from localStorage or initialize with default comments
+  // Comments state
   const initialComments = JSON.parse(localStorage.getItem('comments')) || [
     { id: 1, name: '電子太郎', text: '欲しいかもしれない', time: '3秒前', isUser: false },
-    { id: 2, name: 'マサトシ', text: '売価', time: '1秒前', isUser: false }
+    { id: 2, name: 'マサトシ', text: '売価', time: '1秒前', isUser: false },
   ];
-
   const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState('');
 
-  // Save comments to localStorage whenever they change
+  // Like state
+  const [liked, setLiked] = useState(false);
+
+  // Save comments to localStorage
   useEffect(() => {
     localStorage.setItem('comments', JSON.stringify(comments));
   }, [comments]);
@@ -36,11 +37,15 @@ function RequestDetail() {
         name: '自分の名前', // Replace with the logged-in user's name
         text: newComment,
         time: '今',
-        isUser: true
+        isUser: true,
       };
       setComments([...comments, newCommentEntry]);
       setNewComment('');
     }
+  };
+
+  const toggleLike = () => {
+    setLiked(!liked);
   };
 
   return (
@@ -64,24 +69,27 @@ function RequestDetail() {
         </div>
         <div className="content">
           <p>お前が欲しい</p>
-          <img src={tvImage} alt="Request" className="request-image" />
+          <img src={tvImage} alt="Request" className="request-images" />
         </div>
         <div className="interaction-bar">
           <span className="comment-count">コメント {comments.length}</span>
-          <FavoriteBorder className="heart-icon" />
+          <div onClick={toggleLike} className="likes-button">
+            {liked ? (
+              <Favorite className="heart-icon liked" />
+            ) : (
+              <FavoriteBorder className="heart-icon" />
+            )}
+          </div>
         </div>
       </div>
 
       {/* Comments Section */}
       <div className="comments-section">
-        {/* Top divider */}
         <div className="divider"></div>
-
         {comments.map((comment, index) => (
           <React.Fragment key={comment.id}>
             <div className={`comment ${comment.isUser ? 'user-comment' : 'other-comment'}`}>
               <div className="comment-header-wrapper">
-                {/* Order: Avatar, Name, Time */}
                 <AccountCircleIcon className="avatar-icon small-avatar" />
                 <div className="comment-header">
                   <span className="name">{comment.name}</span>
@@ -92,7 +100,6 @@ function RequestDetail() {
                 <p className="comment-text">{comment.text}</p>
               </div>
             </div>
-            {/* Conditional divider between comments */}
             {index < comments.length - 1 && <div className="divider"></div>}
           </React.Fragment>
         ))}

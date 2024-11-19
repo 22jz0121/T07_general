@@ -1,6 +1,4 @@
-// src/pages/MyPage.js
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -11,16 +9,36 @@ import SchoolIcon from '@mui/icons-material/School';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Footer from '../components/Footer'; // Import your Footer component
+import Footer from '../components/Footer';
 import '../css/MyPage.css';
 
 const MyPage = () => {
     const navigate = useNavigate();
+    const currentUserId = '123'; // Replace with actual logged-in user ID
+    const [userProfile, setUserProfile] = useState({
+        name: '',
+        avatar: '',
+    });
 
-    // Function to navigate to the profile page
+    // Load user profile on component mount
+    useEffect(() => {
+        const storedProfile = JSON.parse(localStorage.getItem(`profile-${currentUserId}`));
+        if (storedProfile) {
+            setUserProfile({
+                name: storedProfile.name || 'プロフィールを編集する',
+                avatar: storedProfile.avatar || '',
+            });
+        } else {
+            setUserProfile({
+                name: 'プロフィールを編集する',
+                avatar: '',
+            });
+        }
+    }, [currentUserId]);
+
+    // Navigate to profile page
     const handleProfileClick = () => {
-        const currentUserId = '123'; // Replace with actual logged-in user ID from auth system
-        navigate(`/profile/${currentUserId}`); // Navigate to the current user's profile page
+        navigate(`/profile/${currentUserId}`);
     };
 
     return (
@@ -35,9 +53,13 @@ const MyPage = () => {
 
             {/* Profile Section */}
             <div className="profile-section" onClick={handleProfileClick}>
-                <AccountCircleIcon className="profile-icon" style={{ fontSize: '36px' }} /> {/* アイコンのサイズを変更 */}
-                <span className="profile-name">日本電子</span>
-                <ChevronRightIcon className="right-arrow-icon" style={{ fontSize: '20px' }} /> {/* アイコンのサイズを変更 */}
+                {userProfile.avatar ? (
+                    <img src={userProfile.avatar} alt="User Avatar" className="profile-avatar" />
+                ) : (
+                    <AccountCircleIcon className="profile-icon" />
+                )}
+                <span className="profile-name">{userProfile.name}</span>
+                <ChevronRightIcon className="right-arrow-icon"  />
             </div>
 
             {/* Menu Grid */}

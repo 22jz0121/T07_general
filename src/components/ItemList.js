@@ -105,6 +105,10 @@ function ItemList() {
     return <div>Loading...</div>;
   }
 
+  const handleItemClick = (itemId) => {
+    navigate(`/listing/${itemId}`);
+  };
+
   return (
     <div>
       {items.map(item => (
