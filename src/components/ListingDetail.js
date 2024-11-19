@@ -43,8 +43,10 @@ function ListingDetail() {
           </div>
 
           <div className="location-details">
-            <span>受け渡し場所:</span>
-            <span>12号館</span>
+            <p>受け渡し場所:12号館</p>
+                <span onClick={handleLike} className="heart-icon">
+                {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
+            </span>
           </div>
 
           <div className="transaction-button-container">
@@ -54,9 +56,7 @@ function ListingDetail() {
             >
               取引手続きへ
             </button>
-            <span onClick={handleLike} className="heart-icon">
-              {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
-            </span>
+           
           </div>
         </div>
       </div>

@@ -17,8 +17,6 @@ body {
     background-color: white;
 }
 
-
-
 /* Top Navigation */
 .top-navigation {
     position: fixed;
@@ -37,64 +35,41 @@ body {
     /* 前面に表示 */
 }
 
-.back-button {
-    background: none;
-    /* Remove button background */
-    border: none;
-    /* Remove button border */
-    padding: 0;
-    /* Remove padding to make it minimal */
-    margin-left: 0;
-    /* Align to the left */
-    cursor: pointer;
-}
-
-.back-icon {
-    color: #374151;
-    font-size: 1.5rem;
-    /* Ensure the icon is the right size */
-}
-
-.page-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    /* Center the title */
-    font-size: 1.25rem;
-    color: #374151;
-}
-
 
 /* Profile Section */
 .profile-section {
-    display: flex;
     align-items: center;
-    padding: 22px 16px 0 16px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e1e1e1;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
+  }
+  
+  .profile-avatar {
+    margin-left: 18px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .profile-icon {
+    color: #888;
+    margin-right: 10px;
+  }
+  
+  .profile-name {
+    flex: 1;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
 
-.profile-section:hover {
-    background-color: #f9f9f9;
-}
-
-/* Profile Icon */
-.profile-icon {
-    font-size: 36px;
-    /* Balanced size with text */
-    color: gray;
-    margin-right: 12px;
-    margin-left: 12px;
-}
-
-/* Profile Name */
-.profile-name {
-    font-size: 1.5rem;
-    /* Slightly larger font size */
-    font-weight: 500;
-    color: #374151;
-    margin-right: 8px;
-}
+  .right-arrow-icon {
+    color: #888;
+    margin-left: 10px;
+  }
+  
 
 /* Right Arrow Icon */
 .right-arrow-icon {
