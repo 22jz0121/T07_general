@@ -19,18 +19,24 @@ const ProfilePage = () => {
     const currentUserId = '123'; // Replace with actual authentication logic
     setIsCurrentUser(userId === currentUserId);
 
-    // Fetch user profile
-    const fetchedProfile = {
-      id: userId,
-      name: userId === currentUserId ? 'あなたの名前' : '他のユーザー',
-      bio: 'すがわら だいすけです。ずんだ餅が好きです',
-      avatar: 'https://source.unsplash.com/random/100x100?profile',
-    };
-    setUserProfile(fetchedProfile);
+    // Fetch profile from localStorage or default values
+    const storedProfile = JSON.parse(localStorage.getItem(`profile-${userId}`));
+    if (storedProfile) {
+      setUserProfile(storedProfile);
+    } else {
+      const defaultProfile = {
+        id: userId,
+        name: userId === currentUserId ? 'あなたの名前' : '他のユーザー',
+        bio: 'すがわら だいすけです。ずんだ餅が好きです',
+        avatar: 'https://source.unsplash.com/random/100x100?profile',
+        num: '12AB3456', // Default student number
+      };
+      setUserProfile(defaultProfile);
+    }
 
     // Retrieve header image from localStorage
     const savedHeaderImage = localStorage.getItem(`headerImage-${userId}`);
-    setHeaderImage(savedHeaderImage || 'https://source.unsplash.com/random/600x200?nature'); // Use saved image or default
+    setHeaderImage(savedHeaderImage || 'https://source.unsplash.com/random/600x200?nature');
   }, [userId]);
 
   const handleHeaderImageChange = (e) => {
@@ -86,12 +92,13 @@ const ProfilePage = () => {
             {isCurrentUser && (
               <button
                 className="profile-header-edit-button"
-                onClick={() => navigate('/profile-edit')}
+                onClick={() => navigate(`/profile-edit/${userId}`)}
               >
                 <EditIcon /> 編集
               </button>
             )}
           </div>
+          <p className="profile-header-num">@{userProfile.num}</p>
           <p className="profile-header-bio">{userProfile.bio}</p>
         </div>
       </div>

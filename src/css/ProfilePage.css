@@ -37,7 +37,7 @@
     margin-bottom: 4px;
   }
   
-  .profile-header-username {
+  .profile-header-num{
     font-size: 16px;
     color: #555;
     margin-bottom: 10px;
@@ -47,7 +47,6 @@
     font-size: 14px;
     color: #333;
     line-height: 1.4;
-    margin-top: 16px;
   }
   
   .profile-header-edit-button {
@@ -70,6 +69,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 60px;
   }
   
   .cover-image {

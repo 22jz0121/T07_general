@@ -1,0 +1,76 @@
+.profile-edit-page {
+    padding: 20px;
+    color: #333;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 60px;
+}
+
+.avatar-editor {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.avatar-upload-label {
+    display: inline-block;
+    background-color: #1d9bf0;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.edit-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edit-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.bio-input {
+    height: 80px;
+}
+
+.save-button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #1d9bf0;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.save-button:hover {
+    background-color: #007acc;
+}
