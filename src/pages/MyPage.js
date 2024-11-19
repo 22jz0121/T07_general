@@ -1,3 +1,5 @@
+// src/pages/MyPage.js
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -15,9 +17,10 @@ import '../css/MyPage.css';
 const MyPage = () => {
     const navigate = useNavigate();
 
-    // Function to navigate to the profile edit page
+    // Function to navigate to the profile page
     const handleProfileClick = () => {
-        navigate('/profile-edit'); // Adjust this path as needed
+        const currentUserId = '123'; // Replace with actual logged-in user ID from auth system
+        navigate(`/profile/${currentUserId}`); // Navigate to the current user's profile page
     };
 
     return (
