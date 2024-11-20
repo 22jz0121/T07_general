@@ -20,6 +20,8 @@ import ProfilePage from './pages/ProfilePage';
 import ProfileEditPage from './pages/ProfileEditPage'; // Import ProfileEditPage
 import Footer from './components/Footer';
 import Login from './components/Login'
+import GoogleCallback from './components/GoogleCallback';
+
 
 import './css/top.css';
 
@@ -47,6 +49,7 @@ function App() {
           <Route path="/post-add" element={<PostAddPage />} />
           <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/profile-edit/:userId" element={<ProfileEditPage />} /> {/* Route for ProfileEditPage */}
+          <Route path="/google-callback" element={<GoogleCallback />} />
         </Routes>
         <Footer />
       </div>
