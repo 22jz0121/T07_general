@@ -21,6 +21,7 @@ import ProfileEditPage from './pages/ProfileEditPage'; // Import ProfileEditPage
 import Footer from './components/Footer';
 import Login from './components/Login'
 import GoogleCallback from './components/GoogleCallback';
+import LikedItemsPage from './pages/LikedItemsPage'; 
 
 
 import './css/top.css';
@@ -50,6 +51,7 @@ function App() {
           <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/profile-edit/:userId" element={<ProfileEditPage />} /> {/* Route for ProfileEditPage */}
           <Route path="/google-callback" element={<GoogleCallback />} />
+          <Route path="/liked-items" element={<LikedItemsPage />} /> {/* New route */}
         </Routes>
         <Footer />
       </div>

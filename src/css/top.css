@@ -241,6 +241,11 @@ body {
     color: #666;
 }
 
+.item-footer {
+    display: flex;    
+    justify-content: space-between;
+}
+
 .ppppppp {
     display: flex;
     justify-content: space-between;

@@ -59,12 +59,12 @@ const MyPage = () => {
                     <AccountCircleIcon className="profile-icon" />
                 )}
                 <span className="profile-name">{userProfile.name}</span>
-                <ChevronRightIcon className="right-arrow-icon"  />
+                <ChevronRightIcon className="right-arrow-icon" />
             </div>
 
             {/* Menu Grid */}
             <div className="menu-grid">
-                <div className="menu-item">
+                <div className="menu-item" onClick={() => navigate('/liked-items')}>
                     <FavoriteBorderIcon className="menu-icon" />
                     <span className="menu-label">いいね一覧</span>
                 </div>

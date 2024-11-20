@@ -43,7 +43,7 @@ function ListingDetail() {
           </div>
 
           <div className="location-details">
-            <p>受け渡し場所:12号館</p>
+            <p className='ppp'>受け渡し場所:12号館</p>
                 <span onClick={handleLike} className="heart-icon">
                 {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
             </span>

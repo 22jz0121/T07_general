@@ -48,8 +48,8 @@ function Item({ itemId, name, time, imageSrc, title, description, location, tran
               ))}
           </div>
           <div className="item-footer">
-            <span className="location">{location}</span>
-            <span
+            <div><span className="location">{location}</span></div>
+            <div><span
               onClick={(e) => {
                 e.stopPropagation(); // Prevent click event from propagating to parent
                 handleLike();
@@ -57,7 +57,7 @@ function Item({ itemId, name, time, imageSrc, title, description, location, tran
               className="heart"
             >
               {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
-            </span>
+            </span></div>
           </div>
         </div>
       </div>
