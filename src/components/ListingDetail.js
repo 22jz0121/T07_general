@@ -38,14 +38,25 @@ function ListingDetail() {
           <p>最新の4K対応で、55インチのスマートテレビです。親に言って来いと言われたのでほしい人がいればお譲りします。</p>
 
           <div className="transaction-details">
-            <span>希望取引方法:</span>
-            <span className="badge">譲渡</span>
+            <div>
+              <span>希望取引方法:</span>
+              <span className="badge">譲渡</span>
+            </div>
+            <div>
+              <span
+                className="tttt"
+                style={{ cursor: 'pointer'}} // Optional styling
+                onClick={() => window.open('https://forms.gle/YMW4aqQLWQ5vEzaUA', '_blank')}
+              >
+                通報する
+              </span>
+            </div>
           </div>
 
           <div className="location-details">
             <p className='ppp'>受け渡し場所:12号館</p>
-                <span onClick={handleLike} className="heart-icon">
-                {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
+            <span onClick={handleLike} className="heart-icon">
+              {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
             </span>
           </div>
 
@@ -56,7 +67,7 @@ function ListingDetail() {
             >
               取引手続きへ
             </button>
-           
+
           </div>
         </div>
       </div>

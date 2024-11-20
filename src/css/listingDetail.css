@@ -47,8 +47,16 @@
     font-size: 1.5rem;
   }
   
+  .tttt {
+    font-size: 0.875rem;
+    color: #888;
+    margin-right: 12px;
+  }
+
   .transaction-details {
     margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .location-details {

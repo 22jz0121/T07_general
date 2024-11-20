@@ -31,6 +31,10 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.top-section-wrapper + .listing {
+    margin-top: 140px;
+}
+
 .searchs-container {
     position: relative;
     flex-grow: 1;
@@ -79,6 +83,8 @@ body {
 }
 
 .tab-bar {
+    width: 100%;
+    position: fixed;
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
@@ -100,7 +106,6 @@ body {
 
 .listing {
     padding: 10px;
-    padding-top: 145px;
 }
 
 .p {

@@ -8,7 +8,6 @@ function RequestPage() {
   return (
     <div className="app">
       <TopSection />
-      <RequestList />
       <Footer />
     </div>
   );

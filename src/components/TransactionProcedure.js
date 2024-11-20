@@ -18,37 +18,55 @@ function TransactionProcedure() {
         date: new Date(),
       };
 
-      // Save message to localStorage with a specific key for the user (e.g., dm-user-1)
-      const conversationId = 'dm-user-1';
+      const itemId = 1; // Replace with the actual item ID
+      const conversationId = `dm-user-${itemId}`;
+      
+      // Save the message to localStorage
       const existingMessages = JSON.parse(localStorage.getItem(`dm-messages-${conversationId}`)) || [];
       const updatedMessages = [...existingMessages, initialMessage];
-
-      // Store the updated messages in localStorage
       localStorage.setItem(`dm-messages-${conversationId}`, JSON.stringify(updatedMessages));
 
-      // Save/update the latest message for the DM list in 'messages'
+      // Save the latest message for the DM summary
       const summaryMessages = JSON.parse(localStorage.getItem('messages')) || [];
       const summaryIndex = summaryMessages.findIndex((msg) => msg.id === conversationId);
 
       const summaryMessage = {
         id: conversationId,
-        name: '日本電子', // Set the name appropriately
-        message: message, // Display the full message text here
-        time: initialMessage.time
+        name: '日本電子', // Update appropriately
+        message: message,
+        time: initialMessage.time,
       };
 
       if (summaryIndex > -1) {
-        // Update existing conversation in summary
         summaryMessages[summaryIndex] = summaryMessage;
       } else {
-        // Add new conversation to summary
         summaryMessages.push(summaryMessage);
       }
-
       localStorage.setItem('messages', JSON.stringify(summaryMessages));
 
+      // Mark the item as "取引中" in localStorage
+      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      const transactionIndex = transactions.findIndex((item) => item.id === itemId);
+
+      const transactionItem = {
+        id: itemId,
+        name: '55インチのスマートテレビ',
+        status: '取引中', // Ongoing transaction
+        description: '最新の4K対応スマートテレビ。',
+        image: 'https://source.unsplash.com/random/300x200?tv', // Update dynamically if needed
+        timestamp: new Date().toLocaleString(),
+      };
+
+      if (transactionIndex > -1) {
+        transactions[transactionIndex] = transactionItem;
+      } else {
+        transactions.push(transactionItem);
+      }
+
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+
       setMessage(''); // Clear the input field
-      navigate(`/dm/${conversationId}`); // Navigate to DirectMessage page for the conversation
+      navigate(`/dm/${conversationId}`); // Navigate to DirectMessage page
     }
   };
 

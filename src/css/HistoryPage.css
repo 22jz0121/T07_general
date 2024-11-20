@@ -1,0 +1,16 @@
+.history-page-container {
+    padding-top: 60px;
+}
+
+.transaction-list {
+    padding: 16px;
+}
+
+.transaction-item {
+    display: flex;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+}

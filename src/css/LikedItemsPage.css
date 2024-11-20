@@ -1,0 +1,23 @@
+.liked-items-page {
+    padding-top: 60px;
+}
+
+.liked-items-list {
+    margin-top: 20px;
+}
+
+.pp {
+    text-align: center;
+    margin: 60px;
+}
+
+.tab-bar {
+    position: sticky; /* Sticky positioning */
+    top: 60px; /* Adjust this based on the height of top-navigation */
+    z-index: 999; /* Ensure it appears above other elements */
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    background-color: #fff; /* Ensure background color covers underlying elements */
+    border-bottom: 1px solid #ddd;
+}

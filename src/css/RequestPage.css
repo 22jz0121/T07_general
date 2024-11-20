@@ -14,6 +14,10 @@ body {
     flex-grow: 1;
 }
 
+.top-section-wrapper + .request-list {
+  margin-top: 140px;
+}
+
 .search-box {
     width: 100%;
     padding-left: 40px;
@@ -70,7 +74,6 @@ body {
 /* Request List */
 .request-list {
     padding: 10px;
-    padding-top: 145px;
 }
 
 /* Request Item Styles */

@@ -10,7 +10,6 @@ function Top() {
   return (
     <div>
       <TopSection />
-      <ItemList />
       <Footer />
     </div>
   );
