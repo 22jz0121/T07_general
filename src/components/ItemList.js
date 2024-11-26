@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Item from './Item';
 
-function ItemList() {
+function ItemList({ userId }) {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [likedItems, setLikedItems] = useState([]); // ユーザーがいいねしたアイテム
-  const [myFavoriteIds, setMyFavoriteIds] = useState([]); // /myfavorite から取得したアイテムID
-  const [error, setError] = useState(null);
-  const isMounted = useRef(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     isMounted.current = true;
@@ -109,7 +106,7 @@ function ItemList() {
       {items.map(item => (
         <Item 
           key={item.ItemID} 
-          name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
+          naSme={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
           userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
           itemId={item.ItemID} 
           title={item.ItemName} 

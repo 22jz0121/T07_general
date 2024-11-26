@@ -41,6 +41,11 @@ const MyPage = () => {
         navigate(`/profile/${currentUserId}`);
     };
 
+    // Redirect to external URL
+    const handleSchoolInfoClick = () => {
+        window.location.href = 'https://www.jec.ac.jp/school-outline/current-student/';
+    };
+
     return (
         <div className="mypage-container">
             {/* Top Navigation */}
@@ -59,28 +64,28 @@ const MyPage = () => {
                     <AccountCircleIcon className="profile-icon" />
                 )}
                 <span className="profile-name">{userProfile.name}</span>
-                <ChevronRightIcon className="right-arrow-icon"  />
+                <ChevronRightIcon className="right-arrow-icon" />
             </div>
 
             {/* Menu Grid */}
             <div className="menu-grid">
-                <div className="menu-item">
+                <div className="menu-item" onClick={() => navigate('/liked-items')}>
                     <FavoriteBorderIcon className="menu-icon" />
                     <span className="menu-label">いいね一覧</span>
                 </div>
-                <div className="menu-item">
+                <div className="menu-item" onClick={() => navigate('/history')}>
                     <HistoryIcon className="menu-icon" />
                     <span className="menu-label">履歴</span>
                 </div>
-                <div className="menu-item">
+                <div className="menu-item" onClick={() => window.location.href = 'https://forms.gle/4fm6jAafJ1APJYo69'}>
                     <HelpOutlineIcon className="menu-icon" />
                     <span className="menu-label">お問い合わせ</span>
                 </div>
-                <div className="menu-item">
+                <div className="menu-item" onClick={handleSchoolInfoClick}>
                     <SchoolIcon className="menu-icon" />
                     <span className="menu-label">学内情報</span>
                 </div>
-                <div className="menu-item">
+                <div className="menu-item" onClick={() => navigate('/qa')}>
                     <QuestionAnswerIcon className="menu-icon" />
                     <span className="menu-label">Q&A</span>
                 </div>

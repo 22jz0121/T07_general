@@ -1,9 +1,9 @@
-// src/components/TopSection.js
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search as SearchIcon, NotificationsNone as NotificationsIcon } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
+import ItemList from './ItemList'; // Import ItemList
+import RequestList from './RequestList'; // Import RequestList
 import '../css/top.css';
 
 function TopSection() {
@@ -62,6 +62,7 @@ function TopSection() {
     } else if (tab === 'request') {
       navigate('/request'); // Navigate to the request page
     }
+    setActiveTab(tab); // Update the active tab
   };
 
   return (
@@ -113,6 +114,9 @@ function TopSection() {
           </button>
         </div>
       </div>
+      {/* Embed ItemList or RequestList component based on activeTab */}
+      {activeTab === 'listing' && <ItemList />}
+      {activeTab === 'request' && <RequestList />}
     </header>
   );
 }

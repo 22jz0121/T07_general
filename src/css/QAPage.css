@@ -1,0 +1,40 @@
+.qa-page {
+    padding: 20px;
+    padding-top: 60px;
+  }
+    
+  .faq-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* FAQ items間の余白 */
+    padding: 20px;
+  }
+  
+  .faq-item {
+    background-color: #ffffff; /* 背景色 */
+    border: 1px solid #e5e7eb; /* 薄いグレーの枠線 */
+    border-radius: 8px; /* 角丸 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 軽い影 */
+    padding: 15px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  .faq-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* ホバー時の影 */
+    transform: translateY(-4px); /* ホバー時の浮き上がり */
+  }
+  
+  .faq-question {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1f2937; /* ダークグレー */
+    margin-bottom: 10px;
+  }
+  
+  .faq-answer {
+    font-size: 0.95rem;
+    color: #4b5563; /* ミディアムグレー */
+    line-height: 1.5; /* 行間を広く */
+  }
+  
+  
