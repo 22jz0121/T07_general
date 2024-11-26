@@ -17,7 +17,7 @@ function Item({ itemId, name, time, imageSrc, title, description, location, onLi
   };
 
   return (
-    <div className="item" onClick={handleItemClick} style={{ cursor: 'pointer' }}>
+    <div className="item">
       <div className="profile">
         <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
         <div className="profile-info">
@@ -26,7 +26,7 @@ function Item({ itemId, name, time, imageSrc, title, description, location, onLi
         </div>
       </div>
       <div className="item-content">
-        <img src={imageSrc} alt="Item" className="item-image" />
+        <img src={imageSrc} alt="Item Image" className="item-image" />
         <div className="item-info">
           <h3>{title}</h3>
           <p>{description}</p>
