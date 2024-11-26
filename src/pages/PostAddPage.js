@@ -1,43 +1,62 @@
-// src/pages/PostAddPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ImageIcon from '@mui/icons-material/Image';
 import '../css/RequestPage.css';
 
+const MAX_IMAGE_SIZE_MB = 5; // 最大画像サイズを5MBに設定
+
 function PostAddPage() {
   const navigate = useNavigate();
   const [postText, setPostText] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+  const [uploadError, setUploadError] = useState(null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      const validTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validTypes.includes(file.type)) {
+        setUploadError("サポートされていないファイル形式です。JPEG, PNG, または GIF のみが許可されています。");
+        return;
+      }
+
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > MAX_IMAGE_SIZE_MB) {
+        setUploadError(`ファイルサイズが大きすぎます。最大サイズは ${MAX_IMAGE_SIZE_MB} MB です。`);
+        return;
+      }
+
+      setUploadError(null);
+      setImage(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handlePostSubmit = () => {
+  const handlePostSubmit = async () => {
     if (postText.trim() || image) {
-      // Load existing posts from localStorage
-      const existingPosts = JSON.parse(localStorage.getItem('requests')) || [];
+      const formData = new FormData();
+      formData.append('RequestContent', postText);
+      formData.append('RequestImage', image);
 
-      // Create a new post object
-      const newPost = {
-        id: Date.now(),
-        name: '自分の名前', // Replace with the user's actual name if available
-        time: '今', // Use a library like date-fns or moment.js for accurate timestamps
-        description: postText,
-        imageSrc: image,
-      };
+      try {
+        const response = await fetch('https://loopplus.mydns.jp/api/request', {
+          method: 'POST',
+          body: formData,
+          credentials: 'include', // 必要に応じてクッキーを送信
+        });
 
-      // Save the new post to localStorage
-      localStorage.setItem('requests', JSON.stringify([newPost, ...existingPosts]));
-
-      // Redirect to the request list
-      navigate('/request');
+        if (response.ok) {
+          navigate('/request'); // リクエスト一覧にリダイレクト
+        } else {
+          const errorData = await response.json();
+          alert(errorData.message || "エラーが発生しました。");
+        }
+      } catch (error) {
+        console.error('Error uploading request:', error);
+        alert("ネットワークエラーが発生しました。");
+      }
     } else {
       alert('テキストか画像を入力してください！');
     }
@@ -73,6 +92,7 @@ function PostAddPage() {
           style={{ display: 'none' }}
           onChange={handleImageUpload}
         />
+        {uploadError && <p className="upload-error">{uploadError}</p>}
       </div>
 
       {imagePreview && (
@@ -90,3 +110,4 @@ function PostAddPage() {
 }
 
 export default PostAddPage;
+

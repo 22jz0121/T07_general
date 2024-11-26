@@ -1,5 +1,3 @@
-// src/pages/Upload.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
@@ -36,7 +34,7 @@ const Upload = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -45,7 +43,7 @@ const Upload = () => {
       ...formData,
       transactionMethods: formData.transactionMethods.includes(method)
         ? formData.transactionMethods.filter((m) => m !== method)
-        : [...formData.transactionMethods, method]
+        : [...formData.transactionMethods, method],
     });
   };
 
@@ -71,7 +69,7 @@ const Upload = () => {
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const { name, description, transactionMethods, location } = formData;
 
     if (!name || !description || transactionMethods.length === 0 || !location || !image) {
@@ -79,8 +77,30 @@ const Upload = () => {
       return;
     }
 
-    // Navigate to confirmation page with form data
-    navigate('/confirmation', { state: { ...formData, image } });
+    const formDataToSend = new FormData();
+    formDataToSend.append('ItemName', name);
+    formDataToSend.append('Description', description);
+    formDataToSend.append('Category', 1); // ここは適宜選択したカテゴリのIDに変更
+    formDataToSend.append('ItemImage', image); // 画像ファイルを追加
+
+    try {
+      const response = await fetch('https://loopplus.mydns.jp/api/item', {
+        method: 'POST',
+        body: formDataToSend,
+        credentials: 'include', // 必要に応じてクッキーを送信
+
+      });
+
+      if (response.ok) {
+        navigate('/confirmation', { state: { ...formData, image } });
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "エラーが発生しました。");
+      }
+    } catch (error) {
+      console.error('Error uploading item:', error);
+      alert("ネットワークエラーが発生しました。");
+    }
   };
 
   return (
@@ -189,3 +209,5 @@ const Upload = () => {
 };
 
 export default Upload;
+
+
