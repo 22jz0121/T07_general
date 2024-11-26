@@ -1,21 +1,19 @@
-// src/components/Item.js
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../css/top.css';
 
-function Item({ itemId, name, time, imageSrc, title, description, location, transactionMethods }) {
-  const [liked, setLiked] = useState(false);
+function Item({ itemId, name, time, imageSrc, title, description, location, onLike, liked: initialLiked }) {
+  const [liked, setLiked] = useState(initialLiked);
 
-  // Toggle the liked state and call the onLike function
+  useEffect(() => {
+    setLiked(initialLiked); // 親からの初期値を設定
+  }, [initialLiked]);
+
   const handleLike = () => {
-    setLiked(!liked);
+    const newLikedState = !liked; // 新しい状態を計算
+    setLiked(newLikedState); // ローカルの状態を更新
     onLike(itemId); // 親コンポーネントの関数を呼び出す
-  };
-
-  const handleItemClick = () => {
-    navigate(`/listing/${itemId}`);
   };
 
   return (
@@ -24,7 +22,7 @@ function Item({ itemId, name, time, imageSrc, title, description, location, tran
         <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
         <div className="profile-info">
           <span className="name">{name}</span>
-          <span className="time">{time.split(':').slice(0, 2).join(':')}</span>
+          <span className="time">{time}</span>
         </div>
       </div>
       <div className="item-content">
@@ -33,19 +31,12 @@ function Item({ itemId, name, time, imageSrc, title, description, location, tran
           <h3>{title}</h3>
           <p>{description}</p>
           <div className="action-buttons">
-            {transactionMethods && transactionMethods.map(method => (
-              <button key={method} className={`button ${method === '譲渡' ? 'trade' : method === 'レンタル' ? 'rental' : 'exchange'}`}>
-                {method}
-              </button>
-            ))}
+            <button className="button trade">譲渡</button>
           </div>
-          <div className='ppppppp'>
-            <span className="location">{location}</span>
-            <span onClick={(e) => { e.stopPropagation(); handleLike(); }} className="heart">
-              {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
-            </span>
-          </div>
-
+          <span className="location">{location}</span>
+          <span onClick={handleLike} className="heart">
+            {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
+          </span>
         </div>
       </div>
     </div>

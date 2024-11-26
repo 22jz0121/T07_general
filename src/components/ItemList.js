@@ -42,7 +42,6 @@ function ItemList() {
         }
         const data = await response.json();
         if (isMounted.current) {
-          // myFavoriteIdsにItemIDを保存
           setMyFavoriteIds(data.map(item => item.ItemID));
         }
       } catch (error) {
@@ -105,20 +104,19 @@ function ItemList() {
     return <div>Loading...</div>;
   }
 
-  const handleItemClick = (itemId) => {
-    navigate(`/listing/${itemId}`);
-  };
-
   return (
     <div>
       {items.map(item => (
         <Item 
           key={item.ItemID} 
+          name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
+          userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
           itemId={item.ItemID} 
           title={item.ItemName} 
-          imageSrc={`${item.ItemImage}`}
+          imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
           description={item.Description} 
           onLike={handleLike}
+          liked={myFavoriteIds.includes(item.ItemID)}
         />
       ))}
     </div>
@@ -126,118 +124,3 @@ function ItemList() {
 }
 
 export default ItemList;
-
-
-// import React, { useEffect, useState, useRef } from 'react';
-// import Item from './Item';
-
-// function ItemList() {
-//   const [items, setItems] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [likedItems, setLikedItems] = useState([]);
-//   const isMounted = useRef(true); // コンポーネントのマウント状態を管理
-
-//   useEffect(() => {
-//     isMounted.current = true;
-
-//     const fetchItems = async () => {
-//       try {
-//         const response = await fetch('https://loopplus.mydns.jp/item');
-//         if (!response.ok) {
-//           throw new Error('Network response was not ok');
-//         }
-//         const data = await response.json();
-//         if (isMounted.current) {
-//           setItems(data);
-//           console.log(data);
-//         }
-//       } catch (error) {
-//         console.error('Error fetching items:', error);
-//       } finally {
-//         if (isMounted.current) {
-//           setLoading(false);
-//         }
-//       }
-//     };
-
-//     const fetchWhoAmI = async () => {
-//       // const token = localStorage.getItem("authToken"); // ローカルストレージからトークンを取得
-//       // console.log(token);
-//       // if (!token) {
-//       //   console.error("No token found in local storage");
-//       //   return;
-//       // }
-
-//       try {
-//         const response = await fetch('https://loopplus.mydns.jp/api/whoami', {
-//           method: 'GET',
-//           headers: {
-//             'Content-Type': 'application/json',
-//             // 'Authorization': `Bearer ${token}`,
-//           },
-//           credentials: 'include',
-//         });
-//         if (!response.ok) {
-//           throw new Error(`Network response was not ok: ${response.statusText}`);
-//         }
-//         const data = await response.json();
-//         console.log('WhoAmI Response:', data); // whoamiの結果を表示
-//       } catch (error) {
-//         console.error('Error fetching whoami:', error);
-//       }
-//     };
-
-//     fetchItems();
-//     fetchWhoAmI();
-
-//     return () => {
-//       isMounted.current = false;
-//     };
-//   }, []);
-
-//   const handleLike = (itemId) => {
-//     console.log('handleLike called with itemId:', itemId);
-//     setLikedItems((prevLikedItems) => {
-//       const isLiked = prevLikedItems.includes(itemId);
-//       sendFavoriteRequest(itemId, isLiked ? 'DELETE' : 'POST');
-//       return isLiked ? prevLikedItems.filter(id => id !== itemId) : [...prevLikedItems, itemId];
-//     });
-//   };
-
-//   const sendFavoriteRequest = async (itemId, method) => {
-//     try {
-//       const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
-//         method: method,
-//         credentials: 'include',
-//       });
-//       if (!response.ok) {
-//         throw new Error(`Network response was not ok: ${response.statusText}`);
-//       }
-//       const data = await response.json();
-//       console.log('Response from server:', data);
-//     } catch (error) {
-//       console.error('Error sending request:', error);
-//     }
-//   };
-
-//   if (loading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div>
-//       {items.map(item => (
-//         <Item 
-//           key={item.ItemID} 
-//           itemId={item.ItemID} 
-//           title={item.ItemName} 
-//           imageSrc={`https://loopplus.mydns.jp/storage/images/${item.ItemImage}`}
-//           description={item.Description} 
-//           onLike={handleLike}
-//         />
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default ItemList;

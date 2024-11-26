@@ -6,8 +6,13 @@ const MyComponent = () => {
     };
 
   return (
-    <div>
-      <button onClick={handleButtonClick}>データを取得</button>
+    <div style={{ textAlign: "center", marginTop: "20vh" }}>
+      <div className='login-form'>
+          <h1>Loop+</h1>
+          <div className='login-button'>
+            <button onClick={handleButtonClick}>ロォグイィン！！</button>
+          </div>
+      </div>
     </div>
   );
 };
