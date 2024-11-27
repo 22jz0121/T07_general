@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import Item from './Item';
 
 function ItemList() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]);                 //表示するアイテム
   const [loading, setLoading] = useState(true);
-  const [likedItems, setLikedItems] = useState([]); // ユーザーがいいねしたアイテム
-  const [myFavoriteIds, setMyFavoriteIds] = useState([]); // /myfavorite から取得したアイテムID
+  const [likedItems, setLikedItems] = useState([]);       // ユーザーがいいねしたアイテム
+  const [myFavoriteIds, setMyFavoriteIds] = useState([]); // /ユーザーがいいねしているアイテムのID
   const [error, setError] = useState(null);
   const isMounted = useRef(true);
 
+  //最初に行う処理
   useEffect(() => {
     isMounted.current = true;
 
@@ -57,12 +58,16 @@ function ItemList() {
     };
   }, []);
 
+
+  //お気に入りボタンが押されたときの処理
   const handleLike = (itemId) => {
     console.log('handleLike called with itemId:', itemId);
+    //likedItems 配列に itemId が含まれているかを確認し、含まれていれば isLiked が trueに
     const isLiked = likedItems.includes(itemId);
+    //↑の亜種
     const isMyFavorite = myFavoriteIds.includes(itemId); // /myfavoriteから取得したIDと比較
 
-    // DELETEかPOSTかを判断
+    // DELETEかPOSTかを判断し切り替え処理へ
     const method = isMyFavorite ? 'DELETE' : 'POST';
     sendFavoriteRequest(itemId, method);
 
@@ -72,19 +77,13 @@ function ItemList() {
     });
   };
 
+
+  //お気に入り切り替え処理
   const sendFavoriteRequest = async (itemId, method) => {
-    // const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
         method: method,
         credentials: 'include',
-        // headers: {
-          // 'Content-Type': 'application/json',
-          // 'X-CSRF-TOKEN': csrfToken,
-        // },
-        // POSTの場合はボディを追加、DELETEの場合はボディを付けない
-        // body: method === 'POST' ? JSON.stringify({ itemId }) : undefined,
       });
   
       if (!response.ok) {

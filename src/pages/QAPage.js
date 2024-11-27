@@ -1,25 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import '../css/QAPage.css';
 
 function QAPage() {
     const navigate = useNavigate();
+    const [faqData, setFaqData] = useState([]);
+    const [error, setError] = useState(null);
 
-    const faqData = [
-        {
-            question: 'アカウントを作成するにはどうすればいいですか？',
-            answer: 'トップページから「サインアップ」をクリックし、必要な情報を入力してください。',
-        },
-        {
-            question: 'パスワードを忘れた場合は？',
-            answer: 'ログイン画面で「パスワードを忘れた場合」をクリックし、再設定してください。',
-        },
-        {
-            question: '取引手続きはどのように行うのですか？',
-            answer: '商品ページから「取引手続き」を選択し、出品者と直接メッセージを送ることができます。',
-        },
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('https://loopplus.mydns.jp/qa');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setFaqData(data);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="qa-page">
@@ -35,12 +43,11 @@ function QAPage() {
             <div className="faq-section">
                 {faqData.map((faq, index) => (
                     <div key={index} className="faq-item">
-                        <h3 className="faq-question">{faq.question}</h3>
-                        <p className="faq-answer">{faq.answer}</p>
+                        <h3 className="faq-question">{faq.QuestionContent}</h3>
+                        <p className="faq-answer">{faq.AnswerContent}</p>
                     </div>
                 ))}
             </div>
-
         </div>
     );
 }

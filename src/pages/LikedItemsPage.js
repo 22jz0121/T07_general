@@ -1,64 +1,116 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import RequestList from '../components/RequestList'; // Corrected path
-import ItemList from '../components/ItemList'; // Corrected path
+import Item from '../components/Item';
 import '../css/LikedItemsPage.css';
 
 const LikedItemsPage = () => {
   const navigate = useNavigate();
-
+  const [items, setItems] = useState([]);  
+  const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
+  const [favoriteItems, setFavoriteItems] = useState([]);
   const [likedRequests, setLikedRequests] = useState([]);
   const [activeTab, setActiveTab] = useState('listing'); // 'listing' or 'request'
+  const isMounted = useRef(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fallback dummy data
-    const dummyLikedItems = [
-      {
-        id: 1,
-        name: '55インチスマートテレビ',
-        timestamp: '1時間前',
-        image: 'https://source.unsplash.com/random/300x200?tv',
-        description: '最新の4K対応スマートテレビ。',
-        location: '12号館',
-        transactionMethods: ['譲渡'],
-      },
-      {
-        id: 2,
-        name: 'ゲーミングチェア',
-        timestamp: '2日前',
-        image: 'https://source.unsplash.com/random/300x200?chair',
-        description: '快適なゲーム環境を提供するチェア。',
-        location: '10号館',
-        transactionMethods: ['レンタル'],
-      },
-    ];
+    isMounted.current = true;
+  
+    const fetchItems = async () => {
+      try {
+        const response = await fetch('https://loopplus.mydns.jp/item');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (isMounted.current) {
+          setItems(data);
+        }
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      } finally {
+        if (isMounted.current) {
+          setLoading(false);
+        }
+      }
+    };
+  
+    const fetchMyFavorites = async () => {
+      try {
+        const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (isMounted.current) {
+          setMyFavoriteIds(data.map(item => item.ItemID));
+        }
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      }
+    };
+  
+    fetchItems();
+    fetchMyFavorites();
+  
+    // クリーンアップ関数
+    return () => {
+      isMounted.current = false; // アンマウント時にフラグを更新
+    };
+  }, []); // 依存配列は空のまま
+  
+  // myFavoriteIds に基づいて storedLikedItems を設定
+  useEffect(() => {
+    if (items.length > 0 && myFavoriteIds.length > 0) {
+      const storedLikedItems = items.filter(item => myFavoriteIds.includes(item.ItemID));
+      setFavoriteItems(storedLikedItems);
+    }
+  }, [items, myFavoriteIds]); // items と myFavoriteIds に依存
+  
 
-    const dummyLikedRequests = [
-      {
-        id: 1,
-        name: '4Kテレビが欲しい',
-        time: '5時間前',
-        description: '最近引っ越したので、大画面のテレビを探しています。',
-        imageSrc: 'https://source.unsplash.com/random/300x200?television',
-      },
-      {
-        id: 2,
-        name: 'ノイズキャンセリングイヤホンが欲しい',
-        time: '3日前',
-        description: 'カフェで集中するために欲しいです。',
-        imageSrc: 'https://source.unsplash.com/random/300x200?headphones',
-      },
-    ];
+  //お気に入りボタンが押されたときの処理
+  const handleLike = (itemId) => {
+    console.log('handleLike called with itemId:', itemId);
+    const isLiked = likedItems.includes(itemId);
+    const isMyFavorite = myFavoriteIds.includes(itemId); // /myfavoriteから取得したIDと比較
 
-    // Load from localStorage or fallback to dummy data
-    const storedLikedItems = JSON.parse(localStorage.getItem('likedItems')) || dummyLikedItems;
-    const storedLikedRequests = JSON.parse(localStorage.getItem('likedRequests')) || dummyLikedRequests;
+    // DELETEかPOSTかを判断し切り替え処理へ
+    const method = isMyFavorite ? 'DELETE' : 'POST';
+    sendFavoriteRequest(itemId, method);
 
-    setLikedItems(storedLikedItems);
-    setLikedRequests(storedLikedRequests);
-  }, []);
+    // likedItemsの更新
+    setLikedItems((prevLikedItems) => {
+      return isLiked ? prevLikedItems.filter(id => id !== itemId) : [...prevLikedItems, itemId];
+    });
+  };
+
+
+  //お気に入り切り替え処理
+  const sendFavoriteRequest = async (itemId, method) => {
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
+        method: method,
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // エラーレスポンスを取得
+        console.error('Error response:', errorData); // エラーレスポンスをログに出力
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('Error sending request:', error);
+    }
+  };
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -93,11 +145,21 @@ const LikedItemsPage = () => {
       {/* Tab Content */}
       <div className="tab-content">
         {activeTab === 'listing' ? (
-          likedItems.length > 0 ? (
-            <ItemList items={likedItems} />
-          ) : (
-            <p className="pp">いいねした出品物はありません。</p>
-          )
+          <div>
+            {favoriteItems.map(item => (
+              <Item 
+                key={item.ItemID} 
+                name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
+                userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
+                itemId={item.ItemID} 
+                title={item.ItemName} 
+                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                description={item.Description} 
+                onLike={handleLike}
+                liked={myFavoriteIds.includes(item.ItemID)}
+              />
+            ))}
+          </div>
         ) : likedRequests.length > 0 ? (
           <RequestList requests={likedRequests} showPostButton={false} />
         ) : (
