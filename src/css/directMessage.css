@@ -106,6 +106,10 @@
     position: relative;
 }
 
+.message-bubble img{
+    max-width: 100%;
+}
+
 .message-bubble.user {
     background-color: #dcf8c6;
     border-top-right-radius: 5px;

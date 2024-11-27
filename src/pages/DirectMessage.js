@@ -82,10 +82,14 @@ const DirectMessage = () => {
 
       <div className="dm-messages">
         {messages.map((msg) => (
-          <div key={msg.ChatContentID} className="message-bubble">
-            <p className="message-text">{msg.Content}</p> {/* メッセージ内容を表示 */}
-            {msg.Image && <img src={`https://loopplus.mydns.jp/${msg.Image}`} alt="メッセージ画像" className="message-image" />} {/* 画像を表示 */}
-            <span className="message-time">{msg.CreatedAt}</span> {/* メッセージの時間を表示 */}
+          <div
+            key={msg.ChatContentID}
+            className="message-bubble"
+            style={{ textAlign: msg.UserID === /*自分のUserID*/ ? 'right' : 'left' }} // 自分のUserIDと一致する場合は右寄り
+          >
+            <p className="message-text">{msg.Content}</p>
+            {msg.Image && <img src={`${msg.Image}`} alt="メッセージ画像" className="message-image" />}
+            <span className="message-time">{msg.CreatedAt}</span>
           </div>
         ))}
       </div>
@@ -98,8 +102,8 @@ const DirectMessage = () => {
           type="file"
           id="image-upload"
           accept="image/*"
-          onChange={handleImageUpload} // 画像選択時の処理
-          style={{ display: 'none' }} // 非表示にする
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
         />
         <input
           type="text"
@@ -114,6 +118,7 @@ const DirectMessage = () => {
       </div>
     </div>
   );
+
 };
 
 export default DirectMessage;
