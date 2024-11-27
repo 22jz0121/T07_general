@@ -84,7 +84,7 @@ const DirectMessage = () => {
         {messages.map((msg) => (
           <div key={msg.ChatContentID} className="message-bubble">
             <p className="message-text">{msg.Content}</p> {/* メッセージ内容を表示 */}
-            {msg.Image && <img src={msg.Image} alt="メッセージ画像" className="message-image" />} {/* 画像を表示 */}
+            {msg.Image && <img src={`https://loopplus.mydns.jp/${msg.Image}`} alt="メッセージ画像" className="message-image" />} {/* 画像を表示 */}
             <span className="message-time">{msg.CreatedAt}</span> {/* メッセージの時間を表示 */}
           </div>
         ))}
