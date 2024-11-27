@@ -5,7 +5,7 @@ import RequestList from '../components/RequestList'; // Corrected path
 import Item from '../components/Item';
 import '../css/LikedItemsPage.css';
 
-//2024/11/27
+//2024/11/27　なんか適当に
 const LikedItemsPage = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);  
