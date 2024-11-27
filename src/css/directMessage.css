@@ -1,3 +1,4 @@
+
 .dm-container {
     display: flex;
     flex-direction: column;
@@ -72,7 +73,16 @@
     color: white;
 }
 
+/* チャットメッセージのコンテナ */
 .dm-messages {
+    display: flex;
+    flex-direction: column; /* 縦に並べる */
+    padding: 0 16px;
+    padding-bottom: 80px;
+    overflow-y: auto;
+    background-color: #f4f4f8;
+}
+/* .dm-messages {
     flex-grow: 1;
     padding: 0 16px;
     padding-bottom: 80px;
@@ -80,9 +90,26 @@
     background-color: #f4f4f8;
     display: flex;
     flex-direction: column;
+} */
+
+/* メッセージコンテナ */
+.message-container {
+    display: flex;
+    align-items: flex-end; /* メッセージの下揃え */
+    margin-bottom: 10px; /* メッセージ間のスペース */
 }
 
-.message-container {
+/* 自分のメッセージ */
+.message-container.user {
+    flex-direction: row-reverse; /* 自分のメッセージを右に配置 */
+}
+
+/* 他のユーザーのメッセージ */
+.message-container.other {
+    flex-direction: row; /* 他のユーザーのメッセージを左に配置 */
+}
+
+/* .message-container {
     display: flex;
     align-items: flex-end;
     margin-bottom: 10px;
@@ -90,7 +117,7 @@
 
 .message-container.user {
     flex-direction: row-reverse;
-}
+} */
 
 .message-container.system {
     justify-content: center;
@@ -98,7 +125,8 @@
 
 .message-bubble {
     max-width: 70%;
-    padding: 10px 15px;
+    padding: 20px;
+    margin-top: 15px;
     border-radius: 20px;
     font-size: 14px;
     line-height: 1.4;
@@ -106,15 +134,17 @@
     position: relative;
 }
 
-.message-bubble.user {
-    background-color: #dcf8c6;
-    border-top-right-radius: 5px;
+.message-bubble.right {
+    background-color: #dcf8c6; /* 自分のメッセージの色 */
+    border-top-right-radius: 5px; /* 右上の角を丸める */
+    align-self: flex-end;
 }
 
-.message-bubble.other {
+.message-bubble.left {
     background-color: #fff;
     border-top-left-radius: 5px;
     border: 1px solid #e5e7eb;
+    align-self: flex-start;
 }
 
 .message-bubble.system {

@@ -12,7 +12,28 @@ const DirectMessage = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null); // 画像ファイルの状態を追加
+  const [userId, setUserId] = useState(null); // 自分のUserIDを保存する状態を追加
+  
 
+  // 自分のUserIDを取得する関数 11/27
+  const fetchMyUserId = async () => {
+    try {
+      const response = await fetch('https://loopplus.mydns.jp/api/whoami' ,{
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      }); // ログイン状態を確認するエンドポイント
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserId(data.UserID); // 自分のUserIDを保存
+      }
+    } catch (error) {
+      console.error('Error fetching user ID:', error);
+    }
+  };
+  
   // チャットメッセージを取得する関数
   const fetchChatMessages = async () => {
     try {
@@ -28,6 +49,7 @@ const DirectMessage = () => {
   };
 
   useEffect(() => {
+    fetchMyUserId(); // 自分のUserIDを取得
     fetchChatMessages(); // チャットメッセージを取得する関数を実行
   }, [id]); // チャットIDが変更されたときに再取得
 
@@ -82,10 +104,13 @@ const DirectMessage = () => {
 
       <div className="dm-messages">
         {messages.map((msg) => (
-          <div key={msg.ChatContentID} className="message-bubble">
-            <p className="message-text">{msg.Content}</p> {/* メッセージ内容を表示 */}
-            {msg.Image && <img src={msg.Image} alt="メッセージ画像" className="message-image" />} {/* 画像を表示 */}
-            <span className="message-time">{msg.CreatedAt}</span> {/* メッセージの時間を表示 */}
+          <div
+            key={msg.ChatContentID}
+            className={`message-bubble ${msg.UserID === userId ? 'right' : 'left'}`}
+          >
+            <p className="message-text">{msg.Content}</p>
+            {msg.Image && <img src={`${msg.Image}`} alt="メッセージ画像" className="message-image" />}
+            <span className="message-time">{msg.CreatedAt}</span>
           </div>
         ))}
       </div>
@@ -98,8 +123,8 @@ const DirectMessage = () => {
           type="file"
           id="image-upload"
           accept="image/*"
-          onChange={handleImageUpload} // 画像選択時の処理
-          style={{ display: 'none' }} // 非表示にする
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
         />
         <input
           type="text"
@@ -114,6 +139,7 @@ const DirectMessage = () => {
       </div>
     </div>
   );
+
 };
 
 export default DirectMessage;
