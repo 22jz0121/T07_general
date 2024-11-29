@@ -124,7 +124,12 @@ const Messages = () => {
                   <span className="names">{chat.UserName}</span>
                   <span className="time">{new Date(chat.lastMessage?.CreatedAt).toLocaleString()}</span> {/* 最後のメッセージの日時 */}
                 </div>
-                <p className="message-content">{chat.lastMessage?.Content || '新しいメッセージがあります'}</p> {/* 最後のメッセージ内容 */}
+                <p className="message-content">{chat.LastContent?.Image 
+                  ? '画像が送信されました' 
+                  : chat.LastContent?.Content 
+                    ? chat.LastContent.Content 
+                    : 'メッセージがありません'}
+                </p> {/* 最後のメッセージ内容 */}
               </div>
               <span className="arrow">›</span>
             </div>
