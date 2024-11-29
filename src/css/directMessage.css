@@ -1,4 +1,3 @@
-
 .dm-container {
     display: flex;
     flex-direction: column;
@@ -41,7 +40,8 @@
     color: #374151;
 }
 
-.set-delivery-container, .transaction-buttons {
+.set-delivery-container,
+.transaction-buttons {
     display: flex;
     justify-content: center;
     padding: 10px;
@@ -49,7 +49,9 @@
     border-bottom: 1px solid #e5e7eb;
 }
 
-.set-delivery-button, .cancel-transaction-button, .complete-transaction-button {
+.set-delivery-button,
+.cancel-transaction-button,
+.complete-transaction-button {
     padding: 10px 20px;
     border: none;
     border-radius: 20px;
@@ -73,105 +75,76 @@
     color: white;
 }
 
-/* チャットメッセージのコンテナ */
+/* General styling for messages */
 .dm-messages {
     display: flex;
-    flex-direction: column; /* 縦に並べる */
-    padding: 0 16px;
+    flex-direction: column;
+    padding: 10px 16px;
+    gap: 10px; /* Adds space between messages */
+    overflow-y: auto; /* Allow vertical scrolling */
+    flex-grow: 1; /* Fill remaining space */
     padding-bottom: 80px;
-    overflow-y: auto;
-    background-color: #f4f4f8;
-}
-/* .dm-messages {
-    flex-grow: 1;
-    padding: 0 16px;
-    padding-bottom: 80px;
-    overflow-y: auto;
-    background-color: #f4f4f8;
+  }
+  
+  /* Wrapper for each message */
+  .message-wrapper {
     display: flex;
     flex-direction: column;
-} */
-
-/* メッセージコンテナ */
-.message-container {
-    display: flex;
-    align-items: flex-end; /* メッセージの下揃え */
-    margin-bottom: 10px; /* メッセージ間のスペース */
-}
-
-/* 自分のメッセージ */
-.message-container.user {
-    flex-direction: row-reverse; /* 自分のメッセージを右に配置 */
-}
-
-/* 他のユーザーのメッセージ */
-.message-container.other {
-    flex-direction: row; /* 他のユーザーのメッセージを左に配置 */
-}
-
-/* .message-container {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 10px;
-}
-
-.message-container.user {
+    max-width: 70%; /* Ensure bubble does not exceed 70% width */
+  }
+  
+  /* Right aligned messages */
+  .message-wrapper.right {
+    align-self: flex-end; /* Aligns messages to the right */
     flex-direction: row-reverse;
-} */
-
-.message-container.system {
-    justify-content: center;
 }
 
-.message-bubble {
-    max-width: 70%;
-    padding: 20px;
-    margin-top: 15px;
+  
+  /* Left aligned messages */
+  .message-wrapper.left {
+    align-self: flex-start; /* Aligns messages to the left */
+    flex-direction: row;
+}
+  
+  /* Message bubble styling */
+  .message-bubble {
+    background-color: #e1ffc7; /* Light green for right bubble */
     border-radius: 20px;
-    font-size: 14px;
-    line-height: 1.4;
-    display: inline-block;
-    position: relative;
-}
-
-.message-bubble img{
-    max-width: 100%;
-}
-
-.message-bubble.right {
-    background-color: #dcf8c6; /* 自分のメッセージの色 */
-    border-top-right-radius: 5px; /* 右上の角を丸める */
-    align-self: flex-end;
-}
-
-.message-bubble.left {
-    background-color: #fff;
-    border-top-left-radius: 5px;
-    border: 1px solid #e5e7eb;
-    align-self: flex-start;
-}
-
-.message-bubble.system {
-    background-color: #d4e2fc;
-    color: #333;
-    text-align: center;
-    align-self: center;
-    border-radius: 10px;
     padding: 10px 15px;
+    word-wrap: break-word;
+    width: fit-content;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  
+  .message-wrapper.left .message-bubble {
+    background-color: #ffffff; /* White for left bubble */
+    border: 1px solid #ddd;
+  }
+  
+  .message-text {
+    margin: 0;
     font-size: 14px;
-}
-
-.message-text {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.message-time {
-    font-size: 0.75rem;
-    color: #888;
-    margin-left: 8px;
+    color: #333;
+  }
+  
+  .message-image {
+    width: 100%;
+    max-width: 200px; /* Limits image size */
+    margin-top: 5px;
+    border-radius: 10px;
+  }
+  
+  /* Time styling */
+  .span-time {
     align-self: flex-end;
-}
+    margin-top: 5px;
+  }
+  
+  .message-time {
+    font-size: 12px;
+    color: #999;
+  }
 
 .dm-input {
     position: fixed;
@@ -187,14 +160,16 @@
     z-index: 1000;
 }
 
-.image-upload-button, .send-button {
+.image-upload-button,
+.send-button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
 }
 
-.add-icon, .send-icon {
+.add-icon,
+.send-icon {
     font-size: 24px;
 }
 
@@ -226,9 +201,12 @@
     margin: 0 auto;
     font-size: 14px;
 }
-.set-delivery-container, .transaction-buttons {
+
+.set-delivery-container,
+.transaction-buttons {
     position: sticky;
-    top: 60px; /* Position it just below the top navigation */
+    top: 60px;
+    /* Position it just below the top navigation */
     z-index: 1000;
     padding: 10px;
     border-bottom: 1px solid #e5e7eb;
