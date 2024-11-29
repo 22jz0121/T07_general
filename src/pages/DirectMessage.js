@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; 
+import { useNavigate, useParams, useLocation } from 'react-router-dom'; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
 import '../css/directMessage.css';
@@ -8,7 +8,9 @@ import '../css/directMessage.css';
 
 const DirectMessage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams(); // URLからチャットIDを取得
+  const { name } = location.state || {}; // 状態を取得
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null); // 画像ファイルの状態を追加
@@ -99,7 +101,7 @@ const DirectMessage = () => {
         <button className="back-button" onClick={() => navigate('/messages')}>
           <ArrowBackIcon className="back-icon" />
         </button>
-        <h1 className="page-title">チャットID: {id}</h1>
+        <h1 className="page-title">{name}</h1>
       </div>
 
       <div className="dm-messages">
