@@ -104,7 +104,7 @@ function ItemList() {
   }
 
   return (
-    <div>
+    <div className='listing'>
       {items.map(item => (
         <Item 
           key={item.ItemID} 
