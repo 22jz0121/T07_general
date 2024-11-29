@@ -6,9 +6,7 @@ import '../css/directMessage.css';
 
 const DirectMessage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { id } = useParams(); // URLからチャットIDを取得
-  const { name } = location.state || {}; // 状態を取得
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null); // 画像ファイルの状態を追加
@@ -34,7 +32,7 @@ const DirectMessage = () => {
       console.error('Error fetching user ID:', error);
     }
   };
-  
+
   // チャットメッセージを取得する関数
   const fetchChatMessages = async () => {
     try {
@@ -110,21 +108,41 @@ const DirectMessage = () => {
         <button className="back-button" onClick={() => navigate('/messages')}>
           <ArrowBackIcon className="back-icon" />
         </button>
-        <h1 className="page-title">{name}</h1>
+        <h1 className="page-title">チャットID: {id}</h1>
       </div>
 
       <div className="dm-messages">
-        {messages.map((msg) => (
-          <div
-            key={msg.ChatContentID}
-            className={`message-bubble ${msg.UserID === userId ? 'right' : 'left'}`}
-          >
-            <p className="message-text">{msg.Content}</p>
-            {msg.Image && <img src={`https://loopplus.mydns.jp/${msg.Image}`} alt="メッセージ画像" className="message-image" />}
-            <span className="message-time">{msg.CreatedAt}</span>
-          </div>
-        ))}
+        {messages.map((msg) => {
+          // Convert CreatedAt to a 24-hour time format
+          const formattedTime = new Date(msg.CreatedAt).toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false, // Ensure 24-hour format
+          });
+
+          return (
+            <div
+              key={msg.ChatContentID}
+              className={`message-wrapper ${msg.UserID === userId ? 'right' : 'left'}`}
+            >
+              <div className="message-bubble">
+                <p className="message-text">{msg.Content}</p>
+                {msg.Image && (
+                  <img
+                    src={`https://loopplus.mydns.jp/${msg.Image}`}
+                    alt="メッセージ画像"
+                    className="message-image"
+                  />
+                )}
+              </div>
+              <div className="span-time">
+                <span className="message-time">{formattedTime}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
+
 
       <div className="dm-input">
         <button className="image-upload-button" onClick={openFileDialog}>
