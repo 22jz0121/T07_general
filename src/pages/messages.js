@@ -66,10 +66,9 @@ const Messages = () => {
     fetchData();
   }, [isLoggedIn]);
 
-  const handleItemClick = (id) => {
-    navigate(`/dm/${id}`);//chatをdmに変更
-
-  }
+  const handleItemClick = (id, name) => {
+    navigate(`/dm/${id}`, { state: { name } });
+  };
 
 // Helper function to truncate message at 25 characters and append "..."
 const truncateMessage = (message) => {
@@ -93,11 +92,6 @@ const Messages = () => {
   useEffect(() => {
     localStorage.setItem('messages', JSON.stringify(messages));
   }, [messages]);
-
-  const handleItemClick = (id) => {
-    navigate(`/dm/${id}`);
-
-  };
 }
   return (
     <div className="message-list">
@@ -116,7 +110,7 @@ const Messages = () => {
             <div
               key={chat.ChatID}
               className="message-item"
-              onClick={() => handleItemClick(chat.ChatID)}
+              onClick={() => handleItemClick(chat.ChatID, chat.OtherUser.UserName)}
             >
               <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
               <div className="message-info">
