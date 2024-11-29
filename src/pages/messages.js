@@ -121,7 +121,7 @@ const Messages = () => {
               <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
               <div className="message-info">
                 <div className="message-header">
-                  <span className="names">{chat.UserName}</span>
+                  <span className="names">{chat.OtherUser.UserName}</span>
                   <span className="time">{new Date(chat.lastMessage?.CreatedAt).toLocaleString()}</span> {/* 最後のメッセージの日時 */}
                 </div>
                 <p className="message-content">{chat.LastContent?.Image 
