@@ -134,6 +134,10 @@
     position: relative;
 }
 
+.message-bubble img{
+    max-width: 100%;
+}
+
 .message-bubble.right {
     background-color: #dcf8c6; /* 自分のメッセージの色 */
     border-top-right-radius: 5px; /* 右上の角を丸める */
