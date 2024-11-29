@@ -109,7 +109,7 @@ const DirectMessage = () => {
             className={`message-bubble ${msg.UserID === userId ? 'right' : 'left'}`}
           >
             <p className="message-text">{msg.Content}</p>
-            {msg.Image && <img src={`${msg.Image}`} alt="メッセージ画像" className="message-image" />}
+            {msg.Image && <img src={`https://loopplus.mydns.jp/${msg.Image}`} alt="メッセージ画像" className="message-image" />}
             <span className="message-time">{msg.CreatedAt}</span>
           </div>
         ))}
