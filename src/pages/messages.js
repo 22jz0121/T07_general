@@ -56,7 +56,7 @@ const Messages = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await checkLoginStatus(); // ログイン状態を確認
+      //await checkLoginStatus(); // ログイン状態を確認
       if (isLoggedIn) {
         const data = await fetchMyChats();
         setMyChats(data);
