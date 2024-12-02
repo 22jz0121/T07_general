@@ -33,10 +33,13 @@ function Item({ itemId, name, time, imageSrc, title, description, location, onLi
           <div className="action-buttons">
             <button className="button trade">譲渡</button>
           </div>
-          <span className="location">{location}</span>
-          <span onClick={handleLike} className="heart">
-            {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
-          </span>
+          <div className='ppppppp'>
+            <span className="location">受渡場所：{location}</span>
+            <span onClick={handleLike} className="heart">
+              {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
+            </span>
+          </div>
+
         </div>
       </div>
     </div>
