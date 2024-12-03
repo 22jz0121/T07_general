@@ -63,7 +63,7 @@ const MyPage = () => {
 
     // Navigate to profile page
     const handleProfileClick = () => {
-        navigate(`/profile/${currentUserId}`);
+        navigate(`/profile/${userProfile.userId}`);
     };
 
     // Redirect to external URL
