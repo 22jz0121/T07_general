@@ -100,7 +100,7 @@ function ItemList() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='loading'><img src='/Loading.gif' alt="Loading"/></div>;
   }
 
   return (
