@@ -244,3 +244,7 @@ body {
   background-color: #2563eb;
   color: #fff;
 }
+
+p {
+  list-style: none;
+}
