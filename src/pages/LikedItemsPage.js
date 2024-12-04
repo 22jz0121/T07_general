@@ -142,31 +142,35 @@ const LikedItemsPage = () => {
           リクエスト
         </button>
       </div>
-
-      {/* Tab Content */}
-      <div className="tab-content">
-        {activeTab === 'listing' ? (
-          <div>
-            {favoriteItems.map(item => (
-              <Item 
-                key={item.ItemID} 
-                name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
-                userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
-                itemId={item.ItemID} 
-                title={item.ItemName} 
-                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
-                description={item.Description} 
-                onLike={handleLike}
-                liked={myFavoriteIds.includes(item.ItemID)}
-              />
-            ))}
-          </div>
-        ) : likedRequests.length > 0 ? (
-          <RequestList requests={likedRequests} showPostButton={false} />
-        ) : (
-          <p className="pp">いいねしたリクエストはありません。</p>
-        )}
-      </div>
+      {loading ? (
+        <div className='loading'>
+          <img src='/Loading.gif' alt="Loading"/>
+        </div>
+      ) : (
+        <div className="tab-content">
+          {activeTab === 'listing' ? (
+            <div>
+              {favoriteItems.map(item => (
+                <Item 
+                  key={item.ItemID} 
+                  name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
+                  userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
+                  itemId={item.ItemID} 
+                  title={item.ItemName} 
+                  imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                  description={item.Description} 
+                  onLike={handleLike}
+                  liked={myFavoriteIds.includes(item.ItemID)}
+                />
+              ))}
+            </div>
+          ) : likedRequests.length > 0 ? (
+            <RequestList requests={likedRequests} showPostButton={false} />
+          ) : (
+            <p className="pp">いいねしたリクエストはありません。</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

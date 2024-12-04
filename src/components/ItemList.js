@@ -50,8 +50,31 @@ function ItemList() {
       }
     };
 
+    // 自分のUserIDを取得する関数
+    const fetchMyinfo = async () => {
+      try {
+        const response = await fetch('https://loopplus.mydns.jp/api/whoami', {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        }); // ログイン状態を確認するエンドポイント
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('MyID', data.UserID);
+          localStorage.setItem('MyName', data.Username);
+          localStorage.setItem('MyIcon', data.Icon);
+          localStorage.setItem('MyMail', data.Email);
+        }
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
+
     fetchItems();
     fetchMyFavorites();
+    fetchMyinfo();
 
     return () => {
       isMounted.current = false;

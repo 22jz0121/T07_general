@@ -6,7 +6,7 @@ import '../css/RequestPage.css';
 
 const MAX_IMAGE_SIZE_MB = 5; // 最大画像サイズを5MBに設定
 
-function PostAddPage() {
+function PostAddPage({ onRequestAdded }) {
   const navigate = useNavigate();
   const [postText, setPostText] = useState('');
   const [image, setImage] = useState(null);
@@ -41,6 +41,11 @@ function PostAddPage() {
       formData.append('RequestImage', image);
 
       try {
+        // CSRFトークンを取得
+        await fetch('https://loopplus.mydns.jp/sanctum/csrf-cookie', {
+          credentials: 'include',
+        });
+
         const response = await fetch('https://loopplus.mydns.jp/api/request', {
           method: 'POST',
           body: formData,
@@ -48,6 +53,9 @@ function PostAddPage() {
         });
 
         if (response.ok) {
+          const newRequest = await response.json(); // 新しいリクエストデータを取得
+          onRequestAdded(newRequest); // onRequestAddedを呼び出して新しいリクエストを親に通知
+          alert("投稿が完了しました！"); // 成功時のアラート
           navigate('/request'); // リクエスト一覧にリダイレクト
         } else {
           const errorData = await response.json();
@@ -110,4 +118,3 @@ function PostAddPage() {
 }
 
 export default PostAddPage;
-

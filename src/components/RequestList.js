@@ -14,12 +14,11 @@ function RequestItem({ id, name, time, content, imageSrc, liked, onLike }) {
   return (
     <div className="request-item">
       <Link to={`/request/${id}`} className="request-link">
-        {/* リンクに詳細ページへの遷移を組み込む */}
         <div className="profile">
           <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
           <div className="profile-info">
             <span className="name">{name}</span>
-            <span className="time">{time}</span>
+            <span className="time">{new Date(time).toLocaleDateString()} {new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span> {/* 日付と時間のフォーマット */}
           </div>
         </div>
         <div className="content">
@@ -47,34 +46,37 @@ function RequestList({ showPostButton = true }) {
 
   useEffect(() => {
     isMounted.current = true;
-
-    const fetchRequests = async () => {
-      try {
-        const response = await fetch('https://loopplus.mydns.jp/request');
-        if (!response.ok) {
-          throw new Error('Failed to fetch requests');
-        }
-        const data = await response.json();
-        if (isMounted.current) {
-          setRequests(data);
-          const likedIds = data.filter((item) => item.isLiked).map((item) => item.RequestID);
-          setLikedRequests(likedIds); // 初期のいいね済みIDを設定
-        }
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        if (isMounted.current) {
-          setLoading(false);
-        }
-      }
-    };
-
     fetchRequests();
 
     return () => {
       isMounted.current = false;
     };
   }, []);
+
+  const fetchRequests = async () => {
+    try {
+      const response = await fetch('https://loopplus.mydns.jp/request');
+      if (!response.ok) {
+        throw new Error('Failed to fetch requests');
+      }
+      const data = await response.json();
+
+      if (isMounted.current) {
+        // リクエストを新しい順にソート
+        const sortedData = data.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)); // CreatedAtの降順でソート
+        setRequests(sortedData);
+
+        const likedIds = sortedData.filter((item) => item.isLiked).map((item) => item.RequestID);
+        setLikedRequests(likedIds); // 初期のいいね済みIDを設定
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
+    }
+  };
 
   const handleLike = async (id) => {
     const isLiked = likedRequests.includes(id);
@@ -90,7 +92,6 @@ function RequestList({ showPostButton = true }) {
         throw new Error('Failed to update like status');
       }
 
-      // フロントエンドの状態を更新
       setLikedRequests((prevLiked) =>
         isLiked ? prevLiked.filter((likedId) => likedId !== id) : [...prevLiked, id]
       );
@@ -100,7 +101,8 @@ function RequestList({ showPostButton = true }) {
   };
 
   if (loading) {
-    return <div className='loading'><img src='/Loading.gif' alt="Loading"/></div>;  }
+    return <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>; 
+  }
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -114,9 +116,9 @@ function RequestList({ showPostButton = true }) {
             key={request.RequestID}
             id={request.RequestID}
             name={request.User ? request.User.UserName : '不明'}
-            time={request.createdAt}
+            time={request.CreatedAt} // 修正: 正しいプロパティ名に変更
             content={request.RequestContent}
-            imageSrc={`https://loopplus.mydns.jp/${request.RequestImage}`}
+            imageSrc={request.RequestImage ? `https://loopplus.mydns.jp/${request.RequestImage}` : null} // 画像がnullの場合の処理
             liked={likedRequests.includes(request.RequestID)}
             onLike={handleLike}
           />
