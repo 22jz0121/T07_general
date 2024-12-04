@@ -20,17 +20,21 @@ const Messages = () => {
         },
         credentials: 'include'
       });
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       const data = await response.json();
       console.log('Fetched chats:', data);
       return data;
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error fetching my chats:', error);
       setError('チャットの取得に失敗しました。');
       return [];
-    } finally {
+    }
+    finally {
       setLoading(false);
     }
     
