@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'; // useRefをイン�
 import { useNavigate, useParams, useLocation } from 'react-router-dom'; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
+import Pusher from 'pusher-js'; // Pusherをインポート
 import '../css/directMessage.css';
 
 const DirectMessage = () => {
@@ -16,6 +17,21 @@ const DirectMessage = () => {
   const [isSending, setIsSending] = useState(false); // 送信中のステータスを追加
   const messageEndRef = useRef(null); // メッセージの最後を参照するためのref
 
+  // Pusherの初期化
+  useEffect(() => {
+    const pusher = new Pusher('f155afe9e8a09487d9ea', {
+      cluster: 'ap3',
+    });
+    const channel = pusher.subscribe(`chat-room-${id}`);
+      channel.bind('message-sent', (data) => {
+        setMessages((prevMessages) => [...prevMessages, data]);
+      });
+
+      return () => {
+        channel.unbind_all();
+        channel.unsubscribe();
+      };
+    }, [id]);
   // 自分のUserIDを取得する関数
   const fetchMyUserId = async () => {
     try {
@@ -89,7 +105,7 @@ const DirectMessage = () => {
         if (response.ok) {
           setInputValue(''); // 入力をクリア
           setImageFile(null); // 画像をクリア
-          fetchChatMessages(); // メッセージを再取得
+          //fetchChatMessages(); // メッセージを再取得
         }
       } catch (error) {
         console.error('Error sending message:', error);
