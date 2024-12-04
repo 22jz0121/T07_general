@@ -15,7 +15,10 @@ import '../css/MyPage.css';
 const MyPage = () => {
     const navigate = useNavigate();
     const [currentUserId, setCurrentUserId] = useState(null); // currentUserIdを定義
-    // const currentUserId = '123'; // Replace with actual logged-in user ID
+    const myID = localStorage.getItem('MyID');
+    const myName = localStorage.getItem('MyName');
+    const myIcon = localStorage.getItem('MyIcon');
+
     const [userProfile, setUserProfile] = useState({
         name: '',
         avatar: '',
@@ -47,23 +50,9 @@ const MyPage = () => {
         .catch(error => console.error('エラー:', error));
     }, []);
 
-        //     const storedProfile = JSON.parse(localStorage.getItem(`profile-${currentUserId}`));
-    //     if (storedProfile) {
-    //         setUserProfile({
-    //             name: storedProfile.name || 'プロフィールを編集する',
-    //             avatar: storedProfile.avatar || '',
-    //         });
-    //     } else {
-    //         setUserProfile({
-    //             name: 'プロフィールを編集する',
-    //             avatar: '',
-    //         });
-    //     }
-    // }, [currentUserId]);
-
     // Navigate to profile page
     const handleProfileClick = () => {
-        navigate(`/profile/${userProfile.userId}`);
+        navigate(`/profile/${myID}`);
     };
 
     // Redirect to external URL
@@ -106,11 +95,11 @@ const MyPage = () => {
             {/* Profile Section */}
             <div className="profile-section" onClick={handleProfileClick}>
                 {userProfile.avatar ? (
-                    <img src={userProfile.avatar} alt="User Avatar" className="profile-avatar" />
+                    <img src={`https://loopplus.mydns.jp/${myIcon}`} alt="User Avatar" className="profile-avatar" />
                 ) : (
                     <AccountCircleIcon className="profile-icon" />
                 )}
-                <span className="profile-name">{userProfile.name}</span>
+                <span className="profile-name">{myName}</span>
                 <ChevronRightIcon className="right-arrow-icon" />
             </div>
 
