@@ -6,6 +6,7 @@ import '../css/QAPage.css';
 function QAPage() {
     const navigate = useNavigate();
     const [faqData, setFaqData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -20,6 +21,9 @@ function QAPage() {
             } catch (error) {
                 setError(error.message);
             }
+            finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
@@ -29,25 +33,29 @@ function QAPage() {
         return <div>Error: {error}</div>;
     }
 
+
     return (
         <div className="qa-page">
-            {/* Top Navigation */}
             <div className="top-navigation">
                 <button className="back-button" onClick={() => navigate(-1)}>
                     <ArrowBackIcon className="back-icon" />
                 </button>
                 <h1 className="page-title">Q&A</h1>
             </div>
-
-            {/* FAQ Section */}
-            <div className="faq-section">
-                {faqData.map((faq, index) => (
-                    <div key={index} className="faq-item">
-                        <h3 className="faq-question">{faq.QuestionContent}</h3>
-                        <p className="faq-answer">{faq.AnswerContent}</p>
-                    </div>
-                ))}
-            </div>
+            {loading ? (
+                <div className='loading'>
+                    <img src='/Loading.gif' alt="Loading"/>
+                </div>
+            ) : (
+                <div className="faq-section">
+                    {faqData.map((faq, index) => (
+                        <div key={index} className="faq-item">
+                            <h3 className="faq-question">{faq.QuestionContent}</h3>
+                            <p className="faq-answer">{faq.AnswerContent}</p>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
