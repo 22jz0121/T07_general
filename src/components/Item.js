@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Link } from 'react-router-dom'; // Linkをインポート
 import '../css/top.css';
 
 function Item({ itemId, name, time, imageSrc, title, description, location, onLike, liked: initialLiked }) {
@@ -10,7 +11,8 @@ function Item({ itemId, name, time, imageSrc, title, description, location, onLi
     setLiked(initialLiked); // 親からの初期値を設定
   }, [initialLiked]);
 
-  const handleLike = () => {
+  const handleLike = (event) => {
+    event.stopPropagation(); // 親のクリックイベントを防ぐ
     const newLikedState = !liked; // 新しい状態を計算
     setLiked(newLikedState); // ローカルの状態を更新
     onLike(itemId); // 親コンポーネントの関数を呼び出す
@@ -25,22 +27,25 @@ function Item({ itemId, name, time, imageSrc, title, description, location, onLi
           <span className="time">{time}</span>
         </div>
       </div>
-      <div className="item-content">
-        <img src={imageSrc} alt="Item Image" className="item-image" />
-        <div className="item-info">
-          <h3>{title}</h3>
-          <p>{description}</p>
-          <div className="action-buttons">
-            <button className="button trade">譲渡</button>
+      <div className="item-link-container"> {/* Linkを外に出す */}
+        <Link to={`/listing/${itemId}`} className="item-link">
+          <div className="item-content">
+            <img src={imageSrc} alt="Item Image" className="item-image" />
+            <div className="item-info">
+              <h3>{title}</h3>
+              <p>{description}</p>
+              <div className="action-buttons">
+                <button className="button trade">譲渡</button>
+              </div>            
+            </div>
           </div>
+        </Link>
           <div className='ppppppp'>
-            <span className="location">受渡場所：{location}</span>
+            {/* <span className="location">受渡場所：{location}</span> */}
             <span onClick={handleLike} className="heart">
               {liked ? <FavoriteIcon style={{ color: 'red' }} /> : <FavoriteBorderIcon />}
             </span>
           </div>
-
-        </div>
       </div>
     </div>
   );

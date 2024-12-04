@@ -24,7 +24,7 @@ import GoogleCallback from './components/GoogleCallback';
 import LikedItemsPage from './pages/LikedItemsPage';
 import HistoryPage from './pages/HistoryPage'; // Ensure correct path
 import QAPage from './pages/QAPage'; // Q&Aページをインポート
-
+// import ListingDetail from './pages/LikedItemsPage'; // アイテム詳細ページのコンポーネントをインポート
 
 
 
@@ -50,7 +50,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/callback" element={<GoogleCallback />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/dm/:id" element={<DirectMessage />} />
           <Route path="/post-add" element={<PostAddPage />} />
           <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/profile-edit/:userId" element={<ProfileEditPage />} /> {/* Route for ProfileEditPage */}

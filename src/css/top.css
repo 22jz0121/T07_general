@@ -155,8 +155,14 @@ body {
 .item-content {
     display: flex;
     flex-wrap: wrap;
+    color: #000;
+    
+    
 }
 
+.item-link {
+    text-decoration: none;
+}
 .item-image {
     width: 90px;
     height: 90px;
@@ -171,6 +177,7 @@ body {
 .item-info h3 {
     margin: 0;
     font-size: 18px;
+    
 }
 
 .item-info p {
@@ -253,7 +260,7 @@ body {
 
 .ppppppp {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     margin-bottom: 5px;
 }
 

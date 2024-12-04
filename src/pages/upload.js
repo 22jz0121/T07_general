@@ -181,7 +181,7 @@ const Upload = () => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <label className="label">受け渡し場所を選択してください</label>
           <select
             name="location"
@@ -194,7 +194,7 @@ const Upload = () => {
               <option key={i} value={`${i + 1}号館`}>{`${i + 1}号館`}</option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <div className="p-4">
           <button className="confirm-button" onClick={handleConfirm}>

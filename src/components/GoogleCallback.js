@@ -11,6 +11,8 @@ function GoogleCallback() {
     if (token) {
       // トークンをローカルストレージに保存するなどの処理
       localStorage.setItem('authToken', token);
+      //ローカルかPWAでデータを保持してサクサク検索したい場所
+      
       navigate('/');  // ログイン後のページへリダイレクト
     } else {
       // トークンがない場合のエラーハンドリング

@@ -6,6 +6,7 @@ import Pusher from 'pusher-js'; // Pusherをインポート
 import '../css/directMessage.css';
 
 //リアルタイム機能実装テスト中
+
 const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,19 +21,29 @@ const DirectMessage = () => {
 
   // Pusherの初期化
   useEffect(() => {
+    Pusher.logToConsole = true;
+    
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
     });
-    const channel = pusher.subscribe(`chat-room-${id}`);
-      channel.bind('message-sent', (data) => {
-        setMessages((prevMessages) => [...prevMessages, data]);
-      });
 
-      return () => {
-        channel.unbind_all();
-        channel.unsubscribe();
-      };
-    }, [id]);
+    pusher.connection.bind( 'error', function( err ) {
+
+      console.log('Errer!');
+
+    });
+    const channel = pusher.subscribe(`chat-room-${id}`);
+    
+    channel.bind('message-sent', (data) => {
+      // const data2 = JSON.parse(data);
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [id]);
   // 自分のUserIDを取得する関数
   const fetchMyUserId = async () => {
     try {
