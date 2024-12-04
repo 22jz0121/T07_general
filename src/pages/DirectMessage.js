@@ -5,6 +5,7 @@ import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
 import Pusher from 'pusher-js'; // Pusherをインポート
 import '../css/directMessage.css';
 
+//リアルタイム機能実装テスト中
 const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
