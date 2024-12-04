@@ -99,7 +99,7 @@ const Messages = () => {
         <button className="back-button" onClick={() => navigate('/')}>
           <ArrowBackIcon className="back-icon" />
         </button>
-        <h1 className="page-title">自分のチャット一覧</h1>
+        <h1 className="page-title">メッセージ</h1>
       </div>
 
       <div className='messages-list'>

@@ -245,6 +245,7 @@ body {
   color: #fff;
 }
 
-p {
-  list-style: none;
+.request-link {
+  text-decoration: none;
+  color: #555;
 }
