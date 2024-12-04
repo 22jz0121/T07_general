@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ItemList from '../components/ItemList';
+import Item from '../components/Item';
 import RequestList from '../components/RequestList';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,46 +10,113 @@ import '../css/ProfilePage.css';
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { userId } = useParams(); // Get the userId from the URL
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [userProfile, setUserProfile] = useState({});
   const [headerImage, setHeaderImage] = useState(''); // Header image state
   const [activeTab, setActiveTab] = useState('listing'); // State for active tab
+  const isCurrentUser = useRef(true);
+  const isMounted = useRef(true);
+  const [items, setItems] = useState([]);  
+  const [myFavoriteIds, setMyFavoriteIds] = useState([]);
+  const [likedItems, setLikedItems] = useState([]);
+  const [favoriteItems, setFavoriteItems] = useState([]);
 
   useEffect(() => {
-    const currentUserId = '123'; // Replace with actual authentication logic
-    setIsCurrentUser(userId === currentUserId);
-
-    // Fetch profile from localStorage or default values
-    const storedProfile = JSON.parse(localStorage.getItem(`profile-${userId}`));
-    if (storedProfile) {
-      setUserProfile(storedProfile);
-    } else {
-      const defaultProfile = {
-        id: userId,
-        name: userId === currentUserId ? 'あなたの名前' : '他のユーザー',
-        bio: 'すがわら だいすけです。ずんだ餅が好きです',
-        avatar: 'https://source.unsplash.com/random/100x100?profile',
-        num: '12AB3456', // Default student number
-      };
-      setUserProfile(defaultProfile);
+    isMounted.current = true;
+    const fetchUserProfile = async (userId) => {
+      try {
+        const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
+        const data = await response.json(); // JSONデータを取得
+        setUserProfile(data); // データをセット
+        setItems(data.Items);
+        console.log(data.Items);
+      } catch (error) {
+        console.error('Fetchエラー:', error);
+      }
     }
 
+    const fetchMyFavorites = async () => {
+      try {
+        const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        if (isMounted.current) {
+          setMyFavoriteIds(data.map(item => item.ItemID));
+        }
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      }
+    };
+
     // Retrieve header image from localStorage
-    const savedHeaderImage = localStorage.getItem(`headerImage-${userId}`);
-    setHeaderImage(savedHeaderImage || 'https://source.unsplash.com/random/600x200?nature');
-  }, [userId]);
+    if(!userProfile.ProfilePicture) {
+      setHeaderImage(`https://loopplus.mydns.jp/${userProfile.ProfilePicture}`);
+    }
+    else{
+      setHeaderImage('https://source.unsplash.com/random/600x200?nature');
+    }
+
+    fetchUserProfile(userId);
+    fetchMyFavorites();
+
+    return () => {
+      isMounted.current = false; // アンマウント時にフラグを更新
+    };
+  }, []);
 
   const handleHeaderImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const imageURL = URL.createObjectURL(file); // Convert file to a temporary URL
       setHeaderImage(imageURL); // Update header image
-      localStorage.setItem(`headerImage-${userId}`, imageURL); // Save to localStorage
+      // localStorage.setItem(`headerImage-${userId}`, imageURL); // Save to localStorage
     }
   };
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+  };
+
+  //お気に入りボタンが押されたときの処理
+  const handleLike = (itemId) => {
+    console.log('handleLike called with itemId:', itemId);
+    const isLiked = likedItems.includes(itemId);
+    const isMyFavorite = myFavoriteIds.includes(itemId); // /myfavoriteから取得したIDと比較
+
+    // DELETEかPOSTかを判断し切り替え処理へ
+    const method = isMyFavorite ? 'DELETE' : 'POST';
+    sendFavoriteRequest(itemId, method);
+
+    // likedItemsの更新
+    setLikedItems((prevLikedItems) => {
+      return isLiked ? prevLikedItems.filter(id => id !== itemId) : [...prevLikedItems, itemId];
+    });
+  };
+
+
+  //お気に入り切り替え処理
+  const sendFavoriteRequest = async (itemId, method) => {
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
+        method: method,
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // エラーレスポンスを取得
+        console.error('Error response:', errorData); // エラーレスポンスをログに出力
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('Error sending request:', error);
+    }
   };
 
   return (
@@ -82,13 +149,13 @@ const ProfilePage = () => {
       {/* Profile Header */}
       <div className="profile-header">
         <img
-          src={userProfile.avatar}
+          src={userProfile.Icon}
           alt="Avatar"
           className="profile-header-avatar"
         />
         <div className="profile-header-details">
           <div className="profile-header-div">
-            <h2 className="profile-header-name">{userProfile.name}</h2>
+            <h2 className="profile-header-name">{userProfile.Username}</h2>
             {isCurrentUser && (
               <button
                 className="profile-header-edit-button"
@@ -122,7 +189,21 @@ const ProfilePage = () => {
       {/* Tab Content */}
       <div className="tab-content">
         {activeTab === 'listing' ? (
-          <ItemList userId={userId} />
+          <div>
+            {items.map(item => (
+              <Item 
+                key={item.ItemID} 
+                name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
+                userIcon={userProfile ? userProfile : 'default-icon-url.jpg'}
+                itemId={item.ItemID} 
+                title={item.ItemName} 
+                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                description={item.Description} 
+                onLike={handleLike}
+                liked={myFavoriteIds.includes(item.ItemID)}
+              />
+            ))}
+          </div>
         ) : (
           <RequestList userId={userId} showPostButton={false} />
         )}
