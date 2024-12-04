@@ -244,3 +244,8 @@ body {
   background-color: #2563eb;
   color: #fff;
 }
+
+.request-link {
+  text-decoration: none;
+  color: #555;
+}

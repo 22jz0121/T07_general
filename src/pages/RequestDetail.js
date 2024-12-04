@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {
   Favorite,
@@ -8,49 +8,98 @@ import {
   ArrowBack as ArrowBackIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
-import tvImage from '../img/tv-image.png';
 import '../css/RequestDetail.css';
 
 function RequestDetail() {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Comments state
-  const initialComments = JSON.parse(localStorage.getItem('comments')) || [
-    { id: 1, name: '電子太郎', text: '欲しいかもしれない', time: '3秒前', isUser: false },
-    { id: 2, name: 'マサトシ', text: '売価', time: '1秒前', isUser: false },
-  ];
-  const [comments, setComments] = useState(initialComments);
+  const [request, setRequest] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-
-  // Like state
   const [liked, setLiked] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Save comments to localStorage
+  // データ取得
   useEffect(() => {
-    localStorage.setItem('comments', JSON.stringify(comments));
-  }, [comments]);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      const newCommentEntry = {
-        id: Date.now(),
-        name: '自分の名前', // Replace with the logged-in user's name
-        text: newComment,
-        time: '今',
-        isUser: true,
-      };
-      setComments([...comments, newCommentEntry]);
-      setNewComment('');
-    }
-  };
+        // リクエストデータ
+        const requestResponse = await fetch(`https://loopplus.mydns.jp/request/${id}`);
+        if (!requestResponse.ok) throw new Error('Failed to fetch request details');
+        const requestData = await requestResponse.json();
+        setRequest(requestData);
+        setLiked(requestData.isLiked);
 
-  const toggleLike = () => {
+        // コメントデータ
+        const commentsResponse = await fetch(`https://loopplus.mydns.jp/request/${id}/comment`);
+        if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
+        const commentsData = await commentsResponse.json();
+        setComments(commentsData);
+
+        // 現在のユーザー情報
+        const userResponse = await fetch('https://loopplus.mydns.jp/whoami', { credentials: 'include' });
+        if (!userResponse.ok) throw new Error('Failed to fetch current user');
+        const userData = await userResponse.json();
+        setCurrentUser(userData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  // いいね切り替え
+  const toggleLike = async () => {
     setLiked(!liked);
+    // 必要に応じてバックエンドリクエスト
   };
+
+  // コメント投稿
+const handleCommentSubmit = async () => {
+  if (newComment.trim()) {
+    try {
+      // CSRF トークン取得
+      const csrfResponse = await fetch('https://loopplus.mydns.jp/sanctum/csrf-cookie', {
+        credentials: 'include',
+      });
+      if (!csrfResponse.ok) throw new Error('Failed to fetch CSRF token');
+
+      // コメント送信
+      const response = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: newComment }),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to send comment: ${errorData.message || 'Unknown error'}`);
+      }
+      const createdComment = await response.json();
+      setComments([...comments, { ...createdComment, id: createdComment.id || Date.now() }]);
+      setNewComment('');
+    } catch (err) {
+      console.error('Error submitting comment:', err.message);
+    }
+  }
+};
+
+
+  if (loading) return <div className="loading"><img src="/Loading.gif" alt="Loading" /></div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="request-detail-container">
-      {/* Top Navigation */}
+      {/* トップナビゲーション */}
       <div className="top-navigation">
         <button className="back-button" onClick={() => navigate(-1)}>
           <ArrowBackIcon className="back-icon" />
@@ -58,37 +107,45 @@ function RequestDetail() {
         <h1 className="page-title">リクエスト</h1>
       </div>
 
-      {/* Main Request Post */}
-      <div className="request-item">
-        <div className="profile">
-          <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-          <div className="profile-info">
-            <span className="name">日本電子</span>
-            <span className="time">3秒前</span>
+      {/* メインリクエスト詳細 */}
+      {request && (
+        <div className="request-item">
+          <div className="profile">
+            <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+            <div className="profile-info">
+              <span className="name">{request.UserName}</span>
+              <span className="time">{request.createdAt}</span>
+            </div>
           </div>
-        </div>
-        <div className="content">
-          <p>お前が欲しい</p>
-          <img src={tvImage} alt="Request" className="request-images" />
-        </div>
-        <div className="interaction-bar">
-          <span className="comment-count">コメント {comments.length}</span>
-          <div onClick={toggleLike} className="likes-button">
-            {liked ? (
-              <Favorite className="heart-icon liked" />
-            ) : (
-              <FavoriteBorder className="heart-icon" />
+          <div className="content">
+            <p>{request.RequestContent}</p>
+            {request.RequestImage && (
+              <img
+                src={`https://loopplus.mydns.jp/${request.RequestImage}`}
+                alt="Request"
+                className="request-images"
+              />
             )}
           </div>
+          <div className="interaction-bar">
+            <span className="comment-count">コメント {comments.length}</span>
+            <div onClick={toggleLike} className="likes-button">
+              {liked ? (
+                <Favorite className="heart-icon liked" />
+              ) : (
+                <FavoriteBorder className="heart-icon" />
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Comments Section */}
+      {/* コメントセクション */}
       <div className="comments-section">
         <div className="divider"></div>
-        {comments.map((comment, index) => (
-          <React.Fragment key={comment.id}>
-            <div className={`comment ${comment.isUser ? 'user-comment' : 'other-comment'}`}>
+        {comments.map((comment) => (
+          <React.Fragment key={comment.id || comment.time}>
+            <div className={`comment ${currentUser && currentUser.name === comment.name ? 'user-comment' : 'other-comment'}`}>
               <div className="comment-header-wrapper">
                 <AccountCircleIcon className="avatar-icon small-avatar" />
                 <div className="comment-header">
@@ -100,12 +157,12 @@ function RequestDetail() {
                 <p className="comment-text">{comment.text}</p>
               </div>
             </div>
-            {index < comments.length - 1 && <div className="divider"></div>}
+            <div className="divider"></div>
           </React.Fragment>
         ))}
       </div>
 
-      {/* Input Section */}
+      {/* コメント入力 */}
       <div className="dm-input">
         <button className="image-upload-button">
           <AddIcon className="add-icon" />
