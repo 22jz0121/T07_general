@@ -11,62 +11,91 @@ import {
 import '../css/RequestDetail.css';
 
 function RequestDetail() {
-  const { id } = useParams(); // URLからリクエストIDを取得
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // 状態管理
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [liked, setLiked] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // リクエスト詳細データを取得
+  // データ取得
   useEffect(() => {
-    const fetchRequestDetails = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`https://loopplus.mydns.jp/request/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch request details');
-        }
-        const data = await response.json();
-        setRequest(data);
-        setLiked(data.isLiked); // サーバーからの初期いいね状態を反映
+        setLoading(true);
+
+        // リクエストデータ
+        const requestResponse = await fetch(`https://loopplus.mydns.jp/request/${id}`);
+        if (!requestResponse.ok) throw new Error('Failed to fetch request details');
+        const requestData = await requestResponse.json();
+        setRequest(requestData);
+        setLiked(requestData.isLiked);
+
+        // コメントデータ
+        const commentsResponse = await fetch(`https://loopplus.mydns.jp/request/${id}/comment`);
+        if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
+        const commentsData = await commentsResponse.json();
+        setComments(commentsData);
+
+        // 現在のユーザー情報
+        const userResponse = await fetch('https://loopplus.mydns.jp/whoami', { credentials: 'include' });
+        if (!userResponse.ok) throw new Error('Failed to fetch current user');
+        const userData = await userResponse.json();
+        setCurrentUser(userData);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchRequestDetails();
+    fetchData();
   }, [id]);
 
-  const toggleLike = () => {
+  // いいね切り替え
+  const toggleLike = async () => {
     setLiked(!liked);
-    // 必要に応じてバックエンドにlike状態を更新するリクエストを送信
+    // 必要に応じてバックエンドリクエスト
   };
 
-  const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      const newCommentEntry = {
-        id: Date.now(),
-        name: '自分の名前', // ユーザー名を動的に取得する必要がある
-        text: newComment,
-        time: '今',
-        isUser: true,
-      };
-      setComments([...comments, newCommentEntry]);
+  // コメント投稿
+const handleCommentSubmit = async () => {
+  if (newComment.trim()) {
+    try {
+      // CSRF トークン取得
+      const csrfResponse = await fetch('https://loopplus.mydns.jp/sanctum/csrf-cookie', {
+        credentials: 'include',
+      });
+      if (!csrfResponse.ok) throw new Error('Failed to fetch CSRF token');
+
+      // コメント送信
+      const response = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: newComment }),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to send comment: ${errorData.message || 'Unknown error'}`);
+      }
+      const createdComment = await response.json();
+      setComments([...comments, { ...createdComment, id: createdComment.id || Date.now() }]);
       setNewComment('');
+    } catch (err) {
+      console.error('Error submitting comment:', err.message);
     }
-  };
-
-  if (loading) {
-    return <div className='loading'><img src='/Loading.gif' alt="Loading"/></div>;  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
   }
+};
+
+
+  if (loading) return <div className="loading"><img src="/Loading.gif" alt="Loading" /></div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="request-detail-container">
@@ -114,9 +143,9 @@ function RequestDetail() {
       {/* コメントセクション */}
       <div className="comments-section">
         <div className="divider"></div>
-        {comments.map((comment, index) => (
-          <React.Fragment key={comment.id}>
-            <div className={`comment ${comment.isUser ? 'user-comment' : 'other-comment'}`}>
+        {comments.map((comment) => (
+          <React.Fragment key={comment.id || comment.time}>
+            <div className={`comment ${currentUser && currentUser.name === comment.name ? 'user-comment' : 'other-comment'}`}>
               <div className="comment-header-wrapper">
                 <AccountCircleIcon className="avatar-icon small-avatar" />
                 <div className="comment-header">
@@ -128,7 +157,7 @@ function RequestDetail() {
                 <p className="comment-text">{comment.text}</p>
               </div>
             </div>
-            {index < comments.length - 1 && <div className="divider"></div>}
+            <div className="divider"></div>
           </React.Fragment>
         ))}
       </div>
