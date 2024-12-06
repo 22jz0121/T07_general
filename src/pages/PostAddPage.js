@@ -12,9 +12,11 @@ function PostAddPage({ onRequestAdded }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [uploadError, setUploadError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 送信中のフラグ
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!validTypes.includes(file.type)) {
@@ -36,20 +38,16 @@ function PostAddPage({ onRequestAdded }) {
 
   const handlePostSubmit = async () => {
     if (postText.trim() || image) {
+      setIsSubmitting(true); // 送信中フラグをオン
       const formData = new FormData();
       formData.append('RequestContent', postText);
       formData.append('RequestImage', image);
 
       try {
-        // CSRFトークンを取得
-        await fetch('https://loopplus.mydns.jp/sanctum/csrf-cookie', {
-          credentials: 'include',
-        });
-
         const response = await fetch('https://loopplus.mydns.jp/api/request', {
           method: 'POST',
           body: formData,
-          credentials: 'include', // 必要に応じてクッキーを送信
+          credentials: 'include',
         });
 
         if (response.ok) {
@@ -64,6 +62,8 @@ function PostAddPage({ onRequestAdded }) {
       } catch (error) {
         console.error('Error uploading request:', error);
         alert("ネットワークエラーが発生しました。");
+      } finally {
+        setIsSubmitting(false); // 送信中フラグをオフ
       }
     } else {
       alert('テキストか画像を入力してください！');
@@ -110,8 +110,12 @@ function PostAddPage({ onRequestAdded }) {
       )}
 
       {/* Submit Button */}
-      <button className="post-submit-button" onClick={handlePostSubmit}>
-        リクエストする
+      <button
+        className="post-submit-button"
+        onClick={handlePostSubmit}
+        disabled={isSubmitting} // 送信中はボタンを無効化
+      >
+        {isSubmitting ? 'リクエスト中...' : 'リクエストする'}
       </button>
     </div>
   );
