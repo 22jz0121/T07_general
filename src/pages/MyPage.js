@@ -14,41 +14,9 @@ import '../css/MyPage.css';
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const [currentUserId, setCurrentUserId] = useState(null); // currentUserIdを定義
     const myID = localStorage.getItem('MyID');
     const myName = localStorage.getItem('MyName');
     const myIcon = localStorage.getItem('MyIcon');
-
-    const [userProfile, setUserProfile] = useState({
-        name: '',
-        avatar: '',
-        
-    });
-
-    // Load user profile on component mount
-    useEffect(() => {
-        // ユーザー情報を取得するAPIを呼び出す
-        fetch('https://loopplus.mydns.jp/api/whoami', {
-            method: 'GET',
-            credentials: 'include', // クッキーを含めるため
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('ネットワークエラー');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // 取得したユーザー情報をstateに設定
-            setUserProfile({
-                name: data.Username || 'プロフィールを編集する',
-                avatar: data.Icon || 'images/defaultIcon.svg',
-                userId: data.UserID, // ユーザーIDを設定
-            });
-            setCurrentUserId(data.UserID);
-        })
-        .catch(error => console.error('エラー:', error));
-    }, []);
 
     // Navigate to profile page
     const handleProfileClick = () => {
@@ -73,6 +41,11 @@ const MyPage = () => {
         })
         .then(response => {
             if (response.ok) {
+                localStorage.removeItem('MyID');
+                localStorage.removeItem('MyName');
+                localStorage.removeItem('MyIcon');
+                localStorage.removeItem('MyMail');
+
                 // ログアウト成功時にログインページへ遷移
                 navigate('/login');
             } else {
@@ -94,7 +67,7 @@ const MyPage = () => {
 
             {/* Profile Section */}
             <div className="profile-section" onClick={handleProfileClick}>
-                {userProfile.avatar ? (
+                {myIcon ? (
                     <img src={`https://loopplus.mydns.jp/${myIcon}`} alt="User Avatar" className="profile-avatar" />
                 ) : (
                     <AccountCircleIcon className="profile-icon" />
