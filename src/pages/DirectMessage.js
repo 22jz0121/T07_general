@@ -23,7 +23,7 @@ const DirectMessage = () => {
 
   // Pusherの初期化
   useEffect(() => {
-    Pusher.logToConsole = true;
+    //Pusher.logToConsole = true;
     
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
@@ -66,11 +66,12 @@ const DirectMessage = () => {
   }, [id]); // チャットIDが変更されたときに再取得
 
   useEffect(() => {
-    // メッセージが更新された場合にスクロールする
-    if (messageEndRef.current) {
+     // メッセージが更新された場合にスクロールする
+     if (messageEndRef.current) {
+      // メッセージの最後にスクロール
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]); // メッセージが更新されたときに実行 11/29
+  }, [messages]); // messagesが更新されたときに実行 11/29
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value); // 入力値を更新

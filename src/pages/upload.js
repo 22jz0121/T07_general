@@ -72,7 +72,7 @@ const Upload = () => {
   const handleConfirm = async () => {
     const { name, description, transactionMethods, location } = formData;
 
-    if (!name || !description || transactionMethods.length === 0 || !location || !image) {
+    if (!name || !description || transactionMethods.length === 0 || !image) {
       alert("すべてのフィールドを入力してください。");
       return;
     }
@@ -83,24 +83,25 @@ const Upload = () => {
     formDataToSend.append('Category', 1); // ここは適宜選択したカテゴリのIDに変更
     formDataToSend.append('ItemImage', image); // 画像ファイルを追加
 
-    try {
-      const response = await fetch('https://loopplus.mydns.jp/api/item', {
-        method: 'POST',
-        body: formDataToSend,
-        credentials: 'include', // 必要に応じてクッキーを送信
+    navigate('/confirmation', { state: { ...formData, image } });
+    // try {
+    //   const response = await fetch('https://loopplus.mydns.jp/api/item', {
+    //     method: 'POST',
+    //     body: formDataToSend,
+    //     credentials: 'include', // 必要に応じてクッキーを送信
 
-      });
+    //   });
 
-      if (response.ok) {
-        navigate('/confirmation', { state: { ...formData, image } });
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || "エラーが発生しました。");
-      }
-    } catch (error) {
-      console.error('Error uploading item:', error);
-      alert("ネットワークエラーが発生しました。");
-    }
+    //   if (response.ok) {
+    //     navigate('/confirmation', { state: { ...formData, image } });
+    //   } else {
+    //     const errorData = await response.json();
+    //     alert(errorData.message || "エラーが発生しました。");
+    //   }
+    // } catch (error) {
+    //   console.error('Error uploading item:', error);
+    //   alert("ネットワークエラーが発生しました。");
+    // }
   };
 
   return (

@@ -10,38 +10,76 @@ const Confirmation = () => {
   const location = useLocation();
   const formData = location.state;
 
+  const myID = localStorage.getItem('MyID');
+  const myName = localStorage.getItem('MyName');
+  const myIcon = localStorage.getItem('MyIcon');
+
   // User state for name and avatar
-  const [user, setUser] = useState({ name: '', avatar: '' });
+  //const [user, setUser] = useState({ name: '', avatar: '' });
+  const [isSending, setIsSending] = useState(false); // 送信中の状態を管理
 
-  useEffect(() => {
-    // Retrieve the logged-in user's information from localStorage
-    const storedUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', avatar: '' };
-    setUser(storedUser);
-  }, []);
+  // useEffect(() => {
+  //   // Retrieve the logged-in user's information from localStorage
+  //   const storedUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', avatar: '' };
+  //   setUser(storedUser);
+  // }, []);
 
-  const handleSubmit = () => {
-    // Prepare item data for saving
-    const newItem = {
-      id: Date.now(),
-      ...formData,
-      transactionMethods: formData.transactionMethods, // Include transaction methods
-      timestamp: new Date().toLocaleString('ja-JP'),
-      image: formData.image ? URL.createObjectURL(formData.image) : '',
-      user, // Include user details
-    };
+  const handleSubmit = async () => {
+    if (isSending) return; // 送信中は処理を中止
 
-    // Retrieve existing items from localStorage
-    const existingItems = JSON.parse(localStorage.getItem('items')) || [];
+    // Prepare item data for sending to the server
+    const formDataToSend = new FormData();
+    formDataToSend.append('ItemName', formData.name);
+    formDataToSend.append('Description', formData.description);
+    formDataToSend.append('Category', 1); // 適宜選択したカテゴリのIDに変更
+    formDataToSend.append('ItemImage', formData.image); // 画像ファイルを追加
 
-    // Add the new item to the list and save back to localStorage
-    const updatedItems = [...existingItems, newItem];
-    localStorage.setItem('items', JSON.stringify(updatedItems));
+    try {
+      setIsSending(true); // 送信中フラグを立てる
+      const response = await fetch('https://loopplus.mydns.jp/api/item', {
+        method: 'POST',
+        body: formDataToSend,
+        credentials: 'include', // 必要に応じてクッキーを送信
+      });
 
-    // Notify the user and redirect
-    alert('出品が完了しました！');
-    localStorage.removeItem('formData'); // Clear saved form data
-    navigate('/'); // Redirect to homepage
+      if (response.ok) {
+        alert('出品が完了しました！');
+        localStorage.removeItem('formData'); // Clear saved form data
+        navigate('/'); // Redirect to homepage
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "エラーが発生しました。");
+      }
+    } catch (error) {
+      console.error('Error uploading item:', error);
+      alert("ネットワークエラーが発生しました。");
+    } finally {
+      setIsSending(false); // 送信処理が完了したらフラグを戻す
+    }
   };
+  // const handleSubmit = () => {
+  //   // Prepare item data for saving
+  //   const newItem = {
+  //     id: Date.now(),
+  //     ...formData,
+  //     transactionMethods: formData.transactionMethods, // Include transaction methods
+  //     timestamp: new Date().toLocaleString('ja-JP'),
+  //     image: formData.image ? URL.createObjectURL(formData.image) : '',
+  //     user, // Include user details
+  //   };
+
+  //   // Retrieve existing items from localStorage
+  //   const existingItems = JSON.parse(localStorage.getItem('items')) || [];
+
+  //   // Add the new item to the list and save back to localStorage
+  //   const updatedItems = [...existingItems, newItem];
+  //   localStorage.setItem('items', JSON.stringify(updatedItems));
+
+  //   // Notify the user and redirect
+  //   alert('出品が完了しました！');
+  //   localStorage.removeItem('formData'); // Clear saved form data
+  //   navigate('/'); // Redirect to homepage
+  // };
 
   const handleEdit = () => {
     // Save only text fields and selections to localStorage, excluding the image file
@@ -62,12 +100,12 @@ const Confirmation = () => {
 
       <div className="confirmation-content-card">
         <div className="confirmation-user-info">
-          {user.avatar ? (
-            <img src={user.avatar} alt="User Avatar" className="confirmation-avatar" />
+          {myIcon ? (
+            <img src={myIcon} alt="User Avatar" className="confirmation-avatar" />
           ) : (
             <div className="confirmation-avatar-placeholder" /> // Placeholder if no avatar
           )}
-          <span className="confirmation-user-name">{user.name}</span>
+          <span className="confirmation-user-name">{myName}</span>
         </div>
 
         <img src={formData.image ? URL.createObjectURL(formData.image) : ''} alt="出品物の画像" className="confirmation-item-image" />
@@ -92,7 +130,13 @@ const Confirmation = () => {
         </p>
 
         <div className="confirmation-button-container">
-          <button className="confirmation-submit-button" onClick={handleSubmit}>出品する</button>
+        <button 
+            className="confirmation-submit-button" 
+            onClick={handleSubmit} 
+            disabled={isSending} // 送信中は無効
+          >
+            出品する
+          </button>
           <button className="confirmation-edit-button" onClick={handleEdit}>修正する</button>
         </div>
       </div>
