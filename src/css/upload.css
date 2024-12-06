@@ -52,6 +52,7 @@ body {
 .p-4 {
   padding: 1.25rem;
   display: block;
+  margin-bottom: 50px;
 }
 
 .border-b {
