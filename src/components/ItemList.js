@@ -13,73 +13,52 @@ function ItemList() {
   useEffect(() => {
     isMounted.current = true;
 
-    const fetchItems = async () => {
-      try {
-        const response = await fetch('https://loopplus.mydns.jp/item');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (isMounted.current) {
-          setItems(data);
-        }
-      } catch (error) {
-        console.error('Error fetching items:', error);
-      } finally {
-        if (isMounted.current) {
-          setLoading(false);
-        }
-      }
-    };
-
-    const fetchMyFavorites = async () => {
-      try {
-        const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (isMounted.current) {
-          setMyFavoriteIds(data.map(item => item.ItemID));
-        }
-      } catch (error) {
-        console.error('Error fetching favorites:', error);
-      }
-    };
-
-    // 自分のUserIDを取得する関数
-    const fetchMyinfo = async () => {
-      try {
-        const response = await fetch('https://loopplus.mydns.jp/api/whoami', {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include'
-        }); // ログイン状態を確認するエンドポイント
-
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('MyID', data.UserID);
-          localStorage.setItem('MyName', data.Username);
-          localStorage.setItem('MyIcon', data.Icon);
-          localStorage.setItem('MyMail', data.Email);
-        }
-      } catch (error) {
-        console.error('Error fetching user ID:', error);
-      }
-    };
-
     fetchItems();
     fetchMyFavorites();
-    fetchMyinfo();
 
     return () => {
       isMounted.current = false;
     };
   }, []);
+
+  //アイテムを取得
+  const fetchItems = async () => {
+    try {
+      const response = await fetch('https://loopplus.mydns.jp/item');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (isMounted.current) {
+        setItems(data);
+      }
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
+    }
+  };
+
+  //自分のお気に入りを取得
+  const fetchMyFavorites = async () => {
+    try {
+      const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (isMounted.current) {
+        setMyFavoriteIds(data.map(item => item.ItemID));
+      }
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    }
+  };
 
 
   //お気に入りボタンが押されたときの処理
