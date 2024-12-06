@@ -15,9 +15,11 @@ const DirectMessage = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null); // 画像ファイルの状態を追加
-  const [userId, setUserId] = useState(null); // 自分のUserIDを保存する状態を追加
   const [isSending, setIsSending] = useState(false); // 送信中のステータスを追加
   const messageEndRef = useRef(null); // メッセージの最後を参照するためのref
+  const userId = localStorage.getItem('MyID');// 自分のUserIDを保存する状態を追加
+  const myName = localStorage.getItem('MyName');
+  const myIcon = localStorage.getItem('MyIcon');
 
   // Pusherの初期化
   useEffect(() => {
@@ -44,24 +46,6 @@ const DirectMessage = () => {
       channel.unsubscribe();
     };
   }, [id]);
-  // 自分のUserIDを取得する関数
-  const fetchMyUserId = async () => {
-    try {
-      const response = await fetch('https://loopplus.mydns.jp/api/whoami', {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      }); // ログイン状態を確認するエンドポイント
-
-      if (response.ok) {
-        const data = await response.json();
-        setUserId(data.UserID); // 自分のUserIDを保存
-      }
-    } catch (error) {
-      console.error('Error fetching user ID:', error);
-    }
-  };
 
   // チャットメッセージを取得する関数
   const fetchChatMessages = async () => {
@@ -78,7 +62,6 @@ const DirectMessage = () => {
   };
 
   useEffect(() => {
-    fetchMyUserId(); // 自分のUserIDを取得
     fetchChatMessages(); // チャットメッセージを取得する関数を実行
   }, [id]); // チャットIDが変更されたときに再取得
 
@@ -153,7 +136,7 @@ const DirectMessage = () => {
           return (
             <div
               key={msg.ChatContentID}
-              className={`message-wrapper ${msg.UserID === userId ? 'right' : 'left'}`}
+              className={`message-wrapper ${msg.UserID == userId ? 'right' : 'left'}`}
             >
               <div className="message-bubble">
                 <p className="message-text">{msg.Content}</p>
