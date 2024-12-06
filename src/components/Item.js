@@ -3,8 +3,8 @@ import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom'; // Linkをインポート
 import '../css/top.css';
-
-function Item({ itemId, name, time, imageSrc, title, description, location, onLike, liked: initialLiked }) {
+//locationを削除
+function Item({ itemId, name, time, imageSrc, title, description, onLike, liked: initialLiked }) {
   const [liked, setLiked] = useState(initialLiked);
 
   useEffect(() => {
@@ -28,7 +28,11 @@ function Item({ itemId, name, time, imageSrc, title, description, location, onLi
         </div>
       </div>
       <div className="item-link-container"> {/* Linkを外に出す */}
-        <Link to={`/listing/${itemId}`} className="item-link">
+        <Link 
+        to={`/listing/${itemId}`} 
+        state={{ itemId, name, time, description, imageSrc, liked, title}} // stateを利用
+
+        className="item-link">
           <div className="item-content">
             <img src={imageSrc} alt="Item Image" className="item-image" />
             <div className="item-info">
