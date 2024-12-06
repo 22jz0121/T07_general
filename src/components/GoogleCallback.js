@@ -21,6 +21,7 @@ function GoogleCallback() {
           localStorage.setItem('MyName', data.Username);
           localStorage.setItem('MyIcon', data.Icon);
           localStorage.setItem('MyMail', data.Email);
+          navigate('/');  // ログイン後のページへリダイレクト
         }
       } catch (error) {
         console.error('Error fetching user ID:', error);
@@ -28,7 +29,6 @@ function GoogleCallback() {
     };
 
     fetchMyinfo();
-    navigate('/');  // ログイン後のページへリダイレクト
   }, [navigate]);
 
   return <div>LOOP+へようこそ</div>;
