@@ -15,6 +15,7 @@ function PostAddPage({ onRequestAdded }) {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!validTypes.includes(file.type)) {
@@ -41,15 +42,10 @@ function PostAddPage({ onRequestAdded }) {
       formData.append('RequestImage', image);
 
       try {
-        // CSRFトークンを取得
-        await fetch('https://loopplus.mydns.jp/sanctum/csrf-cookie', {
-          credentials: 'include',
-        });
-
         const response = await fetch('https://loopplus.mydns.jp/api/request', {
           method: 'POST',
           body: formData,
-          credentials: 'include', // 必要に応じてクッキーを送信
+          credentials: 'include',
         });
 
         if (response.ok) {
