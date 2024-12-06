@@ -16,8 +16,6 @@ const DirectMessage = () => {
   const [isSending, setIsSending] = useState(false);
   const messageEndRef = useRef(null);
   const userId = localStorage.getItem('MyID');
-  const myName = localStorage.getItem('MyName');
-  const myIcon = localStorage.getItem('MyIcon');
 
   useEffect(() => {
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
@@ -27,6 +25,10 @@ const DirectMessage = () => {
     const channel = pusher.subscribe(`chat-room-${id}`);
     channel.bind('message-sent', (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    channel.bind('message-deleted', (data) => {
+      setMessages((prevMessages) => prevMessages.filter(msg => msg.ChatContentID !== data.ChatContentID));
     });
 
     return () => {
@@ -110,7 +112,20 @@ const DirectMessage = () => {
       });
 
       if (response.ok) {
-        setMessages((prevMessages) => prevMessages.filter(msg => msg.ChatContentID !== chatContentID));
+        // Pusherを使って削除イベントをトリガー
+        const data = { ChatContentID: chatContentID };
+        const pusherResponse = await fetch('https://loopplus.mydns.jp/api/chat/pusher/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          credentials: 'include',
+        });
+
+        if (!pusherResponse.ok) {
+          console.error('Pusher delete event failed');
+        }
       } else {
         console.error('メッセージ削除に失敗しました');
       }
