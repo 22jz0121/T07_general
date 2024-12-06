@@ -28,6 +28,7 @@ import './css/top.css';
 
 function App() {
   const [requests, setRequests] = useState([]);
+  const [isFooterVisible, setIsFooterVisible] = useState(true);
 
   const handleRequestAdded = (newRequest) => {
     setRequests((prevRequests) => [...prevRequests, newRequest]);
@@ -49,18 +50,17 @@ function App() {
           <Route path="/search-results" element={<PrivateRoute><SearchResults /></PrivateRoute>} />
           <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
           <Route path="/dm/:id" element={<PrivateRoute><DirectMessage /></PrivateRoute>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/callback" element={<GoogleCallback />} />
+          <Route path="/login" element={<Login setIsFooterVisible={setIsFooterVisible} />} />
+          <Route path="/callback" element={<GoogleCallback setIsFooterVisible={setIsFooterVisible} />} />
           <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
           <Route path="/post-add" element={<PrivateRoute><PostAddPage onRequestAdded={handleRequestAdded} /></PrivateRoute>} />
           <Route path="/profile/:userId" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
           <Route path="/profile-edit/:userId" element={<PrivateRoute><ProfileEditPage /></PrivateRoute>} />
-          <Route path="/google-callback" element={<GoogleCallback />} />
           <Route path="/liked-items" element={<PrivateRoute><LikedItemsPage /></PrivateRoute>} />
           <Route path="/history" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
           <Route path="/qa" element={<PrivateRoute><QAPage /></PrivateRoute>} />
         </Routes>
-        <Footer />
+        {isFooterVisible && <Footer />}
       </div>
     </Router>
   );

@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function GoogleCallback() {
+function GoogleCallback({ setIsFooterVisible }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 自分のUserIDを取得する関数
+    // フッターを非表示にする
+    setIsFooterVisible(false);
+
     const fetchMyinfo = async () => {
       try {
         const response = await fetch('https://loopplus.mydns.jp/api/whoami', {
@@ -13,7 +15,7 @@ function GoogleCallback() {
             'Content-Type': 'application/json'
           },
           credentials: 'include'
-        }); // ログイン状態を確認するエンドポイント
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -29,7 +31,10 @@ function GoogleCallback() {
     };
 
     fetchMyinfo();
-  }, [navigate]);
+
+    // クリーンアップ関数でフッターを再表示
+    return () => setIsFooterVisible(true);
+  }, [navigate, setIsFooterVisible]);
 
   return <div>LOOP+へようこそ</div>;
 }
