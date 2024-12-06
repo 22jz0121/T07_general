@@ -1,43 +1,31 @@
-import React, { useEffect, useState, useRef } from 'react'; // useRefをインポート
-import { useNavigate, useParams, useLocation } from 'react-router-dom'; 
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
-import Pusher from 'pusher-js'; // Pusherをインポート
+import Pusher from 'pusher-js';
 import '../css/directMessage.css';
-
-//リアルタイム機能実装テスト中
 
 const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = useParams(); // URLからチャットIDを取得
+  const { id } = useParams();
   const { name } = location.state || {};
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [imageFile, setImageFile] = useState(null); // 画像ファイルの状態を追加
-  const [isSending, setIsSending] = useState(false); // 送信中のステータスを追加
-  const messageEndRef = useRef(null); // メッセージの最後を参照するためのref
-  const userId = localStorage.getItem('MyID');// 自分のUserIDを保存する状態を追加
+  const [imageFile, setImageFile] = useState(null);
+  const [isSending, setIsSending] = useState(false);
+  const messageEndRef = useRef(null);
+  const userId = localStorage.getItem('MyID');
   const myName = localStorage.getItem('MyName');
   const myIcon = localStorage.getItem('MyIcon');
 
-  // Pusherの初期化
   useEffect(() => {
-    //Pusher.logToConsole = true;
-    
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
     });
 
-    pusher.connection.bind( 'error', function( err ) {
-
-      console.log('Errer!');
-
-    });
     const channel = pusher.subscribe(`chat-room-${id}`);
-    
     channel.bind('message-sent', (data) => {
-      // const data2 = JSON.parse(data);
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -47,73 +35,92 @@ const DirectMessage = () => {
     };
   }, [id]);
 
-  // チャットメッセージを取得する関数
   const fetchChatMessages = async () => {
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/chat/room/${id}`); // チャットIDに基づいてメッセージを取得
+      const response = await fetch(`https://loopplus.mydns.jp/chat/room/${id}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      setMessages(data); // 取得したメッセージを状態に保存
+      setMessages(data);
     } catch (error) {
       console.error('Error fetching chat messages:', error);
     }
   };
 
   useEffect(() => {
-    fetchChatMessages(); // チャットメッセージを取得する関数を実行
-  }, [id]); // チャットIDが変更されたときに再取得
+    fetchChatMessages();
+  }, [id]);
 
   useEffect(() => {
-     // メッセージが更新された場合にスクロールする
-     if (messageEndRef.current) {
-      // メッセージの最後にスクロール
+    if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]); // messagesが更新されたときに実行 11/29
+  }, [messages]);
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value); // 入力値を更新
+    setInputValue(event.target.value);
   };
 
   const handleImageUpload = (event) => {
-    setImageFile(event.target.files[0]); // 画像ファイルを状態に保存
+    setImageFile(event.target.files[0]);
   };
 
   const handleSendMessage = async () => {
-    if (inputValue.trim() || imageFile) { // メッセージまたは画像がある場合に送信
-      setIsSending(true); // 送信中フラグを立てる
+    if (inputValue.trim() || imageFile) {
+      setIsSending(true);
       const formData = new FormData();
       formData.append('Content', inputValue);
-      formData.append('ChatID', id); // チャットIDを送信
+      formData.append('ChatID', id);
       if (imageFile) {
-        formData.append('Image', imageFile); // 画像ファイルを送信
+        formData.append('Image', imageFile);
       }
 
       try {
         const response = await fetch('https://loopplus.mydns.jp/api/chat/send', {
           method: 'POST',
-          body: formData, // FormDataを使用
-          credentials: 'include', // クッキーを含める
+          body: formData,
+          credentials: 'include',
         });
 
         if (response.ok) {
-          setInputValue(''); // 入力をクリア
-          setImageFile(null); // 画像をクリア
-          //fetchChatMessages(); // メッセージを再取得
+          setInputValue('');
+          setImageFile(null);
         }
       } catch (error) {
         console.error('Error sending message:', error);
       } finally {
-        setIsSending(false); // 送信処理が完了したらフラグを戻す
+        setIsSending(false);
       }
     }
   };
 
-  // 画像選択ダイアログを開く関数
+  const handleLongPress = (chatContentID) => {
+    const confirmDelete = window.confirm('このメッセージを削除しますか？');
+    if (confirmDelete) {
+      deleteMessage(chatContentID);
+    }
+  };
+
+  const deleteMessage = async (chatContentID) => {
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/chat/delete/${chatContentID}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        setMessages((prevMessages) => prevMessages.filter(msg => msg.ChatContentID !== chatContentID));
+      } else {
+        console.error('メッセージ削除に失敗しました');
+      }
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    }
+  };
+
   const openFileDialog = () => {
-    document.getElementById('image-upload').click(); // 隠れたinputをクリック
+    document.getElementById('image-upload').click();
   };
 
   return (
@@ -127,17 +134,20 @@ const DirectMessage = () => {
 
       <div className="dm-messages">
         {messages.map((msg) => {
-          // Convert CreatedAt to a 24-hour time format
           const formattedTime = new Date(msg.CreatedAt).toLocaleTimeString('ja-JP', {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: false, // Ensure 24-hour format
+            hour12: false,
           });
 
           return (
             <div
               key={msg.ChatContentID}
               className={`message-wrapper ${msg.UserID == userId ? 'right' : 'left'}`}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                handleLongPress(msg.ChatContentID);
+              }}
             >
               <div className="message-bubble">
                 <p className="message-text">{msg.Content}</p>
@@ -155,10 +165,8 @@ const DirectMessage = () => {
             </div>
           );
         })}
-        {/* 最後のメッセージにスクロールするための空のdiv */}
         <div ref={messageEndRef} />
       </div>
-
 
       <div className="dm-input">
         <button className="image-upload-button" onClick={openFileDialog}>
@@ -181,7 +189,7 @@ const DirectMessage = () => {
         <button 
           className="send-button" 
           onClick={handleSendMessage} 
-          disabled={!inputValue.trim() && !imageFile || isSending} // 送信中も無効にする
+          disabled={!inputValue.trim() && !imageFile || isSending}
         >
           <SendIcon className="send-icon" />
         </button>
