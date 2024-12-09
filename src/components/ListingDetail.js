@@ -21,6 +21,7 @@ function ListingDetail() {
     const fetchItemDetails = async () => {
       const { itemId, name, time, description, imageSrc, liked, title} = location.state;
       setItemDetails({ itemId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title});
+      console.log('Fetched title:', title); // ここでtitleを確認
       setLiked(liked);
     };
 
@@ -102,7 +103,7 @@ function ListingDetail() {
   console.log('Location state:', location.state); // location.stateの内容を確認
 
   // itemDetailsから必要なプロパティを取得
-  const { UserName, CreatedAt, itemImage, itemName, itemContent, itemId, title} = itemDetails;
+  const { UserName, CreatedAt, itemImage, itemName, itemContent, itemId} = itemDetails;
   return (
     <div className="listing-detail-container">
       <div className="top-navigation">
@@ -151,7 +152,7 @@ function ListingDetail() {
             <button
               className="transaction-button"
               onClick={() => {
-                console.log('Navigating with title:', title); // ここでtitleを確認
+                console.log('Navigating with itemName:', itemName); // ここでtitleを確認
                 navigate(`/transaction/${listingId}`, { 
                   state: { 
                     itemId, 
@@ -159,7 +160,7 @@ function ListingDetail() {
                     time: CreatedAt, 
                     description: itemContent, 
                     imageSrc: itemImage, 
-                    itemName: title 
+                    itemName 
                   } 
                 });
               }}

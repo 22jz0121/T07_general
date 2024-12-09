@@ -9,7 +9,7 @@ function TransactionProcedure() {
   const [message, setMessage] = useState('');
   
   // location.stateからデータを取得
-  const { itemId, name, time, description, imageSrc, title } = location.state || {}; // stateがundefinedの場合に備える
+  const { itemId, name, time, description, imageSrc,  itemName} = location.state || {}; // stateがundefinedの場合に備える
 
   if (!location.state) {
     return <div>データがありません。</div>; // stateが存在しない場合の表示
@@ -68,7 +68,7 @@ function TransactionProcedure() {
       <div className="transaction-procedure-listing-info">
         <img src={imageSrc} alt="Listing" className="transaction-procedure-listing-image" />
         <div className="transaction-procedure-listing-details">
-        <h2 className="transaction-procedure-item-title">{title}</h2>
+        <h2 className="transaction-procedure-item-title">{itemName}</h2>
           <span className="badge">譲渡</span>
           <p>{description}</p>
         </div>
