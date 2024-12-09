@@ -10,17 +10,17 @@ const Confirmation = () => {
   const location = useLocation();
   const formData = location.state;
 
-  const myID = localStorage.getItem('MyID');
-  const myName = localStorage.getItem('MyName');
-  const myIcon = localStorage.getItem('MyIcon');
+  const myID = sessionStorage.getItem('MyID');
+  const myName = sessionStorage.getItem('MyName');
+  const myIcon = sessionStorage.getItem('MyIcon');
 
   // User state for name and avatar
   //const [user, setUser] = useState({ name: '', avatar: '' });
   const [isSending, setIsSending] = useState(false); // 送信中の状態を管理
 
   // useEffect(() => {
-  //   // Retrieve the logged-in user's information from localStorage
-  //   const storedUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', avatar: '' };
+  //   // Retrieve the logged-in user's information from sessionStorage
+  //   const storedUser = JSON.parse(sessionStorage.getItem('currentUser')) || { name: 'Guest', avatar: '' };
   //   setUser(storedUser);
   // }, []);
 
@@ -44,7 +44,7 @@ const Confirmation = () => {
 
       if (response.ok) {
         alert('出品が完了しました！');
-        localStorage.removeItem('formData'); // Clear saved form data
+        sessionStorage.removeItem('formData'); // Clear saved form data
         navigate('/'); // Redirect to homepage
       } else {
         const errorData = await response.json();
@@ -68,24 +68,24 @@ const Confirmation = () => {
   //     user, // Include user details
   //   };
 
-  //   // Retrieve existing items from localStorage
-  //   const existingItems = JSON.parse(localStorage.getItem('items')) || [];
+  //   // Retrieve existing items from sessionStorage
+  //   const existingItems = JSON.parse(sessionStorage.getItem('items')) || [];
 
-  //   // Add the new item to the list and save back to localStorage
+  //   // Add the new item to the list and save back to sessionStorage
   //   const updatedItems = [...existingItems, newItem];
-  //   localStorage.setItem('items', JSON.stringify(updatedItems));
+  //   sessionStorage.setItem('items', JSON.stringify(updatedItems));
 
   //   // Notify the user and redirect
   //   alert('出品が完了しました！');
-  //   localStorage.removeItem('formData'); // Clear saved form data
+  //   sessionStorage.removeItem('formData'); // Clear saved form data
   //   navigate('/'); // Redirect to homepage
   // };
 
   const handleEdit = () => {
-    // Save only text fields and selections to localStorage, excluding the image file
+    // Save only text fields and selections to sessionStorage, excluding the image file
     const { name, description, transactionMethods, location } = formData;
     const formDataToSave = { name, description, transactionMethods, location };
-    localStorage.setItem('formData', JSON.stringify(formDataToSave));
+    sessionStorage.setItem('formData', JSON.stringify(formDataToSave));
     navigate(-1); // Go back to the upload page
   };
 

@@ -15,9 +15,9 @@ const DirectMessage = () => {
   const [imageFile, setImageFile] = useState(null);
   const [isSending, setIsSending] = useState(false);
   const messageEndRef = useRef(null);
-  const userId = localStorage.getItem('MyID');
-  const myName = localStorage.getItem('MyName');
-  const myIcon = localStorage.getItem('MyIcon');
+  const userId = sessionStorage.getItem('MyID');
+  const myName = sessionStorage.getItem('MyName');
+  const myIcon = sessionStorage.getItem('MyIcon');
 
   useEffect(() => {
     const pusher = new Pusher('f155afe9e8a09487d9ea', {

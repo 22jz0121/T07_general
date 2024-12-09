@@ -14,9 +14,9 @@ import '../css/MyPage.css';
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const myID = localStorage.getItem('MyID');
-    const myName = localStorage.getItem('MyName');
-    const myIcon = localStorage.getItem('MyIcon');
+    const myID = sessionStorage.getItem('MyID');
+    const myName = sessionStorage.getItem('MyName');
+    const myIcon = sessionStorage.getItem('MyIcon');
 
     // Navigate to profile page
     const handleProfileClick = () => {
@@ -41,10 +41,10 @@ const MyPage = () => {
         })
         .then(response => {
             if (response.ok) {
-                localStorage.removeItem('MyID');
-                localStorage.removeItem('MyName');
-                localStorage.removeItem('MyIcon');
-                localStorage.removeItem('MyMail');
+                sessionStorage.removeItem('MyID');
+                sessionStorage.removeItem('MyName');
+                sessionStorage.removeItem('MyIcon');
+                sessionStorage.removeItem('MyMail');
 
                 // ログアウト成功時にログインページへ遷移
                 navigate('/login');

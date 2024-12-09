@@ -38,7 +38,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Top />} />
+          <Route path="/" element={<PrivateRoute><Top /></PrivateRoute>} />
           <Route path="/listings" element={<ItemList />} />
           <Route path="/listing/:listingId" element={<ListingDetail />} />
           <Route path="/transaction/:listingId" element={<TransactionProcedure />} />

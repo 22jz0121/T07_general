@@ -19,10 +19,10 @@ function GoogleCallback({ setIsFooterVisible }) {
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem('MyID', data.UserID);
-          localStorage.setItem('MyName', data.Username);
-          localStorage.setItem('MyIcon', data.Icon);
-          localStorage.setItem('MyMail', data.Email);
+          sessionStorage.setItem('MyID', data.UserID);
+          sessionStorage.setItem('MyName', data.Username);
+          sessionStorage.setItem('MyIcon', data.Icon);
+          sessionStorage.setItem('MyMail', data.Email);
           navigate('/');  // ログイン後のページへリダイレクト
         }
       } catch (error) {

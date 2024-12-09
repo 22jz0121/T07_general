@@ -52,7 +52,7 @@ const ProfilePage = () => {
       }
     };
 
-    // Retrieve header image from localStorage
+    // Retrieve header image from sessionStorage
     if(!userProfile.ProfilePicture) {
       setHeaderImage(`https://loopplus.mydns.jp/${userProfile.ProfilePicture}`);
     }
@@ -73,7 +73,7 @@ const ProfilePage = () => {
     if (file) {
       const imageURL = URL.createObjectURL(file); // Convert file to a temporary URL
       setHeaderImage(imageURL); // Update header image
-      // localStorage.setItem(`headerImage-${userId}`, imageURL); // Save to localStorage
+      // sessionStorage.setItem(`headerImage-${userId}`, imageURL); // Save to sessionStorage
     }
   };
 
