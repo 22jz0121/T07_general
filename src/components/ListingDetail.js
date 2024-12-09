@@ -1,33 +1,31 @@
-// import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react'; // useEffectをインポート
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
-import { useNavigate, useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react'; // useEffectをインポート
-// import tvImage from '../img/tv-image.png';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import '../css/listingDetail.css';
 
 function ListingDetail() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { listingId } = useParams();
   const [itemDetails, setItemDetails] = useState(null); // アイテム詳細を保存するステート
   const [liked, setLiked] = useState(false);
-
   // アイテムの詳細を取得
   useEffect(() => {
+    let isMounted = true; // マウント状態を追跡
+
     const fetchItemDetails = async () => {
-      try {
-        const response = await fetch(`https://loopplus.mydns.jp/api/item/${listingId}`);
-        if (!response.ok) throw new Error('Failed to fetch item details');
-        
-        const data = await response.json();
-        setItemDetails(data); // 取得したデータをステートに設定
-      } catch (error) {
-        console.error('Error fetching item details:', error);
-      }
+      const { itemId, name, time, description, imageSrc, liked, title} = location.state;
+      setItemDetails({ itemId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title});
+      setLiked(liked);
     };
 
     fetchItemDetails();
+
+    return () => {
+      isMounted = false; // アンマウントされた際にフラグを更新
+    };
   }, [listingId]);
 
   const handleLike = () => {
@@ -37,7 +35,8 @@ function ListingDetail() {
   if (!itemDetails) {
     return <div>Loading...</div>; // ローディング表示
   }
-
+  // itemDetailsから必要なプロパティを取得
+  const { UserName, CreatedAt, itemImage, itemName, itemContent } = itemDetails;
   return (
     <div className="listing-detail-container">
       <div className="top-navigation">
@@ -50,16 +49,15 @@ function ListingDetail() {
       <div className="listing-content">
         <div className="listing-header">
           <AccountCircleIcon className="avatar-icon" style={{ fontSize: '40px', color: '#374151' }} />
-          <span className="user-name">{itemDetails.User.UserName}</span> {/* ユーザー名 */}
-          <span className="listing-time">{itemDetails.CreatedAt}</span> {/* 登録日時 */}
+          <span className="user-name">{UserName || 'ユーザー名が取得できません'}</span> {/* ユーザー名 */}
+          <span className="listing-time">{CreatedAt}</span> {/* 登録日時 */}
         </div>
 
-        <img src={`https://loopplus.mydns.jp/${itemDetails.ItemImage}`} alt="Listing" className="listing-image" />
-
+        <img src={itemImage} alt="Listing" className="listing-image" />
 
         <div className="listing-details">
-          <h2>{itemDetails.ItemName}</h2> {/* アイテム名 */}
-          <p>{itemDetails.Description}</p> {/* アイテムの説明 */}
+          <h2>{itemName}</h2> {/* アイテム名 */}
+          <p>{itemContent}</p> {/* アイテムの説明 */}
 
           <div className="transaction-details">
             <div>
@@ -78,7 +76,6 @@ function ListingDetail() {
           </div>
 
           <div className="location-details">
-            {/* <p className='ppp'>受け渡し場所:12号館</p> */}
             <span onClick={handleLike} className="heart-icon">
               {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
             </span>
@@ -91,7 +88,6 @@ function ListingDetail() {
             >
               取引手続きへ
             </button>
-
           </div>
         </div>
       </div>
