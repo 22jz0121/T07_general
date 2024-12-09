@@ -11,13 +11,26 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('');
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (searchQuery.trim() || category) {
-      navigate('/search-results', {
-        state: { searchQuery, category },
-      });
+      try {
+        const response = await fetch(`https://loopplus.mydns.jp/api/searchitem?word=${encodeURIComponent(searchQuery)}&category=${encodeURIComponent(category)}`);
+        const data = await response.json();
+
+        // 検索結果が取得できたら、結果画面に遷移
+        if (response.ok) {
+          navigate('/search-results', {
+            state: { results: data }, // APIからの結果を渡す
+          });
+        } else {
+          alert('検索に失敗しました。');
+        }
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        alert('検索中にエラーが発生しました。');
+      }
     } else {
-      alert('Please enter a keyword or select a category.');
+      alert('キーワードまたはカテゴリを入力してください。');
     }
   };
 
@@ -31,7 +44,6 @@ const Search = () => {
       </div>
 
       <div className="search-form">
-        {/* Input Field */}
         <input
           type="text"
           placeholder="キーワードを入力"
@@ -40,7 +52,6 @@ const Search = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        {/* Dropdown for Category */}
         <div className="dropdown-container">
           <select
             className="dropdown-select"
@@ -54,7 +65,6 @@ const Search = () => {
           </select>
         </div>
 
-        {/* Search Button */}
         <button className="search-button" onClick={handleSearch}>
           <SearchIcon className="search-icon" />
           <span className="search-text">探す</span>
