@@ -22,10 +22,11 @@ function TransactionProcedure() {
   const handleSend = async () => {
     setError(null); // エラーをリセット
     setSuccess(null); // 成功メッセージをリセット
+    setIsSending(true); // 送信中フラグを立てる
 
     if (message.trim()) {
       // チャットルームを作成
-      console.error('Error response:', userId);
+      console.log('userID:', userId);
       try {
         const createRoomResponse  = await fetch(`https://loopplus.mydns.jp/api/chatcreate/${userId}`, {
           method: 'POST',
@@ -42,6 +43,7 @@ function TransactionProcedure() {
         }
 
         const data = await createRoomResponse.json();
+        console.log(data.roomId);
         if (data.roomId) {
           setChatId(data.roomId); // チャットIDを保存
         } else {
@@ -63,7 +65,7 @@ function TransactionProcedure() {
           credentials: 'include',
           body: JSON.stringify(payload),
         });
-
+        // console.log(chatId);
         if (!sendResponse.ok) {
           const errorText = await sendResponse.text();
           console.error('Error response:', errorText);
@@ -74,12 +76,16 @@ function TransactionProcedure() {
         if (result.message === 'success') {
           setSuccess('メッセージが送信されました！');
           setMessage(''); // 入力フィールドをクリア
+          setIsSending(false); // 送信完了後に設定
+          
+          // ここでchatIdを使用する
+          if (data.roomId) {
+            navigate(`/dm/${data.roomId}`, {state: {name}}); // 新しく取得したroomIdを使用
+          }
         }
       } catch (error) {
         console.error('Error:', error);
         setError(error.message); // エラーメッセージを設定
-      }finally {
-        setIsSending(false); // 送信完了後に設定
       }
     } else {
       setError('メッセージを入力してください。');

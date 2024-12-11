@@ -84,24 +84,6 @@ const Upload = () => {
     formDataToSend.append('ItemImage', image); // 画像ファイルを追加
 
     navigate('/confirmation', { state: { ...formData, image } });
-    // try {
-    //   const response = await fetch('https://loopplus.mydns.jp/api/item', {
-    //     method: 'POST',
-    //     body: formDataToSend,
-    //     credentials: 'include', // 必要に応じてクッキーを送信
-
-    //   });
-
-    //   if (response.ok) {
-    //     navigate('/confirmation', { state: { ...formData, image } });
-    //   } else {
-    //     const errorData = await response.json();
-    //     alert(errorData.message || "エラーが発生しました。");
-    //   }
-    // } catch (error) {
-    //   console.error('Error uploading item:', error);
-    //   alert("ネットワークエラーが発生しました。");
-    // }
   };
 
   return (
