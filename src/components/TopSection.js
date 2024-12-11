@@ -11,9 +11,9 @@ function TopSection() {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([
-    '新しいメッセージが届きました',
-    '取引が完了しました',
-    'リクエストが承認されました'
+    { id: 1, message: '新しいメッセージが届きました' },
+    { id: 2, message: '取引が完了しました' },
+    { id: 3, message: 'リクエストが承認されました' }
   ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('listing');
@@ -51,6 +51,11 @@ function TopSection() {
 
   const toggleNotificationBar = () => {
     setIsNotificationOpen((prev) => !prev);
+  };
+
+  // 通知を削除する関数
+  const removeNotification = (id) => {
+    setNotifications((prev) => prev.filter(notification => notification.id !== id));
   };
 
   useEffect(() => {
@@ -111,9 +116,10 @@ function TopSection() {
             {isNotificationOpen && (
               <div className="notification-bar">
                 {notifications.length > 0 ? (
-                  notifications.map((notification, index) => (
-                    <div key={index} className="notification-item">
-                      {notification}
+                  notifications.map((notification) => (
+                    <div key={notification.id} className="notification-item">
+                      {notification.message}
+                      <button onClick={() => removeNotification(notification.id)} className="remove-button">×</button>
                     </div>
                   ))
                 ) : (
