@@ -4,7 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom'; // Linkをインポート
 import '../css/top.css';
 //locationを削除
-function Item({ itemId, name, time, imageSrc, title, description, onLike, liked: initialLiked }) {
+function Item({ itemId, userId, name, time, imageSrc, title, description, onLike, liked: initialLiked }) {
   const [liked, setLiked] = useState(initialLiked);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function Item({ itemId, name, time, imageSrc, title, description, onLike, liked:
       <div className="item-link-container"> {/* Linkを外に出す */}
         <Link 
         to={`/listing/${itemId}`} 
-        state={{ itemId, name, time, description, imageSrc, liked, title}} // stateを利用
+        state={{ itemId, userId, name, time, description, imageSrc, liked, title}} // stateを利用
 
         className="item-link">
           <div className="item-content">

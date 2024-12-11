@@ -112,6 +112,7 @@ function ItemList() {
           key={item.ItemID} 
           name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
           userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
+          userId={item.UserID}
           itemId={item.ItemID} 
           title={item.ItemName} 
           imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}

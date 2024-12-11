@@ -19,8 +19,8 @@ function ListingDetail() {
     let isMounted = true; // マウント状態を追跡
 
     const fetchItemDetails = async () => {
-      const { itemId, name, time, description, imageSrc, liked, title} = location.state;
-      setItemDetails({ itemId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title});
+      const { itemId, userId, name, time, description, imageSrc, liked, title} = location.state;
+      setItemDetails({ itemId, userId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title});
       console.log('Fetched title:', title); // ここでtitleを確認
       setLiked(liked);
     };
@@ -103,7 +103,7 @@ function ListingDetail() {
   console.log('Location state:', location.state); // location.stateの内容を確認
 
   // itemDetailsから必要なプロパティを取得
-  const { UserName, CreatedAt, itemImage, itemName, itemContent, itemId} = itemDetails;
+  const { UserName, userId, CreatedAt, itemImage, itemName, itemContent, itemId} = itemDetails;
   return (
     <div className="listing-detail-container">
       <div className="top-navigation">
@@ -156,11 +156,12 @@ function ListingDetail() {
                 navigate(`/transaction/${listingId}`, { 
                   state: { 
                     itemId, 
+                    itemName,
+                    userId,
                     name: UserName, 
                     time: CreatedAt, 
                     description: itemContent, 
                     imageSrc: itemImage, 
-                    itemName 
                   } 
                 });
               }}
