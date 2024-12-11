@@ -119,6 +119,10 @@ const ProfilePage = () => {
     }
   };
 
+  const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/') 
+    ? `https://loopplus.mydns.jp/${userProfile.Icon}` 
+    : userProfile.Icon;
+
   return (
     <div className="profile-page">
       {/* Top Navigation */}
@@ -149,7 +153,7 @@ const ProfilePage = () => {
       {/* Profile Header */}
       <div className="profile-header">
         <img
-          src={userProfile.Icon}
+          src={iconSrc}
           alt="Avatar"
           className="profile-header-avatar"
         />
@@ -165,8 +169,8 @@ const ProfilePage = () => {
               </button>
             )}
           </div>
-          <p className="profile-header-num">@{userProfile.num}</p>
-          <p className="profile-header-bio">{userProfile.bio}</p>
+          <p className="profile-header-num">@{userProfile.Email}</p>
+          <p className="profile-header-bio">{userProfile.Comment}</p>
         </div>
       </div>
 

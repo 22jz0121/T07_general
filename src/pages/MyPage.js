@@ -45,6 +45,8 @@ const MyPage = () => {
                 sessionStorage.removeItem('MyName');
                 sessionStorage.removeItem('MyIcon');
                 sessionStorage.removeItem('MyMail');
+                sessionStorage.removeItem('MyProfPic');
+                sessionStorage.removeItem('MyComment');
 
                 // ログアウト成功時にログインページへ遷移
                 navigate('/login');

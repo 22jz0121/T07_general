@@ -23,6 +23,8 @@ function GoogleCallback({ setIsFooterVisible }) {
           sessionStorage.setItem('MyName', data.Username);
           sessionStorage.setItem('MyIcon', data.Icon);
           sessionStorage.setItem('MyMail', data.Email);
+          sessionStorage.setItem('MyComment', data.Comment);
+          sessionStorage.setItem('MyProfPic', data.ProfilePicture);
           navigate('/');  // ログイン後のページへリダイレクト
         }
       } catch (error) {
