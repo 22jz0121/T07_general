@@ -11,22 +11,51 @@ function TopSection() {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([
-    '新しいメッセージが届きました',
-    '取引が完了しました',
-    'リクエストが承認されました'
+    { id: 1, message: '新しいメッセージが届きました' },
+    { id: 2, message: '取引が完了しました' },
+    { id: 3, message: 'リクエストが承認されました' }
   ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('listing');
   const notificationRef = useRef(null);
 
+  // 検索処理
+  const handleSearch = async () => {
+    if (searchQuery.trim()) {
+      try {
+        const response = await fetch(`https://loopplus.mydns.jp/api/searchitem?word=${encodeURIComponent(searchQuery)}`);
+        const data = await response.json();
+
+        // 検索結果が取得できたら、結果画面に遷移
+        if (response.ok) {
+          navigate('/search-results', {
+            state: { results: data }, // APIからの結果を渡す
+          });
+        } else {
+          alert('検索に失敗しました。');
+        }
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        alert('検索中にエラーが発生しました。');
+      }
+    } else {
+      alert('キーワードを入力してください。');
+    }
+  };
+
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter' && searchQuery.trim()) {
-      navigate('/search-results', { state: { searchQuery, category: '' } });
+    if (event.key === 'Enter') {
+      handleSearch(); // Enterキーで検索
     }
   };
 
   const toggleNotificationBar = () => {
     setIsNotificationOpen((prev) => !prev);
+  };
+
+  // 通知を削除する関数
+  const removeNotification = (id) => {
+    setNotifications((prev) => prev.filter(notification => notification.id !== id));
   };
 
   useEffect(() => {
@@ -77,7 +106,7 @@ function TopSection() {
               placeholder="欲しいものを探す"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyPress={handleKeyPress} // Enterキーで検索
             />
           </div>
           <div className="notification-container" ref={notificationRef}>
@@ -87,9 +116,10 @@ function TopSection() {
             {isNotificationOpen && (
               <div className="notification-bar">
                 {notifications.length > 0 ? (
-                  notifications.map((notification, index) => (
-                    <div key={index} className="notification-item">
-                      {notification}
+                  notifications.map((notification) => (
+                    <div key={notification.id} className="notification-item">
+                      {notification.message}
+                      <button onClick={() => removeNotification(notification.id)} className="remove-button">×</button>
                     </div>
                   ))
                 ) : (
