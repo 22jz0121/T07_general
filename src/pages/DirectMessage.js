@@ -138,6 +138,15 @@ const DirectMessage = () => {
     document.getElementById('image-upload').click();
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // デフォルトのEnterキーの動作を防ぐ
+      if (inputValue.trim() || imageFile) {
+        handleSendMessage();
+      }
+    }
+  };
+
   return (
     <div className="dm-container">
       <div className="top-navigation">
@@ -193,6 +202,7 @@ const DirectMessage = () => {
           accept="image/*"
           onChange={handleImageUpload}
           style={{ display: 'none' }}
+          onKeyDown={handleKeyDown}
         />
         <input
           type="text"
@@ -200,6 +210,7 @@ const DirectMessage = () => {
           className="input-box"
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
         <button 
           className="send-button" 
