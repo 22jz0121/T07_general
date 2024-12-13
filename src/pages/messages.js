@@ -80,7 +80,7 @@ const Messages = () => {
                               <div
                                   key={chat.ChatID}
                                   className="message-item"
-                                  onClick={() => handleItemClick(chat.ChatID, chat.OtherUser.UserName, chat.Item.UserID, chat.Item.ItemName)}
+                                  onClick={() => handleItemClick(chat.ChatID, chat.OtherUser.UserName, chat.Item.ItemID, chat.Item.UserID, chat.Item.ItemName)}
                               >
                                   {chat.OtherUser.Icon ? (
                                       <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />

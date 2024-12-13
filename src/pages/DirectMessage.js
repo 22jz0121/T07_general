@@ -9,7 +9,7 @@ const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { name, itemName, itemId, hostUserId } = location.state || {};
+  const { name, itemName, itemId, hostUserId} = location.state || {};
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -17,6 +17,7 @@ const DirectMessage = () => {
   const messageEndRef = useRef(null);
   const userId = sessionStorage.getItem('MyID');
 
+  console.log(hostUserId,userId);
   useEffect(() => {
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
@@ -157,15 +158,20 @@ const DirectMessage = () => {
       </div>
 
       <div className="top-buttons">
-          {itemOwnerId === userId ? (
-            // ↑で出品者か確認
-              <button className="top-button primary">引渡し予定者にする</button>
-          ) : (
-              <span className="item-status">現在 {itemName} を取引しています</span> 
-          )}
-          <button className="top-button secondary">取引を中止する</button>
-          <button className="top-button success">取引を完了する</button>
+        <button className={`top-button primary ${hostUserId !== userId ? 'hidden' : ''}`}>
+            引渡し予定者にする
+        </button>
+        <span className={`item-status ${hostUserId === userId ? 'hidden' : ''}`}>
+            現在 {itemName} を取引しています
+        </span>
+        <button className={`top-button secondary ${true ? 'hidden' : ''}`}> {/* 最初は非表示 */}
+            取引を中止する
+        </button>
+        <button className={`top-button success ${true ? 'hidden' : ''}`}> {/* 最初は非表示 */}
+            取引を完了する
+        </button>
       </div>
+
 
       <div className="dm-messages">
           {messages.map((msg) => {

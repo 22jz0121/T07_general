@@ -84,6 +84,10 @@
   border-bottom: 1px solid #e5e7eb; /* 下のボーダー */
 }
 
+.hidden {
+  display: none; /* 要素を非表示にする */
+}
+
 .top-buttons {
   position: fixed; /* 固定表示 */
   top: 60px; /* top-navigationの高さに合わせて配置 */
