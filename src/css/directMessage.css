@@ -75,76 +75,118 @@
     color: white;
 }
 
+/* button */
+.top-buttons {
+  display: flex;
+  justify-content: center; /* 中央揃え */
+  padding: 10px 0; /* 上下のパディング */
+  background-color: none; /* 背景色 */
+  border-bottom: 1px solid #e5e7eb; /* 下のボーダー */
+}
+
+.top-buttons {
+  position: fixed; /* 固定表示 */
+  top: 60px; /* top-navigationの高さに合わせて配置 */
+  left: 0;
+  width: 100%; /* 幅を100%に設定 */
+  display: flex;
+  justify-content: center; /* 中央揃え */
+  padding: 10px 0; /* 上下のパディング */
+  background-color: none; /* 背景色 */
+  border-bottom: 1px solid #e5e7eb; /* 下のボーダー */
+  z-index: 1000; /* 他の要素の上に表示 */
+}
+
+.top-button.primary {
+  background-color: #48a9f8; /* プライマリボタンの色 */
+  color: white; /* 文字色 */
+}
+
+.top-button.secondary {
+  background-color: #f87171; /* セカンダリボタンの色 */
+  color: white; /* 文字色 */
+}
+
+.top-button.success {
+  background-color: #34d399; /* サクセスボタンの色 */
+  color: white; /* 文字色 */
+}
+
+.top-button:hover {
+  opacity: 0.9; /* ホバー時の透明度 */
+}
 /* General styling for messages */
 .dm-messages {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 16px;
-    gap: 10px; /* Adds space between messages */
-    overflow-y: auto; /* Allow vertical scrolling */
-    flex-grow: 1; /* Fill remaining space */
-    padding-bottom: 80px;
-  }
-  
-  /* Wrapper for each message */
-  .message-wrapper {
-    display: flex;
-    flex-direction: column;
-    max-width: 70%; /* Ensure bubble does not exceed 70% width */
-  }
-  
-  /* Right aligned messages */
-  .message-wrapper.right {
-    align-self: flex-end; /* Aligns messages to the right */
-    flex-direction: row-reverse;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 16px;
+  padding-top: 70px; /* ボタンの高さを考慮して余白を追加 */
+  gap: 10px; /* Adds space between messages */
+  overflow-y: auto; /* Allow vertical scrolling */
+  flex-grow: 1; /* Fill remaining space */
+  padding-bottom: 80px;
 }
 
   
-  /* Left aligned messages */
-  .message-wrapper.left {
-    align-self: flex-start; /* Aligns messages to the left */
-    flex-direction: row;
+/* Wrapper for each message */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%; /* Ensure bubble does not exceed 70% width */
+}
+
+/* Right aligned messages */
+.message-wrapper.right {
+  align-self: flex-end; /* Aligns messages to the right */
+  flex-direction: row-reverse;
+}
+
+  
+/* Left aligned messages */
+.message-wrapper.left {
+  align-self: flex-start; /* Aligns messages to the left */
+  flex-direction: row;
 }
   
-  /* Message bubble styling */
-  .message-bubble {
-    background-color: #e1ffc7; /* Light green for right bubble */
-    border-radius: 20px;
-    padding: 10px 15px;
-    word-wrap: break-word;
-    width: fit-content;
-    margin-left: 5px;
-    margin-right: 5px;
-  }
-  
-  .message-wrapper.left .message-bubble {
-    background-color: #ffffff; /* White for left bubble */
-    border: 1px solid #ddd;
-  }
-  
-  .message-text {
-    margin: 0;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .message-image {
-    width: 100%;
-    max-width: 200px; /* Limits image size */
-    margin-top: 5px;
-    border-radius: 10px;
-  }
-  
-  /* Time styling */
-  .span-time {
-    align-self: flex-end;
-    margin-top: 5px;
-  }
-  
-  .message-time {
-    font-size: 12px;
-    color: #999;
-  }
+/* Message bubble styling */
+.message-bubble {
+  background-color: #e1ffc7; /* Light green for right bubble */
+  border-radius: 20px;
+  padding: 10px 15px;
+  word-wrap: break-word;
+  width: fit-content;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.message-wrapper.left .message-bubble {
+  background-color: #ffffff; /* White for left bubble */
+  border: 1px solid #ddd;
+}
+
+.message-text {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.message-image {
+  width: 100%;
+  max-width: 200px; /* Limits image size */
+  margin-top: 5px;
+  border-radius: 10px;
+}
+
+/* Time styling */
+.span-time {
+  align-self: flex-end;
+  margin-top: 5px;
+}
+
+.message-time {
+  font-size: 12px;
+  color: #999;
+}
 
 .dm-input {
     position: fixed;
