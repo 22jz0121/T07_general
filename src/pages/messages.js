@@ -49,8 +49,8 @@ const Messages = () => {
     fetchData();
   }, []);
 
-  const handleItemClick = (id, name, itemId, hostUserId, itemName) => {
-    navigate(`/dm/${id}`, { state: { name, itemId, hostUserId, itemName } });
+  const handleItemClick = (id, name, itemId, hostUserId, itemName, otherUserId) => {
+    navigate(`/dm/${id}`, { state: { name, itemId, hostUserId, itemName, otherUserId } });
   };
 
   return (
@@ -88,7 +88,8 @@ const Messages = () => {
                                               chat.OtherUser.UserName,
                                               chat.Item.ItemID,
                                               chat.Item.UserID,
-                                              chat.Item.ItemName
+                                              chat.Item.ItemName,
+                                              chat.OtherUser.UserID
                                           );
                                       } else {
                                           // chat.Itemが存在しない場合
@@ -97,7 +98,8 @@ const Messages = () => {
                                               chat.OtherUser.UserName,
                                               null, // itemIdをnullにする
                                               null, // hostUserIdをnullにする
-                                              null  // itemNameをnullにする
+                                              null,  // itemNameをnullにする
+                                              chat.OtherUser.UserID
                                           );
                                       }
                                   }}

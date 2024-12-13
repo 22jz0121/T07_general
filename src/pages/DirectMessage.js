@@ -9,7 +9,7 @@ const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { name, itemName, itemId, hostUserId} = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
+  const { name, itemName, itemId, hostUserId, otherUserId} = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -147,6 +147,37 @@ const DirectMessage = () => {
     }
   };
 
+  // 引渡し予定者にするボタンがクリックされたときの処理
+  const handleSetTrader = async () => {
+    const traderId = otherUserId; // 相手のuserIdをtraderIdとして設定
+    
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ 
+          TraderID: traderId, // TraderIDを設定
+          TradeFlag: 1 // TradeFlagを2に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
+         }),
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        // 成功時の処理
+        console.log('Trader set successfully');
+      } else {
+        console.error('Failed to set trader');
+      }
+    } catch (error) {
+      console.error('Error setting trader:', error);
+    }
+    console.log('Trader ID:', traderId); // traderIdを確認
+
+  };
+
   return (
     <div className="dm-container">
       <div className="top-navigation">
@@ -157,7 +188,7 @@ const DirectMessage = () => {
       </div>
 
       <div className="top-buttons">
-        <button className={`top-button primary ${hostUserId != myId ? 'hidden' : ''}`}>
+      <button className={`top-button primary ${hostUserId !== myId ? 'hidden' : ''}`} onClick={handleSetTrader}>
             引渡し予定者にする
         </button>
         <span className={`item-status ${hostUserId == myId ? 'hidden' : ''}`}>
