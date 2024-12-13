@@ -9,15 +9,14 @@ const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { name, itemName, itemId, hostUserId} = location.state || {};
+  const { name, itemName, itemId, hostUserId} = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [isSending, setIsSending] = useState(false);
   const messageEndRef = useRef(null);
-  const userId = sessionStorage.getItem('MyID');
+  const myId = parseInt(sessionStorage.getItem('MyID'), 10);
 
-  console.log(hostUserId,userId);
   useEffect(() => {
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
@@ -158,18 +157,20 @@ const DirectMessage = () => {
       </div>
 
       <div className="top-buttons">
-        <button className={`top-button primary ${hostUserId !== userId ? 'hidden' : ''}`}>
+        <button className={`top-button primary ${hostUserId != myId ? 'hidden' : ''}`}>
             引渡し予定者にする
         </button>
-        <span className={`item-status ${hostUserId === userId ? 'hidden' : ''}`}>
+        <span className={`item-status ${hostUserId == myId ? 'hidden' : ''}`}>
             現在 {itemName} を取引しています
         </span>
-        <button className={`top-button secondary ${true ? 'hidden' : ''}`}> {/* 最初は非表示 */}
+{/*         
+        <button className={`top-button secondary ${true ? 'hidden' : ''}`}> 
             取引を中止する
         </button>
-        <button className={`top-button success ${true ? 'hidden' : ''}`}> {/* 最初は非表示 */}
+        <button className={`top-button success ${true ? 'hidden' : ''}`}> 
             取引を完了する
-        </button>
+        </button> */}
+
       </div>
 
 
@@ -184,7 +185,7 @@ const DirectMessage = () => {
               return (
                   <div
                       key={msg.ChatContentID}
-                      className={`message-wrapper ${msg.UserID == userId ? 'right' : 'left'}`}
+                      className={`message-wrapper ${msg.UserID == myId ? 'right' : 'left'}`}
                       onContextMenu={(e) => {
                           e.preventDefault();
                           handleLongPress(msg.ChatContentID);
