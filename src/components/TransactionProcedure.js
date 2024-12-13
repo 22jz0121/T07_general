@@ -80,7 +80,7 @@ function TransactionProcedure() {
           
           // ここでchatIdを使用する
           if (data.roomId) {
-            navigate(`/dm/${data.roomId}`, {state: {name}}); // 新しく取得したroomIdを使用
+            navigate(`/dm/${data.roomId}`, {state: { name, itemName, itemId, userId}}); // 新しく取得したroomIdを使用
           }
         }
       } catch (error) {

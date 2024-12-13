@@ -9,7 +9,7 @@ const DirectMessage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { name } = location.state || {};
+  const { name, itemName, itemId, hostUserId } = location.state || {};
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -150,75 +150,86 @@ const DirectMessage = () => {
   return (
     <div className="dm-container">
       <div className="top-navigation">
-        <button className="back-button" onClick={() => navigate('/messages')}>
-          <ArrowBackIcon className="back-icon" />
-        </button>
-        <h1 className="page-title">{name}</h1>
+          <button className="back-button" onClick={() => navigate('/messages')}>
+              <ArrowBackIcon className="back-icon" />
+          </button>
+          <h1 className="page-title">{name}</h1>
+      </div>
+
+      <div className="top-buttons">
+          {itemOwnerId === userId ? (
+            // ↑で出品者か確認
+              <button className="top-button primary">引渡し予定者にする</button>
+          ) : (
+              <span className="item-status">現在 {itemName} を取引しています</span> 
+          )}
+          <button className="top-button secondary">取引を中止する</button>
+          <button className="top-button success">取引を完了する</button>
       </div>
 
       <div className="dm-messages">
-        {messages.map((msg) => {
-          const formattedTime = new Date(msg.CreatedAt).toLocaleTimeString('ja-JP', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-          });
+          {messages.map((msg) => {
+              const formattedTime = new Date(msg.CreatedAt).toLocaleTimeString('ja-JP', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+              });
 
-          return (
-            <div
-              key={msg.ChatContentID}
-              className={`message-wrapper ${msg.UserID == userId ? 'right' : 'left'}`}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                handleLongPress(msg.ChatContentID);
-              }}
-            >
-              <div className="message-bubble">
-                <p className="message-text">{msg.Content}</p>
-                {msg.Image && (
-                  <img
-                    src={`https://loopplus.mydns.jp/${msg.Image}`}
-                    alt="メッセージ画像"
-                    className="message-image"
-                  />
-                )}
-              </div>
-              <div className="span-time">
-                <span className="message-time">{formattedTime}</span>
-              </div>
-            </div>
-          );
-        })}
-        <div ref={messageEndRef} />
+              return (
+                  <div
+                      key={msg.ChatContentID}
+                      className={`message-wrapper ${msg.UserID == userId ? 'right' : 'left'}`}
+                      onContextMenu={(e) => {
+                          e.preventDefault();
+                          handleLongPress(msg.ChatContentID);
+                      }}
+                  >
+                      <div className="message-bubble">
+                          <p className="message-text">{msg.Content}</p>
+                          {msg.Image && (
+                              <img
+                                  src={`https://loopplus.mydns.jp/${msg.Image}`}
+                                  alt="メッセージ画像"
+                                  className="message-image"
+                              />
+                          )}
+                      </div>
+                      <div className="span-time">
+                          <span className="message-time">{formattedTime}</span>
+                      </div>
+                  </div>
+              );
+          })}
+          <div ref={messageEndRef} />
       </div>
 
       <div className="dm-input">
-        <button className="image-upload-button" onClick={openFileDialog}>
-          <AddIcon className="add-icon" />
-        </button>
-        <input
-          type="file"
-          id="image-upload"
-          accept="image/*"
-          onChange={handleImageUpload}
-          style={{ display: 'none' }}
-          onKeyDown={handleKeyDown}
-        />
-        <input
-          type="text"
-          placeholder="メッセージを入力..."
-          className="input-box"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
-        <button 
-          className="send-button" 
-          onClick={handleSendMessage} 
-          disabled={!inputValue.trim() && !imageFile || isSending}
-        >
-          <SendIcon className="send-icon" />
-        </button>
+          <button className="image-upload-button" onClick={openFileDialog}>
+              <AddIcon className="add-icon" />
+          </button>
+          <input
+              type="file"
+              id="image-upload"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+              onKeyDown={handleKeyDown}
+          />
+          <input
+              type="text"
+              placeholder="メッセージを入力..."
+              className="input-box"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+          />
+          <button 
+              className="send-button" 
+              onClick={handleSendMessage} 
+              disabled={!inputValue.trim() && !imageFile || isSending}
+          >
+              <SendIcon className="send-icon" />
+          </button>
       </div>
     </div>
   );
