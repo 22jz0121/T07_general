@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import '../css/confirmation.css';
 
 const Confirmation = () => {
@@ -101,9 +102,9 @@ const Confirmation = () => {
       <div className="confirmation-content-card">
         <div className="confirmation-user-info">
           {myIcon ? (
-            <img src={myIcon} alt="User Avatar" className="confirmation-avatar" />
+            <img src={`https://loopplus.mydns.jp/${myIcon}`} alt="User Avatar" className="confirmation-avatar" />
           ) : (
-            <div className="confirmation-avatar-placeholder" /> // Placeholder if no avatar
+            <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
           )}
           <span className="confirmation-user-name">{myName}</span>
         </div>
