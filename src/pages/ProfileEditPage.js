@@ -52,7 +52,7 @@ const ProfileEditPage = () => {
         sessionStorage.setItem('MyComment', data.Comment);
         sessionStorage.setItem('MyProfPic', data.ProfilePicture);
 
-        // navigate(`/profile/${userId}`);
+        navigate(`/profile/${userId}`);
       }
       console.log(data);
 

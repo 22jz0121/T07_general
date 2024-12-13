@@ -131,6 +131,7 @@
   .message-image {
     width: 100%;
     max-width: 200px; /* Limits image size */
+    max-height: 250px;
     margin-top: 5px;
     border-radius: 10px;
   }
