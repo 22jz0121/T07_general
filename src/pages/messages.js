@@ -80,7 +80,27 @@ const Messages = () => {
                               <div
                                   key={chat.ChatID}
                                   className="message-item"
-                                  onClick={() => handleItemClick(chat.ChatID, chat.OtherUser.UserName, chat.Item.ItemID, chat.Item.UserID, chat.Item.ItemName)}
+                                  onClick={() => {
+                                      // chat.Itemが存在するかチェック
+                                      if (chat.Item) {
+                                          handleItemClick(
+                                              chat.ChatID,
+                                              chat.OtherUser.UserName,
+                                              chat.Item.ItemID,
+                                              chat.Item.UserID,
+                                              chat.Item.ItemName
+                                          );
+                                      } else {
+                                          // chat.Itemが存在しない場合
+                                          handleItemClick(
+                                              chat.ChatID,
+                                              chat.OtherUser.UserName,
+                                              null, // itemIdをnullにする
+                                              null, // hostUserIdをnullにする
+                                              null  // itemNameをnullにする
+                                          );
+                                      }
+                                  }}
                               >
                                   {chat.OtherUser.Icon ? (
                                       <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
