@@ -23,17 +23,19 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
 
   return (
     <div className="item">
-      <div className="profile">
-        {userIcon ? (
-            <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
-        ) : (
-            <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-        )}
-        <div className="profile-info">
-          <span className="name">{name}</span>
-          <span className="time">{time}</span>
+      <Link to={`/profile/${userId}`} >
+        <div className="profile">
+          {userIcon ? (
+              <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+          ) : (
+              <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+          )}
+          <div className="profile-info">
+            <span className="name">{name}</span>
+            <span className="time">{time}</span>
+          </div>
         </div>
-      </div>
+      </Link>
       <div className="item-link-container"> {/* Linkを外に出す */}
         <Link 
         to={`/listing/${itemId}`} 

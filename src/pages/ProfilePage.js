@@ -13,51 +13,38 @@ const ProfilePage = () => {
   const [userProfile, setUserProfile] = useState({});
   const [headerImage, setHeaderImage] = useState(''); // Header image state
   const [activeTab, setActiveTab] = useState('listing'); // State for active tab
-  const isCurrentUser = useRef(true);
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
   const isMounted = useRef(true);
   const [items, setItems] = useState([]);  
   const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
+  const myId = parseInt(sessionStorage.getItem('MyID'), 10);
+  const myName = sessionStorage.getItem('MyName');
+  const myIcon = sessionStorage.getItem('MyIcon');
+  const myProf = sessionStorage.getItem('MyProfPic');
+  const myMail = sessionStorage.getItem('MyMail');
+  const myComment = sessionStorage.getItem('MyComment');
 
   useEffect(() => {
     isMounted.current = true;
-    const fetchUserProfile = async (userId) => {
-      try {
-        const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
-        const data = await response.json(); // JSONデータを取得
-        setUserProfile(data); // データをセット
-        setItems(data.Items);
-        console.log(data.Items);
-      } catch (error) {
-        console.error('Fetchエラー:', error);
-      }
+
+    console.log(myProf);
+
+    //自分のページか判定
+    if(userId == myId) {
+      setIsCurrentUser(true);
     }
 
-    const fetchMyFavorites = async () => {
-      try {
-        const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (isMounted.current) {
-          setMyFavoriteIds(data.map(item => item.ItemID));
-        }
-      } catch (error) {
-        console.error('Error fetching favorites:', error);
-      }
-    };
-
-    // Retrieve header image from sessionStorage
-    if(!userProfile.ProfilePicture) {
+    if (myId && userId == myId) {
+      setUserProfile({
+        Username: myName,
+        Icon: myIcon,
+        Email: myMail,
+        Comment: myComment,
+        ProfilePicture: myProf,
+      });
       setHeaderImage(`https://loopplus.mydns.jp/${userProfile.ProfilePicture}`);
-    }
-    else{
-      setHeaderImage('https://source.unsplash.com/random/600x200?nature');
     }
 
     fetchUserProfile(userId);
@@ -67,6 +54,47 @@ const ProfilePage = () => {
       isMounted.current = false; // アンマウント時にフラグを更新
     };
   }, []);
+
+
+
+
+  const fetchUserProfile = async (userId) => {
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
+      const data = await response.json(); // JSONデータを取得
+      setUserProfile(data); // データをセット
+      setItems(data.Items);
+
+      //ヘッダー画像の先頭部分判定(正直いらない)
+      const image = data.ProfilePicture.startsWith('storage/images/') 
+      ? `https://loopplus.mydns.jp/${data.ProfilePicture}` 
+      : data.ProfilePicture;
+      setHeaderImage(image);
+      
+      console.log(data.Items);
+    } catch (error) {
+      console.error('Fetchエラー:', error);
+    }
+  }
+
+  const fetchMyFavorites = async () => {
+    try {
+      const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (isMounted.current) {
+        setMyFavoriteIds(data.map(item => item.ItemID));
+      }
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    }
+  };
+
 
   //画像ファイルをbase64形式に変換
   function convertToBase64(file) {
@@ -153,6 +181,10 @@ const ProfilePage = () => {
     ? `https://loopplus.mydns.jp/${userProfile.Icon}` 
     : userProfile.Icon;
 
+  // headerImage = headerImage && headerImage.startsWith('storage/images/') 
+  // ? `https://loopplus.mydns.jp/${headerImage}` 
+  // : headerImage;
+
   return (
     <div className="profile-page">
       {/* Top Navigation */}
@@ -166,7 +198,7 @@ const ProfilePage = () => {
       {/* Cover Image */}
       <div className="cover-image-container">
         <img src={headerImage} alt="Cover" className="cover-image" />
-        {isCurrentUser && (
+        {isCurrentUser ? (
           <label htmlFor="header-image-upload" className="header-upload-label">
             <CameraAltIcon className="upload-icon" />
             <input
@@ -177,7 +209,7 @@ const ProfilePage = () => {
               style={{ display: 'none' }}
             />
           </label>
-        )}
+        ): null}
       </div>
 
       {/* Profile Header */}
@@ -190,14 +222,14 @@ const ProfilePage = () => {
         <div className="profile-header-details">
           <div className="profile-header-div">
             <h2 className="profile-header-name">{userProfile.Username}</h2>
-            {isCurrentUser && (
+            {isCurrentUser ? (
               <button
                 className="profile-header-edit-button"
                 onClick={() => navigate(`/profile-edit/${userId}`)}
               >
                 <EditIcon /> 編集
               </button>
-            )}
+            ): null}
           </div>
           <p className="profile-header-num">@{userProfile.Email}</p>
           <p className="profile-header-bio">{userProfile.Comment}</p>
