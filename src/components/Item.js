@@ -4,7 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom'; // Linkをインポート
 import '../css/top.css';
 //locationを削除
-function Item({ itemId, name, time, imageSrc, title, description, onLike, liked: initialLiked }) {
+function Item({ itemId, userId, name, time, imageSrc, title, description, onLike, liked: initialLiked, userIcon }) {
   const [liked, setLiked] = useState(initialLiked);
 
   useEffect(() => {
@@ -17,11 +17,18 @@ function Item({ itemId, name, time, imageSrc, title, description, onLike, liked:
     setLiked(newLikedState); // ローカルの状態を更新
     onLike(itemId); // 親コンポーネントの関数を呼び出す
   };
+  const iconSrc = userIcon && userIcon.startsWith('storage/images/') 
+    ? `https://loopplus.mydns.jp/${userIcon}` 
+    : userIcon;
 
   return (
     <div className="item">
       <div className="profile">
-        <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+        {userIcon ? (
+            <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+        ) : (
+            <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+        )}
         <div className="profile-info">
           <span className="name">{name}</span>
           <span className="time">{time}</span>
@@ -30,7 +37,7 @@ function Item({ itemId, name, time, imageSrc, title, description, onLike, liked:
       <div className="item-link-container"> {/* Linkを外に出す */}
         <Link 
         to={`/listing/${itemId}`} 
-        state={{ itemId, name, time, description, imageSrc, liked, title}} // stateを利用
+        state={{ itemId, userId, name, time, description, imageSrc, liked, title, userIcon}} // stateを利用
 
         className="item-link">
           <div className="item-content">

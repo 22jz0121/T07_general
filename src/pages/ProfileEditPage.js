@@ -22,32 +22,61 @@ const ProfileEditPage = () => {
     }
   }, [userId]);
 
-  const handleIconChange = (e) => {
+  const handleIconChange = async(e) => {
     const file = e.target.files[0];
     if (file) {
       const imageURL = URL.createObjectURL(file);
+      const base64 = await convertToBase64(file);
       setIcon(imageURL);
-      setImagedata(file);
+      setImagedata(base64);
     }
   };
 
+  //プロフ保存リクエスト
   const handleSave = async () => {
     try {
-      const updatedProfile = { 'UserName':name, 'Comment':comment, 'Icon':imagedata };
+      const updatedProfile = { 'Username':name, 'Comment':comment, 'Icon':imagedata };
+      console.log(updatedProfile);
       const response = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`, {
         method: 'PUT',
-        body: updatedProfile,
+        headers: {
+          'Content-Type': 'application/json', 
+        },
+        body: JSON.stringify(updatedProfile),
         credentials: 'include', // 必要に応じてクッキーを送信
       });
       const data = await response.json(); // JSONデータを取得
+      if(data.status == 'success') {
+        sessionStorage.setItem('MyName', data.Username);
+        sessionStorage.setItem('MyIcon', data.Icon);
+        sessionStorage.setItem('MyComment', data.Comment);
+        sessionStorage.setItem('MyProfPic', data.ProfilePicture);
 
-      navigate(`/profile/${userId}`);
+        navigate(`/profile/${userId}`);
+      }
+      console.log(data);
+
+      
       
     } catch (error) {
       console.error('Fetchエラー:', error);
     }
   }
 
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = () => {
+        reject(new Error('Failed to read the file.'));
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  //アイコンが鯖内保存ならhttps以下略を、そうでない(googleのデフォアイコンなど)ならそのままにする
   const imageSrc = icon.startsWith('storage/images/') ? `https://loopplus.mydns.jp/${icon}` : icon;
 
   return (

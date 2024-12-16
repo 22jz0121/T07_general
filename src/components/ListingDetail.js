@@ -19,8 +19,8 @@ function ListingDetail() {
     let isMounted = true; // マウント状態を追跡
 
     const fetchItemDetails = async () => {
-      const { itemId, name, time, description, imageSrc, liked, title} = location.state;
-      setItemDetails({ itemId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title});
+      const { itemId, userId, name, time, description, imageSrc, liked, title, userIcon} = location.state;
+      setItemDetails({ itemId, userId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title, userIcon});
       console.log('Fetched title:', title); // ここでtitleを確認
       setLiked(liked);
     };
@@ -103,7 +103,10 @@ function ListingDetail() {
   console.log('Location state:', location.state); // location.stateの内容を確認
 
   // itemDetailsから必要なプロパティを取得
-  const { UserName, CreatedAt, itemImage, itemName, itemContent, itemId} = itemDetails;
+  const { UserName, userId, CreatedAt, itemImage, itemName, itemContent, itemId, userIcon} = itemDetails;
+  const iconSrc = userIcon && userIcon.startsWith('storage/images/') 
+    ? `https://loopplus.mydns.jp/${userIcon}` 
+    : userIcon;
   return (
     <div className="listing-detail-container">
       <div className="top-navigation">
@@ -115,7 +118,11 @@ function ListingDetail() {
 
       <div className="listing-content">
         <div className="listing-header">
-          <AccountCircleIcon className="avatar-icon" style={{ fontSize: '40px', color: '#374151' }} />
+          {userIcon ? (
+              <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+          ) : (
+              <AccountCircleIcon className="avatar-icon" style={{ fontSize: '40px' }} />
+          )}
           <span className="user-name">{UserName || 'ユーザー名が取得できません'}</span> {/* ユーザー名 */}
           <span className="listing-time">{CreatedAt}</span> {/* 登録日時 */}
         </div>
@@ -156,11 +163,12 @@ function ListingDetail() {
                 navigate(`/transaction/${listingId}`, { 
                   state: { 
                     itemId, 
+                    itemName,
+                    userId,
                     name: UserName, 
                     time: CreatedAt, 
                     description: itemContent, 
                     imageSrc: itemImage, 
-                    itemName 
                   } 
                 });
               }}

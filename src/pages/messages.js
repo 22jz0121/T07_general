@@ -49,57 +49,90 @@ const Messages = () => {
     fetchData();
   }, []);
 
-  const handleItemClick = (id, name) => {
-    navigate(`/dm/${id}`, { state: { name } });
+  const handleItemClick = (id, name, itemId, hostUserId, itemName, otherUserId) => {
+    navigate(`/dm/${id}`, { state: { name, itemId, hostUserId, itemName, otherUserId } });
   };
 
   return (
-    <div className="message-list">
-      <div className="top-navigation">
-        <button className="back-button" onClick={() => navigate('/')}>
-          <ArrowBackIcon className="back-icon" />
-        </button>
-        <h1 className="page-title">メッセージ</h1>
-      </div>
-  
-      {loading ? (
-        <div className='loading'>
-          <img src='/Loading.gif' alt="Loading"/>
-        </div>
-      ) : (
-        <div className='messages-list'>
-          {error ? (
-            <p className="error-message">{error}</p>
-          ) : myChats.length > 0 ? (
-            myChats.map((chat) => (
-              <div
-                key={chat.ChatID}
-                className="message-item"
-                onClick={() => handleItemClick(chat.ChatID, chat.OtherUser.UserName)}
-              >
-                <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-                <div className="message-info">
-                  <div className="message-header">
-                    <span className="names">{chat.OtherUser.UserName}</span>
-                    <span className="time">{new Date(chat.lastMessage?.CreatedAt).toLocaleString()}</span>
-                  </div>
-                  <p className="message-content">{chat.LastContent?.Image 
-                    ? '画像が送信されました' 
-                    : chat.LastContent?.Content 
-                      ? chat.LastContent.Content 
-                      : 'メッセージがありません'}
-                  </p>
-                </div>
-                <span className="arrow">›</span>
+      <div className="message-list">
+          <div className="top-navigation">
+              <button className="back-button" onClick={() => navigate('/')}>
+                  <ArrowBackIcon className="back-icon" />
+              </button>
+              <h1 className="page-title">メッセージ</h1>
+          </div>
+
+          {loading ? (
+              <div className='loading'>
+                  <img src='/Loading.gif' alt="Loading" />
               </div>
-            ))
           ) : (
-            <p>チャットがありません。</p>
+              <div className='messages-list'>
+                  {error ? (
+                      <p className="error-message">{error}</p>
+                  ) : myChats.length > 0 ? (
+                      myChats.map((chat) => {
+                          const iconSrc = chat.OtherUser.Icon && chat.OtherUser.Icon.startsWith('storage/images/') 
+                              ? `https://loopplus.mydns.jp/${chat.OtherUser.Icon}` 
+                              : chat.OtherUser.Icon;
+
+                          return (
+                              <div
+                                  key={chat.ChatID}
+                                  className="message-item"
+                                  onClick={() => {
+                                      // chat.Itemが存在するかチェック
+                                      if (chat.Item) {
+                                          handleItemClick(
+                                              chat.ChatID,
+                                              chat.OtherUser.UserName,
+                                              chat.Item.ItemID,
+                                              chat.Item.UserID,
+                                              chat.Item.ItemName,
+                                              chat.OtherUser.UserID
+                                          );
+                                      } else {
+                                          // chat.Itemが存在しない場合
+                                          handleItemClick(
+                                              chat.ChatID,
+                                              chat.OtherUser.UserName,
+                                              null, // itemIdをnullにする
+                                              null, // hostUserIdをnullにする
+                                              null,  // itemNameをnullにする
+                                              chat.OtherUser.UserID
+                                          );
+                                      }
+                                  }}
+                              >
+                                  {chat.OtherUser.Icon ? (
+                                      <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                                  ) : (
+                                      <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+                                  )}
+                                  <div className="message-info">
+                                      <div className="message-header">
+                                          <span className="names">{chat.OtherUser.UserName}</span>
+                                          <span className="time">{new Date(chat.lastMessage?.CreatedAt).toLocaleString()}</span>
+                                      </div>
+                                      <p className="message-content">{chat.LastContent?.Image 
+                                          ? '画像が送信されました' 
+                                          : chat.LastContent?.Content 
+                                              ? chat.LastContent.Content 
+                                              : 'メッセージがありません'}
+                                      </p>
+                                  </div>
+                                  <span className="arrow">›</span>
+                              </div>
+                          );
+                      })
+                  ) : (
+                      <p>チャットがありません。</p>
+                  )}
+              </div>
           )}
-        </div>
-      )}
-    </div>
+      </div>
   );
+
   
 };
   
