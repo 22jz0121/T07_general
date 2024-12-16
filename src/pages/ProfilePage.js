@@ -68,12 +68,42 @@ const ProfilePage = () => {
     };
   }, []);
 
-  const handleHeaderImageChange = (e) => {
+  //画像ファイルをbase64形式に変換
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = () => {
+        reject(new Error('Failed to read the file.'));
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  //ProfilePicture(ヘッダー画像)を変更
+  const handleHeaderImageChange = async(e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageURL = URL.createObjectURL(file); // Convert file to a temporary URL
-      setHeaderImage(imageURL); // Update header image
-      // sessionStorage.setItem(`headerImage-${userId}`, imageURL); // Save to sessionStorage
+      const imageURL = URL.createObjectURL(file);
+      setHeaderImage(imageURL);
+
+      const base64 = await convertToBase64(file);
+      const updatedProfile = {'ProfilePicture':base64 };
+
+      const response = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json', 
+        },
+        body: JSON.stringify(updatedProfile),
+        credentials: 'include', // 必要に応じてクッキーを送信
+      });
+      const data = await response.json(); // JSONデータを取得
+      if(data.status == 'success') {
+        sessionStorage.setItem('MyProfPic', data.ProfilePicture);
+      }
     }
   };
 
