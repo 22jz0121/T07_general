@@ -112,6 +112,7 @@ function ItemList() {
           key={item.ItemID} 
           name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
           userIcon={item.User && item.User.Icon ? item.User.Icon : 'default-icon-url.jpg'}
+          time={new Date(item.CreatedAt).toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })} // 日付をフォーマットして渡す
           itemId={item.ItemID} 
           title={item.ItemName} 
           imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}

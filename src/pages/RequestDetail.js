@@ -127,7 +127,7 @@ function RequestDetail() {
             <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
             <div className="profile-info">
               <span className="name">{request.UserName || '不明'}</span>
-              <span className="time">{new Date(request.CreatedAt).toLocaleString()}</span>
+              <span className="time">{new Date(request.CreatedAt).toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
             </div>
           </div>
           <div className="content">
