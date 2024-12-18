@@ -16,7 +16,9 @@ const DirectMessage = () => {
   const [isSending, setIsSending] = useState(false);
   const messageEndRef = useRef(null);
   const myId = parseInt(sessionStorage.getItem('MyID'), 10);
+  const [TraderID, setTraderId] = useState(undefined); // traderIdを状態として管理
 
+  //Pusherの設定
   useEffect(() => {
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
@@ -37,6 +39,23 @@ const DirectMessage = () => {
     };
   }, [id]);
 
+  // itemIdを使ってtraderIDを取得する関数
+  const fetchTraderId = async () => {
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setTraderId(data.TraderID); // traderIdを設定
+      console.log(data.TraderID);
+    } catch (error) {
+      console.error('Error fetching trader ID:', error);
+    }
+    // setTraderId(data.traderId); // traderIdを設定
+    // console.log(data.traderId);
+  };
+
   const fetchChatMessages = async () => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/chat/room/${id}`);
@@ -51,7 +70,8 @@ const DirectMessage = () => {
   };
 
   useEffect(() => {
-    fetchChatMessages();
+    fetchTraderId(); // traderIDを取得
+    fetchChatMessages(); // チャットメッセージを取得
   }, [id]);
 
   useEffect(() => {
@@ -106,15 +126,15 @@ const DirectMessage = () => {
 
   const deleteMessage = async (chatContentID) => {
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/chat/delete/${chatContentID}`, {
-        method: 'DELETE',
+      const response = await fetch(`https://loopplus.mydns.jp/api/chat/${chatContentID}`, {
+        method: 'PUT',
         credentials: 'include',
       });
 
       if (response.ok) {
         // Pusherを使って削除イベントをトリガー
         const data = { ChatContentID: chatContentID };
-        const pusherResponse = await fetch('https://loopplus.mydns.jp/api/chat/pusher/delete', {
+        const pusherResponse = await fetch(`https://loopplus.mydns.jp/api/chat/delete/${chatContentID}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -139,6 +159,9 @@ const DirectMessage = () => {
   };
 
   const handleKeyDown = (event) => {
+    if (isSending){
+      return
+    }
     if (event.key === 'Enter') {
       event.preventDefault(); // デフォルトのEnterキーの動作を防ぐ
       if (inputValue.trim() || imageFile) {
@@ -149,33 +172,103 @@ const DirectMessage = () => {
 
   // 引渡し予定者にするボタンがクリックされたときの処理
   const handleSetTrader = async () => {
-    const traderId = otherUserId; // 相手のuserIdをtraderIdとして設定
     
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`, {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: JSON.stringify({ 
-          TraderID: traderId, // TraderIDを設定
+          TraderID: otherUserId, // TraderIDを設定
           TradeFlag: 1 // TradeFlagを2に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
          }),
         credentials: 'include',
       });
-
-      if (response.ok) {
+      
+      const data = await response.json();
+      console.log(data.result);
+      if (data.result == 'success') {
         // 成功時の処理
+        setTraderId(otherUserId); // 相手のuserIdをtraderIdとして設定
+        sessionStorage.setItem('TraderID', otherUserId); // ローカルストレージを更新
         console.log('Trader set successfully');
+        console.log('Other User ID:', otherUserId);
+      } else {
+        console.error('Failed to set trader');
+      }
+    } catch (error) {
+      console.error('Error setting trader:', error);
+    }; // traderIdを確認
+    // traderIdとotherUserIdの値を確認
+
+  };
+
+  const handleCancelTrade = async () => {
+    // 取引を中止する処理をここに追加
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ 
+          TraderID: null, // TraderIDにnull設定
+          TradeFlag: 0 // TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
+         }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      console.log(data.result);
+      if (data.result == 'success') {
+        // 成功時の処理
+        setTraderId(null); // 相手のuserIdをtraderIdとして設定
+        console.log('Trader set successfully', TraderID);
+        console.log('取引が中止されました');
+      } else {
+        console.error('Failed to set trader');
+      }
+      
+    } catch (error) {
+      console.error('Error setting trader:', error);
+    }
+    // 必要なAPIリクエストを呼び出すなど
+
+  };
+
+  const handleCompleteTrade = async () => {
+    // 取引を完了する処理をここに追加
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ 
+          TradeFlag: 2 // TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
+         }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      console.log(data.result);
+      if (data.result == 'success') {
+        // 成功時の処理
+        setTraderId(otherUserId); // 相手のuserIdをtraderIdとして設定
+        console.log('Trader set successfully', TraderID);
+        
       } else {
         console.error('Failed to set trader');
       }
     } catch (error) {
       console.error('Error setting trader:', error);
     }
-    console.log('Trader ID:', traderId); // traderIdを確認
-
+    console.log('取引が完了しました');
+    // 必要なAPIリクエストを呼び出すなど
   };
 
   return (
@@ -188,20 +281,35 @@ const DirectMessage = () => {
       </div>
 
       <div className="top-buttons">
-      <button className={`top-button primary ${hostUserId !== myId ? 'hidden' : ''}`} onClick={handleSetTrader}>
-            引渡し予定者にする
-        </button>
-        <span className={`item-status ${hostUserId == myId ? 'hidden' : ''}`}>
-            現在 {itemName} を取引しています
-        </span>
-{/*         
-        <button className={`top-button secondary ${true ? 'hidden' : ''}`}> 
-            取引を中止する
-        </button>
-        <button className={`top-button success ${true ? 'hidden' : ''}`}> 
-            取引を完了する
-        </button> */}
-
+        {/*後で治す
+         ItemIDがnullかつ、tradeFlagが2の場合「現在取引中の物品はありません」とメッセージを上部に表示 */}
+          {hostUserId === myId && TraderID === null ? (
+              <button className="top-button primary" onClick={handleSetTrader}>
+                  引渡し予定者にする
+              </button>
+          ) : TraderID == otherUserId ? (
+              <>
+                  <button className="top-button secondary" onClick={handleCancelTrade}>
+                      取引を中止する
+                  </button>
+                  <button className="top-button success" onClick={handleCompleteTrade}>
+                      取引を完了する
+                  </button>
+              </>
+          ) : hostUserId != myId && TraderID == myId ? (
+              <span>
+                  現在 {itemName} の引渡し予定者に選ばれています
+              </span>
+          ) : hostUserId != myId && TraderID == null ? (
+              <span className={`item-status`}>
+                  現在 {itemName} を取引しています
+              </span>
+          ) : hostUserId != myId && TraderID != myId ? (
+            <span>
+                現在他のユーザーがの引渡し予定者に選ばれました
+            </span>
+          ) : null
+          }
       </div>
 
 
