@@ -12,8 +12,6 @@ const LikedItemsPage = () => {
   const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
-  const [likedRequests, setLikedRequests] = useState([]);
-  const [activeTab, setActiveTab] = useState('listing'); // 'listing' or 'request'
   const isMounted = useRef(true);
   const [loading, setLoading] = useState(true);
 
@@ -113,10 +111,6 @@ const LikedItemsPage = () => {
     }
   };
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
   return (
     <div className="liked-items-page">
       {/* Top Navigation */}
@@ -124,31 +118,16 @@ const LikedItemsPage = () => {
         <button className="back-button" onClick={() => navigate(-1)}>
           <ArrowBackIcon className="back-icon" />
         </button>
-        <h1 className="page-title">いいね一覧</h1>
+        <h1 className="page-title">いいねした物品</h1>
       </div>
 
-      {/* Tab Bar */}
-      <div className="tab-bar">
-        <button
-          className={`tab ${activeTab === 'listing' ? 'active' : ''}`}
-          onClick={() => handleTabClick('listing')}
-        >
-          出品物一覧
-        </button>
-        <button
-          className={`tab ${activeTab === 'request' ? 'active' : ''}`}
-          onClick={() => handleTabClick('request')}
-        >
-          リクエスト
-        </button>
-      </div>
       {loading ? (
         <div className='loading'>
           <img src='/Loading.gif' alt="Loading"/>
         </div>
       ) : (
         <div className="tab-content">
-          {activeTab === 'listing' ? (
+          {favoriteItems.length > 0 ? (
             <div>
               {favoriteItems.map(item => (
                 <Item 
@@ -164,10 +143,8 @@ const LikedItemsPage = () => {
                 />
               ))}
             </div>
-          ) : likedRequests.length > 0 ? (
-            <RequestList requests={likedRequests} showPostButton={false} />
           ) : (
-            <p className="pp">いいねしたリクエストはありません。</p>
+            <p className="pp">いいねした物品がありません。</p>
           )}
         </div>
       )}
