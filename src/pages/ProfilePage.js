@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Item from '../components/Item';
-import RequestList from '../components/RequestList';
+import RequestItem from '../components/RequestItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -15,7 +15,8 @@ const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('listing'); // State for active tab
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const isMounted = useRef(true);
-  const [items, setItems] = useState([]);  
+  const [items, setItems] = useState([]);
+  const [requests, setRequests] = useState([]);  
   const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
@@ -64,6 +65,7 @@ const ProfilePage = () => {
       const data = await response.json(); // JSONデータを取得
       setUserProfile(data); // データをセット
       setItems(data.Items);
+      setRequests(data.Requests);
 
       //ヘッダー画像の先頭部分判定(正直いらない)
       const image = data.ProfilePicture.startsWith('storage/images/') 
@@ -271,7 +273,19 @@ const ProfilePage = () => {
             ))}
           </div>
         ) : (
-          <RequestList userId={userId} showPostButton={false} />
+          <div>
+            {requests.map(request => (
+              <RequestItem
+                key={request.RequestID}
+                id={request.RequestID}
+                name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
+                time={request.CreatedAt}
+                imageSrc={request.RequestImage}
+                content={request.RequestContent}
+                userIcon={userProfile.Icon}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>

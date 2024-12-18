@@ -12,6 +12,7 @@ const ProfileEditPage = () => {
   const [comment, setComment] = useState('');
   const [icon, setIcon] = useState('');
   const [imagedata, setImagedata] = useState(null);
+  const [isimagechange, Imagechange] = useState(false);
 
 
   useEffect(() => {
@@ -29,13 +30,19 @@ const ProfileEditPage = () => {
       const base64 = await convertToBase64(file);
       setIcon(imageURL);
       setImagedata(base64);
+      Imagechange(true);
     }
   };
 
   //プロフ保存リクエスト
   const handleSave = async () => {
     try {
-      const updatedProfile = { 'Username':name, 'Comment':comment, 'Icon':imagedata };
+      const updatedProfile = {
+        'Username': name,
+        'Comment': comment,
+        // Conditionally add Icon only if isImagechange is true
+        'Icon': isimagechange ? imagedata : undefined 
+      };
       console.log(updatedProfile);
       const response = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`, {
         method: 'PUT',
@@ -51,6 +58,7 @@ const ProfileEditPage = () => {
         sessionStorage.setItem('MyIcon', data.Icon);
         sessionStorage.setItem('MyComment', data.Comment);
         sessionStorage.setItem('MyProfPic', data.ProfilePicture);
+        Imagechange(false);
 
         navigate(`/profile/${userId}`);
       }
