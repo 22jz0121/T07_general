@@ -30,30 +30,31 @@ const DirectMessage = () => {
     });
 
     channel.bind('message-deleted', (data) => {
-      setMessages((prevMessages) => prevMessages.filter(msg => msg.ChatContentID !== data.ChatContentID));
+      // メッセージを削除するために再読み込み
+      fetchChatMessages(); // メッセージを再取得
     });
 
     return () => {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, [id]);
+  }, [id,itemId]);
 
   // itemIdを使ってtraderIDを取得する関数
   const fetchTraderId = async () => {
-    try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+    if(itemId !== null){
+      try {
+        const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setTraderId(data.TraderID); // traderIdを設定
+        console.log(data.TraderID);
+      } catch (error) {
+        console.error('Error fetching trader ID:', error);
       }
-      const data = await response.json();
-      setTraderId(data.TraderID); // traderIdを設定
-      console.log(data.TraderID);
-    } catch (error) {
-      console.error('Error fetching trader ID:', error);
     }
-    // setTraderId(data.traderId); // traderIdを設定
-    // console.log(data.traderId);
   };
 
   const fetchChatMessages = async () => {
@@ -124,28 +125,17 @@ const DirectMessage = () => {
     }
   };
 
+  //チャットメッセージ非表示化処理
   const deleteMessage = async (chatContentID) => {
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/chat/${chatContentID}`, {
+      const response = await fetch(`https://loopplus.mydns.jp/api/chat/message/${chatContentID}`, {
         method: 'PUT',
         credentials: 'include',
       });
+      //自分のコメントだけ非表示にできるように後で制限掛ける
 
       if (response.ok) {
-        // Pusherを使って削除イベントをトリガー
-        const data = { ChatContentID: chatContentID };
-        const pusherResponse = await fetch(`https://loopplus.mydns.jp/api/chat/delete/${chatContentID}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-          credentials: 'include',
-        });
-
-        if (!pusherResponse.ok) {
-          console.error('Pusher delete event failed');
-        }
+      console.error('メッセージ削除に成功しました');//デバック用message
       } else {
         console.error('メッセージ削除に失敗しました');
       }
@@ -240,36 +230,55 @@ const DirectMessage = () => {
   };
 
   const handleCompleteTrade = async () => {
-    // 取引を完了する処理をここに追加
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ 
-          TradeFlag: 2 // TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
-         }),
-        credentials: 'include',
-      });
+        // 取引を完了する処理
+        const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ itemId: null }), // nullに更新
+            credentials: 'include',
+        });
 
-      const data = await response.json();
-      console.log(data.result);
-      if (data.result == 'success') {
-        // 成功時の処理
-        setTraderId(otherUserId); // 相手のuserIdをtraderIdとして設定
-        console.log('Trader set successfully', TraderID);
-        
-      } else {
-        console.error('Failed to set trader');
-      }
+        const data = await response.json();
+        console.log(data.result);
+        if (data.result === 'success') {
+            // 取引完了後にチャットのitemIDをnullに更新
+            console.log('chatID : ', id);
+            const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    itemId: null // itemIDをnullに更新
+                }),
+                credentials: 'include',
+            });
+
+            const updateData = await updateResponse.json();
+            if (updateData.result === 'success') {
+                console.log('チャットのitemIDがnullに更新されました');
+                
+                navigate('/messages');
+                
+            } else {
+                console.error('チャットのitemIDの更新に失敗しました');
+            }
+            console.log('Update Response:', updateResponse);
+
+        } else {
+            console.error('Failed to Reset ItemID');
+        }
     } catch (error) {
-      console.error('Error setting trader:', error);
+        console.error('Error setting trader:', error);
     }
     console.log('取引が完了しました');
-    // 必要なAPIリクエストを呼び出すなど
   };
+
 
   return (
     <div className="dm-container">
@@ -281,13 +290,16 @@ const DirectMessage = () => {
       </div>
 
       <div className="top-buttons">
-        {/*後で治す
-         ItemIDがnullかつ、tradeFlagが2の場合「現在取引中の物品はありません」とメッセージを上部に表示 */}
-          {hostUserId === myId && TraderID === null ? (
+        {/* ItemIDがnullかつ、tradeFlagが2の場合メッセージを表示 */}
+          {itemId === null ? (
+              <span className="item-status">
+                  現在取引中の物品はありません
+              </span>
+          ) : hostUserId === myId && TraderID === null ? (
               <button className="top-button primary" onClick={handleSetTrader}>
                   引渡し予定者にする
               </button>
-          ) : TraderID == otherUserId ? (
+          ) : TraderID === otherUserId ? (
               <>
                   <button className="top-button secondary" onClick={handleCancelTrade}>
                       取引を中止する
@@ -296,15 +308,15 @@ const DirectMessage = () => {
                       取引を完了する
                   </button>
               </>
-          ) : hostUserId != myId && TraderID == myId ? (
+          ) : hostUserId != myId && TraderID === myId ? (
               <span>
                   現在 {itemName} の引渡し予定者に選ばれています
               </span>
-          ) : hostUserId != myId && TraderID == null ? (
+          ) : hostUserId !== myId && TraderID === null ? (
               <span className={`item-status`}>
                   現在 {itemName} を取引しています
               </span>
-          ) : hostUserId != myId && TraderID != myId ? (
+          ) : hostUserId !== myId && TraderID !== myId ? (
             <span>
                 現在他のユーザーがの引渡し予定者に選ばれました
             </span>
@@ -315,36 +327,55 @@ const DirectMessage = () => {
 
       <div className="dm-messages">
           {messages.map((msg) => {
-              const formattedTime = new Date(msg.CreatedAt).toLocaleTimeString('ja-JP', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-              });
 
-              return (
-                  <div
-                      key={msg.ChatContentID}
-                      className={`message-wrapper ${msg.UserID == myId ? 'right' : 'left'}`}
-                      onContextMenu={(e) => {
-                          e.preventDefault();
+
+            const messageDate = new Date(msg.CreatedAt); // メッセージの作成日時
+            const today = new Date();
+  
+            let formattedTime;
+            if (
+                messageDate.getFullYear() === today.getFullYear() &&
+                messageDate.getMonth() === today.getMonth() &&
+                messageDate.getDate() === today.getDate()
+            ) {
+                // 今日の場合
+                formattedTime = messageDate.toLocaleTimeString('ja-JP', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                });
+            } else {
+                // 今日以外の日付の場合
+                formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
+            }
+            return (
+              <div
+                  key={msg.ChatContentID}
+                  className={`message-wrapper ${msg.UserID == myId ? 'right' : 'left'}`}
+                  onContextMenu={(e) => {
+                      e.preventDefault();
+                      // 自分のメッセージの場合のみ長押し処理を呼び出す
+                      if (msg.UserID === myId) {
                           handleLongPress(msg.ChatContentID);
-                      }}
-                  >
-                      <div className="message-bubble">
-                          <p className="message-text">{msg.Content}</p>
-                          {msg.Image && (
-                              <img
-                                  src={`https://loopplus.mydns.jp/${msg.Image}`}
-                                  alt="メッセージ画像"
-                                  className="message-image"
-                              />
-                          )}
-                      </div>
-                      <div className="span-time">
-                          <span className="message-time">{formattedTime}</span>
-                      </div>
-                  </div>
-              );
+                      }
+                  }}
+              >
+                <div className="message-bubble">
+                  
+                    <p className="message-text">{msg.Content}</p>
+                    {msg.Image && (
+                        <img
+                            src={`https://loopplus.mydns.jp/${msg.Image}`}
+                            alt="メッセージ画像"
+                            className="message-image"
+                        />
+                    )}
+                </div>
+                <div className="span-time">
+                    <span className="message-time">{formattedTime}</span>
+                </div>
+              </div>
+            );
           })}
           <div ref={messageEndRef} />
       </div>
