@@ -17,6 +17,7 @@ const DirectMessage = () => {
   const messageEndRef = useRef(null);
   const myId = parseInt(sessionStorage.getItem('MyID'), 10);
   const [TraderID, setTraderId] = useState(undefined); // traderIdを状態として管理
+  const [isProcessing, setIsProcessing] = useState(false);
 
   //Pusherの設定
   useEffect(() => {
@@ -162,7 +163,9 @@ const DirectMessage = () => {
 
   // 引渡し予定者にするボタンがクリックされたときの処理
   const handleSetTrader = async () => {
-    
+    if (isProcessing) return; // 連投防止
+    setIsProcessing(true);
+
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
         method: 'PUT',
@@ -190,12 +193,17 @@ const DirectMessage = () => {
       }
     } catch (error) {
       console.error('Error setting trader:', error);
+    } finally {
+      setIsProcessing(false); // 処理終了
     }; // traderIdを確認
     // traderIdとotherUserIdの値を確認
 
   };
 
   const handleCancelTrade = async () => {
+    if (isProcessing) return; // 連投防止
+    setIsProcessing(true);
+
     // 取引を中止する処理をここに追加
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
@@ -224,12 +232,17 @@ const DirectMessage = () => {
       
     } catch (error) {
       console.error('Error setting trader:', error);
+    } finally {
+      setIsProcessing(false); // 処理終了
     }
     // 必要なAPIリクエストを呼び出すなど
 
   };
 
   const handleCompleteTrade = async () => {
+    if (isProcessing) return; // 連投防止
+    setIsProcessing(true);
+
     try {
         // 取引を完了する処理
         const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
@@ -275,6 +288,8 @@ const DirectMessage = () => {
         }
     } catch (error) {
         console.error('Error setting trader:', error);
+    } finally {
+      setIsProcessing(false); // 処理終了
     }
     console.log('取引が完了しました');
   };
@@ -296,15 +311,27 @@ const DirectMessage = () => {
                   現在取引中の物品はありません
               </span>
           ) : hostUserId === myId && TraderID === null ? (
-              <button className="top-button primary" onClick={handleSetTrader}>
+              <
+                button className="top-button primary" 
+                onClick={handleSetTrader}
+                disabled={isProcessing}
+              >
                   引渡し予定者にする
               </button>
           ) : TraderID === otherUserId ? (
               <>
-                  <button className="top-button secondary" onClick={handleCancelTrade}>
+                  <button 
+                      className="top-button secondary" 
+                      onClick={handleCancelTrade} 
+                      disabled={isProcessing}
+                  >
                       取引を中止する
                   </button>
-                  <button className="top-button success" onClick={handleCompleteTrade}>
+                  <button 
+                      className="top-button success" 
+                      onClick={handleCompleteTrade} 
+                      disabled={isProcessing}
+                  >
                       取引を完了する
                   </button>
               </>
