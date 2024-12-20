@@ -32,7 +32,7 @@ const Push = () => {
     };
 
     const saveSubscription = async (subscription) => {
-        console.log(myId);
+        console.log(myId)
         try {
             const response = await fetch('https://loopplus.mydns.jp/api/subscribe', {
                 method: 'POST',
@@ -57,8 +57,8 @@ const Push = () => {
     };
 
     const sendPushNotification = async () => {
-        const userId = myId; // 実際のユーザーIDを使用してください
-        const message = "これはテストメッセージです"; // 送信するメッセージ内容
+        const userId = 4;
+        const message = "このブラウザはウイルスに感染しています！"; // 送信するメッセージ内容
 
         try {
             const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
