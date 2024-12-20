@@ -22,6 +22,7 @@ import GoogleCallback from './components/GoogleCallback';
 import LikedItemsPage from './pages/LikedItemsPage';
 import HistoryPage from './pages/HistoryPage';
 import QAPage from './pages/QAPage';
+import Push from './components/Push';
 import PrivateRoute from './components/PrivateRoute'; // PrivateRouteをインポート
 
 import './css/top.css';
@@ -59,6 +60,7 @@ function App() {
           <Route path="/liked-items" element={<PrivateRoute><LikedItemsPage /></PrivateRoute>} />
           <Route path="/history" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
           <Route path="/qa" element={<PrivateRoute><QAPage /></PrivateRoute>} />
+          <Route path="/test" element={<PrivateRoute><Push /></PrivateRoute>} />
         </Routes>
         {isFooterVisible && <Footer />}
       </div>
