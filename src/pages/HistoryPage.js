@@ -1,44 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from 'react-router-dom';
 import Item from '../components/Item'; // 正しいパスを指定
 import '../css/HistoryPage.css'; // 必要に応じて正しいパスを確認
 
-function HistoryPage() {
+const HistoryPage = () => {
   const navigate = useNavigate();
+  const [items, setItems] = useState([]); // すべての取引アイテムを格納
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('ongoing'); // タブの状態管理
+  const [itemFilter, setItemFilter] = useState('all'); // アイテムフィルタの状態管理
 
-  // ダミーデータ
-  const [transactions] = useState([
-    {
-      id: 1,
-      name: '55インチスマートテレビ',
-      timestamp: '1時間前',
-      image: 'https://source.unsplash.com/random/300x200?tv',
-      description: '最新の4K対応スマートテレビ。',
-      location: '12号館',
-      transactionMethods: ['譲渡'],
-      status: '取引中',
-    },
-    {
-      id: 2,
-      name: 'ゲーミングチェア',
-      timestamp: '2日前',
-      image: 'https://source.unsplash.com/random/300x200?chair',
-      description: '快適なゲーム環境を提供するチェア。',
-      location: '10号館',
-      transactionMethods: ['レンタル'],
-      status: '取引完了',
-    },
-  ]);
+  // ユーザーのID（MyID）をセッションストレージなどから取得
+  const myID = sessionStorage.getItem('MyID');
 
-  // タブの状態管理
-  const [activeTab, setActiveTab] = useState('ongoing');
+  useEffect(() => {
+    let isMounted = true; // マウント状態を管理
 
-  // 現在のタブに基づいて取引履歴をフィルタリング
-  const filteredTransactions =
-    activeTab === 'ongoing'
-      ? transactions.filter((transaction) => transaction.status === '取引中')
-      : transactions.filter((transaction) => transaction.status === '取引完了');
+    const fetchItems = async () => {
+      try {
+        const response = await fetch(`https://loopplus.mydns.jp/api/item`); // すべてのアイテムを取得
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+
+        if (Array.isArray(data) && isMounted) {
+          setItems(data); // 取得したデータを設定
+        } else {
+          console.error('Unexpected data structure:', data); // デバッグ用
+        }
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      } finally {
+        if (isMounted) {
+          setLoading(false); // ローディングを終了
+        }
+      }
+    };
+
+    fetchItems(); // コンポーネントがマウントされたときにデータを取得
+
+    // クリーンアップ関数
+    return () => {
+      isMounted = false; // アンマウントされた場合、状態を更新しない
+    };
+  }, []);
+
+  // 現在のタブとプルダウンの状態に基づいて取引履歴をフィルタリング
+  const filteredItems = items.filter(item => {
+    const isOngoing = activeTab === 'ongoing' && item.TradeFlag === 1;
+    const isCompleted = activeTab === 'completed' && item.TradeFlag === 2;
+
+    const isOthersItem = item.TraderID === parseInt(myID); // 他人が出品した商品
+    const isMyItem = item.UserID === parseInt(myID); // 自分が出品した商品
+
+    if (itemFilter === 'others' && isOthersItem) {
+      return isOngoing || isCompleted;
+    } else if (itemFilter === 'myItems' && isMyItem) {
+      return isOngoing || isCompleted;
+    } else if (itemFilter === 'all') {
+      return isOngoing || isCompleted;
+    }
+    return false;
+  });
 
   return (
     <div className="history-page-container">
@@ -66,24 +89,36 @@ function HistoryPage() {
         </button>
       </div>
 
-      {/* 取引リスト */}
+      {/* プルダウンメニュー */}
+      <div className="filter-dropdown">
+        <select
+          id="item-filter"
+          value={itemFilter}
+          onChange={(e) => setItemFilter(e.target.value)}
+        >
+          <option value="others">他人が出品した商品</option>
+          <option value="myItems">自分が出品した商品</option>
+        </select>
+      </div>
+
       <div className="transaction-list">
-        {filteredTransactions.length > 0 ? (
-          filteredTransactions.map((transaction) => (
+        {loading ? (
+          <p>Loading transactions...</p> // ローディング中の表示
+        ) : filteredItems.length > 0 ? (
+          filteredItems.map(item => (
             <div
-              key={transaction.id}
-              onClick={() => navigate(`/listing/${transaction.id}`)}
+              key={item.ItemID}
+              onClick={() => navigate(`/product/${item.ItemID}`)} // 商品ページへ遷移
               style={{ cursor: 'pointer' }}
             >
               <Item
-                itemId={transaction.id}
-                name={transaction.name}
-                time={transaction.timestamp}
-                imageSrc={transaction.image}
-                title={transaction.name}
-                description={transaction.description}
-                location={`取引場所：${transaction.location}`}
-                transactionMethods={transaction.transactionMethods}
+                itemId={item.ItemID}
+                name={item.User ? item.User.UserName : '不明'} // ユーザー名を表示（Userがnullの場合は'不明'を表示）
+                userIcon={item.User ? item.User.Icon : 'default-icon-url'} // ユーザーアイコンを表示
+                createdAt={item.CreatedAt} // 作成日を渡す
+                title={item.ItemName} // アイテム名を渡す
+                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`} // アイテム画像を渡す
+                description={item.Description} // 説明を渡す
               />
             </div>
           ))
@@ -95,8 +130,9 @@ function HistoryPage() {
           </p>
         )}
       </div>
+
     </div>
   );
-}
+};
 
 export default HistoryPage;

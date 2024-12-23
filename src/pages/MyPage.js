@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -23,32 +23,27 @@ const MyPage = () => {
         navigate(`/profile/${myID}`);
     };
 
+    // Navigate to history page with myID
+    const handleHistoryClick = () => {
+        navigate(`/history/${myID}`);
+    };
+
     // Redirect to external URL
     const handleSchoolInfoClick = () => {
         window.location.href = 'https://www.jec.ac.jp/school-outline/current-student/';
     };
 
-    // Function to handle logout ログアウト処理追記 NN 12/02
-
     const handleLogout = () => {
         fetch('https://loopplus.mydns.jp/api/logout', {
             method: 'GET',
             headers: {
-                // 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 'Content-Type': 'application/json'
             },
             credentials: 'include'
         })
         .then(response => {
             if (response.ok) {
-                sessionStorage.removeItem('MyID');
-                sessionStorage.removeItem('MyName');
-                sessionStorage.removeItem('MyIcon');
-                sessionStorage.removeItem('MyMail');
-                sessionStorage.removeItem('MyProfPic');
-                sessionStorage.removeItem('MyComment');
-
-                // ログアウト成功時にログインページへ遷移
+                sessionStorage.clear(); // Clear all session storage
                 navigate('/login');
             } else {
                 console.error('ログアウトに失敗しました');
@@ -84,7 +79,7 @@ const MyPage = () => {
                     <FavoriteBorderIcon className="menu-icon" />
                     <span className="menu-label">いいね一覧</span>
                 </div>
-                <div className="menu-item" onClick={() => navigate('/history')}>
+                <div className="menu-item" onClick={handleHistoryClick}>
                     <HistoryIcon className="menu-icon" />
                     <span className="menu-label">履歴</span>
                 </div>
