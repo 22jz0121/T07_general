@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PostButton from './PostButton';
 import '../css/RequestPage.css';
 
 function RequestItem({ id, name, time, content, imageSrc, userIcon }) {
@@ -10,12 +9,11 @@ function RequestItem({ id, name, time, content, imageSrc, userIcon }) {
     ? `https://loopplus.mydns.jp/${userIcon}` 
     : userIcon;
 
-  
   return (
     <div className="request-item">
       <Link
         to={`/request/${id}`}
-        state={{ id, name, time, content, imageSrc}} // stateを利用
+        state={{ id, name, time, content, imageSrc, userIcon }} // userIconを追加
         className="request-link"
       >
         <div className="profile">

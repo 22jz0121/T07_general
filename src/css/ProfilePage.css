@@ -102,3 +102,6 @@
     display: none;
   }
   
+.tab-content {
+  margin: 10px;
+}

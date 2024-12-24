@@ -16,7 +16,7 @@ const ProfilePage = () => {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const isMounted = useRef(true);
   const [items, setItems] = useState([]);
-  const [requests, setRequests] = useState([]);  
+  const [requests, setRequests] = useState([]);
   const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
@@ -33,7 +33,7 @@ const ProfilePage = () => {
     console.log(myProf);
 
     //自分のページか判定
-    if(userId == myId) {
+    if (userId == myId) {
       setIsCurrentUser(true);
     }
 
@@ -56,9 +56,6 @@ const ProfilePage = () => {
     };
   }, []);
 
-
-
-
   const fetchUserProfile = async (userId) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
@@ -68,11 +65,11 @@ const ProfilePage = () => {
       setRequests(data.Requests);
 
       //ヘッダー画像の先頭部分判定(正直いらない)
-      const image = data.ProfilePicture.startsWith('storage/images/') 
-      ? `https://loopplus.mydns.jp/${data.ProfilePicture}` 
-      : data.ProfilePicture;
+      const image = data.ProfilePicture.startsWith('storage/images/')
+        ? `https://loopplus.mydns.jp/${data.ProfilePicture}`
+        : data.ProfilePicture;
       setHeaderImage(image);
-      
+
       console.log(data.Items);
     } catch (error) {
       console.error('Fetchエラー:', error);
@@ -113,25 +110,25 @@ const ProfilePage = () => {
   }
 
   //ProfilePicture(ヘッダー画像)を変更
-  const handleHeaderImageChange = async(e) => {
+  const handleHeaderImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const imageURL = URL.createObjectURL(file);
       setHeaderImage(imageURL);
 
       const base64 = await convertToBase64(file);
-      const updatedProfile = {'ProfilePicture':base64 };
+      const updatedProfile = { 'ProfilePicture': base64 };
 
       const response = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedProfile),
         credentials: 'include', // 必要に応じてクッキーを送信
       });
       const data = await response.json(); // JSONデータを取得
-      if(data.status == 'success') {
+      if (data.status == 'success') {
         sessionStorage.setItem('MyProfPic', data.ProfilePicture);
       }
     }
@@ -165,13 +162,13 @@ const ProfilePage = () => {
         method: method,
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json(); // エラーレスポンスを取得
         console.error('Error response:', errorData); // エラーレスポンスをログに出力
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log('Response from server:', data);
     } catch (error) {
@@ -179,8 +176,8 @@ const ProfilePage = () => {
     }
   };
 
-  const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/') 
-    ? `https://loopplus.mydns.jp/${userProfile.Icon}` 
+  const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/')
+    ? `https://loopplus.mydns.jp/${userProfile.Icon}`
     : userProfile.Icon;
 
   // headerImage = headerImage && headerImage.startsWith('storage/images/') 
@@ -211,7 +208,7 @@ const ProfilePage = () => {
               style={{ display: 'none' }}
             />
           </label>
-        ): null}
+        ) : null}
       </div>
 
       {/* Profile Header */}
@@ -231,7 +228,7 @@ const ProfilePage = () => {
               >
                 <EditIcon /> 編集
               </button>
-            ): null}
+            ) : null}
           </div>
           <p className="profile-header-num">@{userProfile.Email}</p>
           <p className="profile-header-bio">{userProfile.Comment}</p>
@@ -254,37 +251,49 @@ const ProfilePage = () => {
         </button>
       </div>
 
-      {/* Tab Content */}
       <div className="tab-content">
         {activeTab === 'listing' ? (
           <div>
-            {items.map(item => (
-              <Item 
-                key={item.ItemID} 
-                name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
-                userIcon={iconSrc}
-                itemId={item.ItemID} 
-                title={item.ItemName} 
-                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
-                description={item.Description} 
-                onLike={handleLike}
-                liked={myFavoriteIds.includes(item.ItemID)}
-              />
-            ))}
+            {items.length > 0 ? (
+              items
+                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)) // 新しい順にソート
+                .map(item => (
+                  <Item
+                    key={item.ItemID}
+                    name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
+                    userIcon={userProfile.Icon}
+                    itemId={item.ItemID}
+                    title={item.ItemName}
+                    imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                    description={item.Description}
+                    onLike={handleLike}
+                    liked={myFavoriteIds.includes(item.ItemID)}
+                  />
+                ))
+            ) : (
+              <p>出品物はありません。</p> // 出品物がないときのメッセージ
+            )}
           </div>
         ) : (
           <div>
-            {requests.map(request => (
-              <RequestItem
-                key={request.RequestID}
-                id={request.RequestID}
-                name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
-                time={request.CreatedAt}
-                imageSrc={request.RequestImage}
-                content={request.RequestContent}
-                userIcon={userProfile.Icon}
-              />
-            ))}
+            {requests.filter(request => request.DisplayFlag === 1).length > 0 ? (
+              requests
+                .filter(request => request.DisplayFlag === 1) // DisplayFlagが1のリクエストのみ表示
+                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)) // 新しい順にソート
+                .map(request => (
+                  <RequestItem
+                    key={request.RequestID}
+                    id={request.RequestID}
+                    name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
+                    time={request.CreatedAt}
+                    imageSrc={request.RequestImage}
+                    content={request.RequestContent}
+                    userIcon={userProfile.Icon}
+                  />
+                ))
+            ) : (
+              <p>リクエストはありません。</p> // リクエストがないときのメッセージ
+            )}
           </div>
         )}
       </div>
