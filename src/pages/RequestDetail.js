@@ -22,7 +22,7 @@ function RequestDetail() {
       try {
         setLoading(true);
 
-        // useEffect内の変更
+        // Request data
         if (location.state) {
           const { id, name, time, content, imageSrc, liked, userIcon } = location.state;
           setRequest({ id, UserName: name, CreatedAt: time, RequestContent: content, RequestImage: imageSrc, UserIcon: userIcon });
@@ -35,11 +35,13 @@ function RequestDetail() {
           setLiked(requestData.isLiked);
         }
 
+        // Comments data
         const commentsResponse = await fetch(`https://loopplus.mydns.jp/request/${id}/comment`);
         if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
         const commentsData = await commentsResponse.json();
         setComments(commentsData);
 
+        // Current user
         const userResponse = await fetch('https://loopplus.mydns.jp/whoami', { credentials: 'include' });
         if (!userResponse.ok) throw new Error('Failed to fetch current user');
         const userData = await userResponse.json();
@@ -84,7 +86,7 @@ function RequestDetail() {
     }
   };
 
-  const getIconSrc = (iconPath) => {
+    const getIconSrc = (iconPath) => {
     return iconPath && iconPath.startsWith('storage/images/')
       ? `https://loopplus.mydns.jp/${iconPath}`
       : iconPath;
@@ -149,17 +151,26 @@ function RequestDetail() {
       <div className="comments-section">
         <div className="divider"></div>
         {comments.map((comment) => (
-          <React.Fragment key={comment.id || comment.time}>
-            <div className={`comment ${currentUser && currentUser.name === comment.name ? 'user-comment' : 'other-comment'}`}>
+          <React.Fragment key={comment.ReplyID || comment.CreatedAt}>
+            <div className={`comment ${currentUser && currentUser.UserID === comment.UserID ? 'user-comment' : 'other-comment'}`}>
               <div className="comment-header-wrapper">
                 <AccountCircleIcon className="avatar-icon small-avatar" />
                 <div className="comment-header">
-                  <span className="name">{comment.name}</span>
-                  <span className="time">{new Date(comment.time).toLocaleString()}</span>
+                  <span className="name">{comment.name || '不明'}</span>
+                  <span className="time">
+                    {comment.CreatedAt &&
+                      new Date(comment.CreatedAt).toLocaleString('ja-JP', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                  </span>
                 </div>
               </div>
               <div className="comment-content">
-                <p className="comment-text">{comment.text}</p>
+                <p className="comment-text">{comment.ReplyContent}</p>
               </div>
             </div>
             <div className="divider"></div>
