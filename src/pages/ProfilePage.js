@@ -4,6 +4,8 @@ import Item from '../components/Item';
 import RequestItem from '../components/RequestItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import '../css/ProfilePage.css';
 
@@ -176,6 +178,48 @@ const ProfilePage = () => {
     }
   };
 
+  const handleDeleteRequest = async (requestId) => {
+    console.log("削除するリクエストのID:", requestId);
+
+    // ユーザーに削除の確認を求める
+    const confirmDelete = window.confirm(`リクエストID ${requestId} を削除しますか？`);
+    if (!confirmDelete) {
+      alert('削除がキャンセルされました。');
+      return; // ユーザーがキャンセルした場合は処理を終了
+    }
+
+    try {
+      // サーバーでDisplayFlagを0に更新するためのAPI呼び出しを行う
+      const response = await fetch(`https://loopplus.mydns.jp/api/request/${requestId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ DisplayFlag: 0 }),
+        credentials: 'include', // 必要に応じてクッキーを送信する
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // エラー応答をログに記録
+        console.error('リクエストの更新中にエラーが発生しました:', errorData);
+        throw new Error('サーバーでリクエストの削除に失敗しました');
+      }
+
+      // サーバーが更新を確認した後、ローカルの状態を更新
+      setRequests((prevRequests) => {
+        const updatedRequests = prevRequests.map((request) =>
+          request.RequestID === requestId ? { ...request, DisplayFlag: 0 } : request
+        );
+
+        alert(`リクエストID ${requestId} が正常に削除されました。`);
+        return updatedRequests;
+      });
+    } catch (error) {
+      console.error('リクエストの削除中にエラーが発生しました:', error);
+      alert('リクエストの削除中にエラーが発生しました。');
+    }
+  };
+
   const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/')
     ? `https://loopplus.mydns.jp/${userProfile.Icon}`
     : userProfile.Icon;
@@ -271,29 +315,32 @@ const ProfilePage = () => {
                   />
                 ))
             ) : (
-              <p>出品物はありません。</p> // 出品物がないときのメッセージ
+              <p className='no-transactions'>出品物はありません。</p> // 出品物がないときのメッセージ
             )}
           </div>
         ) : (
           <div>
             {requests.filter(request => request.DisplayFlag === 1).length > 0 ? (
               requests
-                .filter(request => request.DisplayFlag === 1) // DisplayFlagが1のリクエストのみ表示
-                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)) // 新しい順にソート
+                .filter(request => request.DisplayFlag === 1)
+                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
                 .map(request => (
                   <RequestItem
                     key={request.RequestID}
                     id={request.RequestID}
-                    name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
+                    name={userProfile.Username ? userProfile.Username : '不明'}
                     time={request.CreatedAt}
                     imageSrc={request.RequestImage}
                     content={request.RequestContent}
                     userIcon={userProfile.Icon}
+                    onDelete={myId === parseInt(request.UserID, 10) ? handleDeleteRequest : undefined} // Only pass onDelete if the user matches
+                    showDeleteButton={myId === parseInt(request.UserID, 10)} // Pass this prop to show or hide the delete button
                   />
                 ))
             ) : (
-              <p>リクエストはありません。</p> // リクエストがないときのメッセージ
+              <p className='no-transactions'>リクエストはありません。</p>
             )}
+
           </div>
         )}
       </div>

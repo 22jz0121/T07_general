@@ -249,3 +249,7 @@ body {
   text-decoration: none;
   color: #555;
 }
+
+.request-item .delete-button {
+  margin-left: auto; /* 左側のマージンを自動にして右寄せ */
+}

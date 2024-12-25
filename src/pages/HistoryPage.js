@@ -8,8 +8,8 @@ const HistoryPage = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]); // すべての取引アイテムを格納
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('ongoing'); // タブの状態管理
-  const [itemFilter, setItemFilter] = useState('all'); // アイテムフィルタの状態管理
+  const [activeTab, setActiveTab] = useState('myItems'); // タブの状態管理
+  const [itemFilter, setItemFilter] = useState('ongoing'); // アイテムフィルタの状態管理
 
   // ユーザーのID（MyID）をセッションストレージなどから取得
   const myID = sessionStorage.getItem('MyID');
@@ -47,17 +47,15 @@ const HistoryPage = () => {
 
   // 現在のタブとプルダウンの状態に基づいて取引履歴をフィルタリング
   const filteredItems = items.filter(item => {
-    const isOngoing = activeTab === 'ongoing' && item.TradeFlag === 1;
-    const isCompleted = activeTab === 'completed' && item.TradeFlag === 2;
+    const isOngoing = itemFilter === 'ongoing' && item.TradeFlag === 1;
+    const isCompleted = itemFilter === 'completed' && item.TradeFlag === 2;
 
     const isOthersItem = item.TraderID === parseInt(myID); // 他人が出品した商品
     const isMyItem = item.UserID === parseInt(myID); // 自分が出品した商品
 
-    if (itemFilter === 'others' && isOthersItem) {
+    if (activeTab === 'others' && isOthersItem) {
       return isOngoing || isCompleted;
-    } else if (itemFilter === 'myItems' && isMyItem) {
-      return isOngoing || isCompleted;
-    } else if (itemFilter === 'all') {
+    } else if (activeTab === 'myItems' && isMyItem) {
       return isOngoing || isCompleted;
     }
     return false;
@@ -74,18 +72,18 @@ const HistoryPage = () => {
       </div>
 
       {/* タブバー */}
-      <div className="tab-bar">
+      <div className="tab-bar">    
         <button
-          className={`tab ${activeTab === 'ongoing' ? 'active' : ''}`}
-          onClick={() => setActiveTab('ongoing')}
+          className={`tab ${activeTab === 'myItems' ? 'active' : ''}`}
+          onClick={() => setActiveTab('myItems')}
         >
-          取引中
+          自分の商品
         </button>
         <button
-          className={`tab ${activeTab === 'completed' ? 'active' : ''}`}
-          onClick={() => setActiveTab('completed')}
+          className={`tab ${activeTab === 'others' ? 'active' : ''}`}
+          onClick={() => setActiveTab('others')}
         >
-          取引完了
+          他人の商品
         </button>
       </div>
 
@@ -96,8 +94,8 @@ const HistoryPage = () => {
           value={itemFilter}
           onChange={(e) => setItemFilter(e.target.value)}
         >
-          <option value="others">他人が出品した商品</option>
-          <option value="myItems">自分が出品した商品</option>
+          <option value="ongoing">取引中</option>
+          <option value="completed">取引完了</option>
         </select>
       </div>
 
@@ -124,9 +122,9 @@ const HistoryPage = () => {
           ))
         ) : (
           <p className="no-transactions">
-            {activeTab === 'ongoing'
-              ? '取引中のアイテムはありません。'
-              : '取引完了のアイテムはありません。'}
+            {activeTab === 'others'
+              ? '他人の商品はありません。'
+              : '自分の商品はありません。'}
           </p>
         )}
       </div>
