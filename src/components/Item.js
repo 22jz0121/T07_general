@@ -4,7 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom'; // Linkをインポート
 import '../css/top.css';
 //locationを削除
-function Item({ itemId, userId, name, time, imageSrc, title, description, onLike, liked: initialLiked, userIcon }) {
+function Item({ itemId, userId, name, time, imageSrc, title, description, onLike, liked: initialLiked, userIcon, tradeFlag, transactionMethods = [0] }) {
   const [liked, setLiked] = useState(initialLiked);
 
   useEffect(() => {
@@ -21,6 +21,26 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
     ? `https://loopplus.mydns.jp/${userIcon}` 
     : userIcon;
 
+  // tradeFlagに基づく表示メッセージ
+  let tradeStatus;
+  switch (tradeFlag) {
+    case 0:
+      tradeStatus = "出品中";
+      break;
+    case 1:
+      tradeStatus = "取引中";
+      break;
+    case 2:
+      tradeStatus = "取引終了";
+      break;
+    default:
+      tradeStatus = "状態不明"; // 予期しない値の場合
+  }
+
+  // 取引方法の表示
+  const methodsDisplay = transactionMethods.length > 0 
+  ? transactionMethods.join(', ') 
+  : "取引方法が選択されていません";
   return (
     <div className="item">
       <Link to={`/profile/${userId}`} >
@@ -39,7 +59,7 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
       <div className="item-link-container"> {/* Linkを外に出す */}
         <Link 
         to={`/listing/${itemId}`} 
-        state={{ itemId, userId, name, time, description, imageSrc, liked, title, userIcon}} // stateを利用
+        state={{ itemId, userId, name, time, description, imageSrc, liked, title, userIcon, tradeFlag, transactionMethods }} // stateを利用
 
         className="item-link">
           <div className="item-content">
@@ -48,7 +68,8 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
               <h3>{title}</h3>
               <p>{description}</p>
               <div className="action-buttons">
-                <button className="button trade">譲渡</button>
+              <p className="methods-display">{methodsDisplay}</p>
+              <p className="trade-status">{tradeStatus}</p>
               </div>            
             </div>
           </div>

@@ -13,21 +13,28 @@ function ListingDetail() {
   const [liked, setLiked] = useState(false);
   const [likedItems, setLikedItems] = useState([]);       // ユーザーがいいねしたアイテム
   const [myFavoriteIds, setMyFavoriteIds] = useState([]); // /ユーザーがいいねしているアイテムのID
+  const [tradeFlag, setTradeFlag] = useState(null); // tradeFlagを保持するための変数
   const isMounted = useRef(true);
+
+  // セッションからユーザーIDを取得
+  const myID = sessionStorage.getItem('MyID');
+
   // アイテムの詳細を取得
   useEffect(() => {
     let isMounted = true; // マウント状態を追跡
 
     const fetchItemDetails = async () => {
-      const { itemId, userId, name, time, description, imageSrc, liked, title, userIcon} = location.state;
+      const { itemId, userId, name, time, description, imageSrc, liked, title, userIcon, tradeFlag} = location.state;
       setItemDetails({ itemId, userId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title, userIcon});
       console.log('Fetched title:', title); // ここでtitleを確認
       setLiked(liked);
+      setTradeFlag(tradeFlag); // location.stateからtradeFlagを取得
     };
 
     fetchItemDetails();
     fetchMyFavorites();
 
+    console.log(tradeFlag);
     return () => {
       isMounted = false; // アンマウントされた際にフラグを更新
     };
@@ -107,6 +114,13 @@ function ListingDetail() {
   const iconSrc = userIcon && userIcon.startsWith('storage/images/') 
     ? `https://loopplus.mydns.jp/${userIcon}` 
     : userIcon;
+
+  // 現在のユーザーが出品者かどうかを判定
+  const isSeller = userId == myID; // セッションから取得したmyIDと比較
+  const tradeFlagValid = [1, 2, 3].includes(tradeFlag);
+
+  // ボタンの表示条件
+  const showTransactionButton = !isSeller && !tradeFlagValid;
   return (
     <div className="listing-detail-container">
       <div className="top-navigation">
@@ -156,25 +170,27 @@ function ListingDetail() {
           </div>
 
           <div className="transaction-button-container">
-            <button
-              className="transaction-button"
-              onClick={() => {
-                console.log('Navigating with itemName:', itemName); // ここでtitleを確認
-                navigate(`/transaction/${listingId}`, { 
-                  state: { 
-                    itemId, 
-                    itemName,
-                    userId,
-                    name: UserName, 
-                    time: CreatedAt, 
-                    description: itemContent, 
-                    imageSrc: itemImage, 
-                  } 
-                });
-              }}
-            >
-              取引手続きへ
-            </button>
+          {showTransactionButton && ( // ボタンの表示条件を追加
+              <button
+                className="transaction-button"
+                onClick={() => {
+                  console.log('Navigating with itemName:', itemName);
+                  navigate(`/transaction/${listingId}`, { 
+                    state: { 
+                      itemId, 
+                      itemName,
+                      userId,
+                      name: UserName, 
+                      time: CreatedAt, 
+                      description: itemContent, 
+                      imageSrc: itemImage, 
+                    } 
+                  });
+                }}
+              >
+                取引手続きへ
+              </button>
+            )}
           </div>
         </div>
       </div>

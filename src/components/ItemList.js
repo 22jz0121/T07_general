@@ -108,6 +108,8 @@ function ItemList() {
   return (
     <div className='listing'>
       {items.map(item => (
+        // tradeFlagが3でない場合のみ表示
+        item.TradeFlag !== 3 && (
         <Item 
           key={item.ItemID} 
           name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
@@ -117,9 +119,12 @@ function ItemList() {
           title={item.ItemName} 
           imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
           description={item.Description} 
+          tradeFlag={item.TradeFlag} // tradeFlagをItemに渡す
           onLike={handleLike}
           liked={myFavoriteIds.includes(item.ItemID)}
+          transactionMethods={item.transactionMethods || []} // 存在しない場合は空の配列を渡す
         />
+        )
       ))}
     </div>
   );
