@@ -122,7 +122,8 @@ function ItemList() {
           tradeFlag={item.TradeFlag} // tradeFlagをItemに渡す
           onLike={handleLike}
           liked={myFavoriteIds.includes(item.ItemID)}
-          transactionMethods={item.transactionMethods || []} // 存在しない場合は空の配列を渡す
+          transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // 修正
+          time={item.CreatedAt} // ここでCreatedAtを渡す
         />
         )
       ))}

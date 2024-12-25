@@ -26,6 +26,12 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
   // 日付フォーマットのヘルパー関数
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+
+    // 日付が無効な場合、適切なエラーメッセージを返す
+    if (isNaN(date.getTime())) {
+      return "無効な日付"; // または適切なデフォルトメッセージ
+    }
+
     const options = {
       year: 'numeric',
       month: '2-digit',
