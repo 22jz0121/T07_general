@@ -59,6 +59,19 @@ function ListingDetail() {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return date.toLocaleString('ja-JP', options); // Adjust locale as needed
+  };
+  
+
 
   //お気に入りボタンが押されたときの処理
   const handleLike = (itemId) => {
@@ -138,7 +151,7 @@ function ListingDetail() {
               <AccountCircleIcon className="avatar-icon" style={{ fontSize: '40px' }} />
           )}
           <span className="user-name">{UserName || 'ユーザー名が取得できません'}</span> {/* ユーザー名 */}
-          <span className="listing-time">{CreatedAt}</span> {/* 登録日時 */}
+          <span className="listing-time">{formatDate(CreatedAt)}</span>
         </div>
 
         <img src={itemImage} alt="Listing" className="listing-image" />

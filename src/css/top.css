@@ -326,8 +326,13 @@ body {
     font-weight: bold;
   }
   
-
- 
+  .item .delete-button {
+    position: absolute;
+    right: 30px;
+    margin-left: auto; /* 左側のマージンを自動にして右寄せ */
+  }
+  
+  
 
   
   

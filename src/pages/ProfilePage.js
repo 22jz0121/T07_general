@@ -4,8 +4,6 @@ import Item from '../components/Item';
 import RequestItem from '../components/RequestItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import '../css/ProfilePage.css';
 
@@ -110,6 +108,42 @@ const ProfilePage = () => {
       reader.readAsDataURL(file);
     });
   }
+
+  const handleDeleteItem = async (itemId) => {
+    console.log("削除するアイテムのID:", itemId);
+
+    // ユーザーに削除の確認を求める
+    const confirmDelete = window.confirm(`アイテムID ${itemId} を削除しますか？`);
+    if (!confirmDelete) {
+      alert('削除がキャンセルされました。');
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ TradeFlag: 3 }),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('アイテムの更新中にエラーが発生しました:', errorData);
+        throw new Error('サーバーでアイテムの削除に失敗しました');
+      }
+
+      setItems((prevItems) => prevItems.filter((item) => item.ItemID !== itemId));
+      alert(`アイテムID ${itemId} が正常に削除されました。`);
+    } catch (error) {
+      console.error('アイテムの削除中にエラーが発生しました:', error);
+      alert('アイテムの削除に失敗しました。');
+    }
+  };
+
+
 
   //ProfilePicture(ヘッダー画像)を変更
   const handleHeaderImageChange = async (e) => {
@@ -300,23 +334,31 @@ const ProfilePage = () => {
           <div>
             {items.length > 0 ? (
               items
-                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)) // 新しい順にソート
-                .map(item => (
+                .filter((item) => item.TradeFlag !== 3)
+                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
+                .map((item) => (
                   <Item
                     key={item.ItemID}
-                    name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
-                    userIcon={userProfile.Icon}
                     itemId={item.ItemID}
-                    title={item.ItemName}
+                    userId={item.UserID}
+                    name={userProfile.Username || '不明'}
+                    time={item.CreatedAt}
                     imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                    title={item.ItemName}
                     description={item.Description}
                     onLike={handleLike}
                     liked={myFavoriteIds.includes(item.ItemID)}
+                    userIcon={userProfile.Icon}
+                    tradeFlag={item.TradeFlag}
+                    transactionMethods={item.TransactionMethods || []}
+                    showDeleteButton={myId === parseInt(item.UserID, 10)} // Show button if user owns the item
+                    onDelete={myId === parseInt(item.UserID, 10) ? handleDeleteItem : undefined}
                   />
                 ))
             ) : (
-              <p className='no-transactions'>出品物はありません。</p> // 出品物がないときのメッセージ
+              <p className="no-transactions">出品物はありません。</p>
             )}
+
           </div>
         ) : (
           <div>
