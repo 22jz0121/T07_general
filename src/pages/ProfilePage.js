@@ -350,7 +350,7 @@ const ProfilePage = () => {
                     liked={myFavoriteIds.includes(item.ItemID)}
                     userIcon={userProfile.Icon}
                     tradeFlag={item.TradeFlag}
-                    transactionMethods={item.TransactionMethods || []}
+                    transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // 修正
                     showDeleteButton={myId === parseInt(item.UserID, 10)} // Show button if user owns the item
                     onDelete={myId === parseInt(item.UserID, 10) ? handleDeleteItem : undefined}
                   />
