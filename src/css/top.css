@@ -9,6 +9,10 @@ body {
     padding-bottom: 60px; /* Ensure content doesn't get hidden behind the footer */
 }
 
+.link{
+    text-decoration-line: none;
+}
+
 /* Wrapper to keep top-bar and tab-bar together */
 .top-section-wrapper {
     position: fixed;
@@ -206,16 +210,25 @@ body {
 .trade {
     background-color: #dbf4ff;
     color: #1e40af;
+    padding: 5px;
+    padding-bottom: 8px;
+    border-radius: 20%;
 }
 
 .rental {
     background-color: #d1fae5;
     color: #16a34a;
+    padding: 5px;
+    padding-bottom: 8px;
+    border-radius: 20%;
 }
 
 .exchange {
     background-color: #fed7aa;
     color: #ea580c;
+    padding: 5px;
+    padding-bottom: 8px;
+    border-radius: 20%;
 }
 
 .location {
@@ -326,13 +339,8 @@ body {
     font-weight: bold;
   }
   
-  .item .delete-button {
-    position: absolute;
-    right: 30px;
-    margin-left: auto; /* 左側のマージンを自動にして右寄せ */
-  }
-  
-  
+
+ 
 
   
   

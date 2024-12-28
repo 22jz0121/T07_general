@@ -24,11 +24,16 @@ function ListingDetail() {
     let isMounted = true; // マウント状態を追跡
 
     const fetchItemDetails = async () => {
-      const { itemId, userId, name, time, description, imageSrc, liked, title, userIcon, tradeFlag} = location.state;
-      setItemDetails({ itemId, userId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc,itemName: title, userIcon});
-      console.log('Fetched title:', title); // ここでtitleを確認
+      const { itemId, userId, name, time, description, imageSrc, liked, title, userIcon, tradeFlag, transactionMethods
+      } = location.state;
+
+      setItemDetails({
+        itemId, userId, UserName: name, CreatedAt: time, itemContent: description, itemImage: imageSrc, itemName: title, userIcon, tradeFlag, transactionMethods
+      });
+
+      console.log('Fetched transactionMethods:', transactionMethods);
       setLiked(liked);
-      setTradeFlag(tradeFlag); // location.stateからtradeFlagを取得
+      setTradeFlag(tradeFlag); 
     };
 
     fetchItemDetails();
@@ -70,7 +75,7 @@ function ListingDetail() {
     };
     return date.toLocaleString('ja-JP', options); // Adjust locale as needed
   };
-  
+
 
 
   //お気に入りボタンが押されたときの処理
@@ -103,13 +108,13 @@ function ListingDetail() {
         method: method,
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json(); // エラーレスポンスを取得
         console.error('Error response:', errorData); // エラーレスポンスをログに出力
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log('Response from server:', data);
     } catch (error) {
@@ -123,9 +128,9 @@ function ListingDetail() {
   console.log('Location state:', location.state); // location.stateの内容を確認
 
   // itemDetailsから必要なプロパティを取得
-  const { UserName, userId, CreatedAt, itemImage, itemName, itemContent, itemId, userIcon} = itemDetails;
-  const iconSrc = userIcon && userIcon.startsWith('storage/images/') 
-    ? `https://loopplus.mydns.jp/${userIcon}` 
+  const { UserName, userId, CreatedAt, itemImage, itemName, itemContent, itemId, userIcon } = itemDetails;
+  const iconSrc = userIcon && userIcon.startsWith('storage/images/')
+    ? `https://loopplus.mydns.jp/${userIcon}`
     : userIcon;
 
   // 現在のユーザーが出品者かどうかを判定
@@ -146,9 +151,9 @@ function ListingDetail() {
       <div className="listing-content">
         <div className="listing-header">
           {userIcon ? (
-              <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+            <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
           ) : (
-              <AccountCircleIcon className="avatar-icon" style={{ fontSize: '40px' }} />
+            <AccountCircleIcon className="avatar-icon" style={{ fontSize: '40px' }} />
           )}
           <span className="user-name">{UserName || 'ユーザー名が取得できません'}</span> {/* ユーザー名 */}
           <span className="listing-time">{formatDate(CreatedAt)}</span>
@@ -161,14 +166,22 @@ function ListingDetail() {
           <p>{itemContent}</p> {/* アイテムの説明 */}
 
           <div className="transaction-details">
-            <div>
-              <span>希望取引方法:</span>
-              <span className="badge">譲渡</span>
+            <div className="transaction-methods">
+              <span className='popo'>希望取引方法:</span>
+              {itemDetails.transactionMethods && itemDetails.transactionMethods.length > 0 ? (
+                itemDetails.transactionMethods.map((method, index) => (
+                  <span key={index} className={`method-badge ${method === '譲渡' ? 'trade' : method === 'レンタル' ? 'rental' : 'exchange'}`}>
+                    {method}
+                  </span>
+                ))
+              ) : (
+                <span className="badge">取引方法が選択されていません</span>
+              )}
             </div>
             <div>
               <span
                 className="tttt"
-                style={{ cursor: 'pointer'}} // Optional styling
+                style={{ cursor: 'pointer' }} // Optional styling
                 onClick={() => window.open('https://forms.gle/YMW4aqQLWQ5vEzaUA', '_blank')}
               >
                 通報する
@@ -183,21 +196,21 @@ function ListingDetail() {
           </div>
 
           <div className="transaction-button-container">
-          {showTransactionButton && ( // ボタンの表示条件を追加
+            {showTransactionButton && ( // ボタンの表示条件を追加
               <button
                 className="transaction-button"
                 onClick={() => {
                   console.log('Navigating with itemName:', itemName);
-                  navigate(`/transaction/${listingId}`, { 
-                    state: { 
-                      itemId, 
+                  navigate(`/transaction/${listingId}`, {
+                    state: {
+                      itemId,
                       itemName,
                       userId,
-                      name: UserName, 
-                      time: CreatedAt, 
-                      description: itemContent, 
-                      imageSrc: itemImage, 
-                    } 
+                      name: UserName,
+                      time: CreatedAt,
+                      description: itemContent,
+                      imageSrc: itemImage,
+                    }
                   });
                 }}
               >

@@ -57,8 +57,19 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
       tradeStatus = "状態不明";
   }
 
+  // Method CSS class assignment
+  const methodClassMapping = {
+    譲渡: 'trade',
+    レンタル: 'rental',
+    交換: 'exchange',
+  };
+
   const methodsDisplay = transactionMethods.length > 0 
-    ? transactionMethods.join(', ') 
+    ? transactionMethods.map((method, index) => (
+        <span key={index} className={`method-badge ${methodClassMapping[method] || ''}`}>
+          {method}
+        </span>
+      ))
     : "取引方法が選択されていません";
 
   return (
@@ -72,7 +83,7 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
           <DeleteIcon />
         </IconButton>
       )}
-      <Link to={`/profile/${userId}`} >
+      <Link to={`/profile/${userId}`} className="link">
         <div className="profile">
           {userIcon ? (
               <img src={iconSrc} alt="ユーザーアイコン" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
@@ -97,7 +108,7 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
               <h3>{title}</h3>
               <p>{description}</p>
               <div className="action-buttons">
-                <p className="methods-display">{methodsDisplay}</p>
+                <div className="methods-display">{methodsDisplay}</div>
                 <p className="trade-status">{tradeStatus}</p>
               </div>            
             </div>
