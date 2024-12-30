@@ -152,3 +152,8 @@
   color: #000;
 }
 
+.comment-divider {
+  height: 1px;
+  background-color: #e0e0e0;
+}
+

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Favorite, FavoriteBorder, Send as SendIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from '@mui/icons-material';
+import { Send as SendIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from '@mui/icons-material';
 import '../css/RequestDetail.css';
 
 function RequestDetail() {
@@ -22,7 +22,13 @@ function RequestDetail() {
       try {
         setLoading(true);
 
-        // Request data
+        // Fetch current user first
+        const userResponse = await fetch('https://loopplus.mydns.jp/whoami', { credentials: 'include' });
+        if (!userResponse.ok) throw new Error('Failed to fetch current user');
+        const userData = await userResponse.json();
+        setCurrentUser(userData); // Store current user's UserID
+
+        // Fetch request data
         if (location.state) {
           const { id, name, time, content, imageSrc, liked, userIcon } = location.state;
           setRequest({ id, UserName: name, CreatedAt: time, RequestContent: content, RequestImage: imageSrc, UserIcon: userIcon });
@@ -35,25 +41,36 @@ function RequestDetail() {
           setLiked(requestData.isLiked);
         }
 
-        // Comments data
+        // Fetch comments
         const commentsResponse = await fetch(`https://loopplus.mydns.jp/request/${id}/comment`);
         if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
         const commentsData = await commentsResponse.json();
-        setComments(commentsData);
 
-        // Current user
-        const userResponse = await fetch('https://loopplus.mydns.jp/whoami', { credentials: 'include' });
-        if (!userResponse.ok) throw new Error('Failed to fetch current user');
-        const userData = await userResponse.json();
-        setCurrentUser(userData);
+        // Fetch user info for each comment
+        const updatedComments = await Promise.all(
+          commentsData.map(async (comment) => {
+            const userResponse = await fetch(`https://loopplus.mydns.jp/user/${comment.UserID}`);
+            if (!userResponse.ok) throw new Error('Failed to fetch user info');
+            const userData = await userResponse.json();
+            return {
+              ...comment,
+              UserName: userData.Username,
+              UserIcon: userData.Icon,
+            };
+          })
+        );
+
+        setComments(updatedComments);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [id, location.state]);
+
 
   const handleCommentSubmit = async () => {
     if (newComment.trim()) {
@@ -75,8 +92,9 @@ function RequestDetail() {
         const createdComment = await response.json();
         const newCommentData = {
           ...createdComment,
-          name: currentUser.name,
-          time: new Date().toISOString(),
+          UserName: currentUser.Username,
+          UserIcon: currentUser.Icon,
+          CreatedAt: new Date().toISOString(),
         };
         setComments((prevComments) => [...prevComments, newCommentData]);
         setNewComment('');
@@ -86,7 +104,7 @@ function RequestDetail() {
     }
   };
 
-    const getIconSrc = (iconPath) => {
+  const getIconSrc = (iconPath) => {
     return iconPath && iconPath.startsWith('storage/images/')
       ? `https://loopplus.mydns.jp/${iconPath}`
       : iconPath;
@@ -149,14 +167,27 @@ function RequestDetail() {
       )}
 
       <div className="comments-section">
-        <div className="divider"></div>
-        {comments.map((comment) => (
+        {comments.map((comment, index) => (
           <React.Fragment key={comment.ReplyID || comment.CreatedAt}>
-            <div className={`comment ${currentUser && currentUser.UserID === comment.UserID ? 'user-comment' : 'other-comment'}`}>
+            {/* Add a divider above the first comment */}
+            {index === 0 && <div className="comment-divider"></div>}
+
+            <div
+              className={`comment ${currentUser && currentUser.UserID === comment.UserID ? 'user-comment' : 'other-comment'}`}
+            >
               <div className="comment-header-wrapper">
-                <AccountCircleIcon className="avatar-icon small-avatar" />
-                <div className="comment-header">
-                  <span className="name">{comment.name || '不明'}</span>
+                {comment.UserIcon ? (
+                  <img
+                    src={getIconSrc(comment.UserIcon)}
+                    alt="User Icon"
+                    className="avatar-icon small-avatar"
+                    style={{ width: '24px', height: '24px', borderRadius: '50%' }}
+                  />
+                ) : (
+                  <AccountCircleIcon className="avatar-icon small-avatar" style={{ fontSize: '24px' }} />
+                )}
+                <div className="profile-info">
+                  <span className="name">{comment.UserName || '不明'}</span>
                   <span className="time">
                     {comment.CreatedAt &&
                       new Date(comment.CreatedAt).toLocaleString('ja-JP', {
@@ -173,7 +204,9 @@ function RequestDetail() {
                 <p className="comment-text">{comment.ReplyContent}</p>
               </div>
             </div>
-            <div className="divider"></div>
+
+            {/* Add a divider unless it's the last comment */}
+            {index < comments.length - 1 && <div className="comment-divider"></div>}
           </React.Fragment>
         ))}
       </div>
