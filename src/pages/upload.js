@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ImageIcon from '@mui/icons-material/Image';
 import '../css/upload.css';
+
 
 const MAX_IMAGE_SIZE_MB = 5; // 最大画像サイズを5MBに設定
 
 const Upload = () => {
     const navigate = useNavigate();
+    const location = useLocation(); // ルートからの状態を取得
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [transactionMethods, setTransactionMethods] = useState([]);
@@ -65,6 +69,20 @@ const Upload = () => {
         });
     };
 
+    useEffect(() => {
+        // location.stateからデータを受け取る
+        if (location.state) {
+            const { name, description, transactionMethods, image } = location.state;
+            setName(name);
+            setDescription(description);
+            setTransactionMethods(transactionMethods);
+            setImage(image);
+            if (image) {
+                setImagePreview(URL.createObjectURL(image)); // 画像プレビューを設定
+            }
+        }
+    }, [location.state]);
+    
     return (
         <div className="upload-container">
             <div className="top-navigation">

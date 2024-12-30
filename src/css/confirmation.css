@@ -131,3 +131,10 @@
     color: #fff;
   }
   
+  .confirmation-submit-button:disabled,
+  .confirmation-edit-button:disabled {
+      background-color: #ccc; /* 無効時の背景色 */
+      color: #666; /* 無効時の文字色 */
+      cursor: not-allowed; /* カーソルを無効にする */
+      pointer-events: none; /* クリックイベントを無効にする */
+  }
