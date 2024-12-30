@@ -87,13 +87,13 @@ function ItemList() {
         method: method,
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json(); // エラーレスポンスを取得
         console.error('Error response:', errorData); // エラーレスポンスをログに出力
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log('Response from server:', data);
     } catch (error) {
@@ -102,33 +102,36 @@ function ItemList() {
   };
 
   if (loading) {
-    return <div className='loading'><img src='/Loading.gif' alt="Loading"/></div>;
+    return <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>;
   }
 
   return (
     <div className='listing'>
-      {items.map(item => (
-        // tradeFlagが3でない場合のみ表示
-        item.TradeFlag !== 3 && (
-        <Item 
-          key={item.ItemID} 
-          name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
-          userIcon={item.User && item.User.Icon}
-          userId={item.UserID}
-          itemId={item.ItemID} 
-          title={item.ItemName} 
-          imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
-          description={item.Description} 
-          tradeFlag={item.TradeFlag} // tradeFlagをItemに渡す
-          onLike={handleLike}
-          liked={myFavoriteIds.includes(item.ItemID)}
-          transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // 修正
-          time={item.CreatedAt} // ここでCreatedAtを渡す
-        />
-        )
-      ))}
+      {items
+        .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)) // Sort items by CreatedAt in descending order
+        .map(item => (
+          // Only display items with TradeFlag not equal to 3
+          item.TradeFlag !== 3 && (
+            <Item
+              key={item.ItemID}
+              name={item.User ? item.User.UserName : '不明'} // Pass user name
+              userIcon={item.User && item.User.Icon}
+              userId={item.UserID}
+              itemId={item.ItemID}
+              title={item.ItemName}
+              imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+              description={item.Description}
+              tradeFlag={item.TradeFlag} // Pass tradeFlag to Item
+              onLike={handleLike}
+              liked={myFavoriteIds.includes(item.ItemID)}
+              transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // Fix trade method
+              time={item.CreatedAt} // Pass CreatedAt time
+            />
+          )
+        ))}
     </div>
   );
+
 }
 
 export default ItemList;

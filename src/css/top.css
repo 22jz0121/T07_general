@@ -340,7 +340,10 @@ body {
     font-weight: bold;
   }
   
-
+.delete-div {
+    display: flex;
+    justify-content: right;
+}
  
 
   

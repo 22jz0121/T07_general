@@ -33,7 +33,7 @@ function ListingDetail() {
 
       console.log('Fetched transactionMethods:', transactionMethods);
       setLiked(liked);
-      setTradeFlag(tradeFlag); 
+      setTradeFlag(tradeFlag);
     };
 
     fetchItemDetails();
@@ -163,7 +163,7 @@ function ListingDetail() {
 
         <div className="listing-details">
           <h2>{itemName}</h2> {/* アイテム名 */}
-          <p>{itemContent}</p> {/* アイテムの説明 */}
+          <p className='popopo'>{itemContent}</p> {/* アイテムの説明 */}
 
           <div className="transaction-details">
             <div className="transaction-methods">
@@ -178,6 +178,9 @@ function ListingDetail() {
                 <span className="badge">取引方法が選択されていません</span>
               )}
             </div>
+          </div>
+
+          <div className="location-details">
             <div>
               <span
                 className="tttt"
@@ -187,9 +190,6 @@ function ListingDetail() {
                 通報する
               </span>
             </div>
-          </div>
-
-          <div className="location-details">
             <span onClick={() => handleLike(itemDetails.itemId)} className="heart-icon">
               {liked ? <Favorite style={{ color: 'red' }} /> : <FavoriteBorder />}
             </span>

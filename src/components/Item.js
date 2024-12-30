@@ -19,8 +19,8 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
     onLike(itemId); // 親のハンドラーをトリガー
   };
 
-  const iconSrc = userIcon && userIcon.startsWith('storage/images/') 
-    ? `https://loopplus.mydns.jp/${userIcon}` 
+  const iconSrc = userIcon && userIcon.startsWith('storage/images/')
+    ? `https://loopplus.mydns.jp/${userIcon}`
     : userIcon;
 
   // 日付フォーマットのヘルパー関数
@@ -64,42 +64,46 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
     交換: 'exchange',
   };
 
-  const methodsDisplay = transactionMethods.length > 0 
+  const methodsDisplay = transactionMethods.length > 0
     ? transactionMethods.map((method, index) => (
-        <span key={index} className={`method-badge ${methodClassMapping[method] || ''}`}>
-          {method}
-        </span>
-      ))
+      <span key={index} className={`method-badge ${methodClassMapping[method] || ''}`}>
+        {method}
+      </span>
+    ))
     : "取引方法が選択されていません";
 
   return (
     <div className="item">
-      {showDeleteButton && onDelete && (
-        <IconButton
-          onClick={() => onDelete(itemId)}
-          aria-label="delete"
-          className="delete-button"
-        >
-          <DeleteIcon />
-        </IconButton>
-      )}
       <Link to={`/profile/${userId}`} className="link">
-        <div className="profile">
-          {userIcon ? (
+        <div className="profile-div">
+          <div className='profile'>
+            {userIcon ? (
               <img src={iconSrc} alt="ユーザーアイコン" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
-          ) : (
+            ) : (
               <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-          )}
-          <div className="profile-info">
-            <span className="name">{name}</span>
-            <span className="time">{formatDate(time)}</span>
+            )}
+            <div className="profile-info">
+              <span className="name">{name}</span>
+              <span className="time">{formatDate(time)}</span>
+            </div>
+          </div>
+          <div className='delete-div'>
+            {showDeleteButton && onDelete && (
+              <IconButton
+                onClick={() => onDelete(itemId)}
+                aria-label="delete"
+                className="delete-button"
+              >
+                <DeleteIcon />
+              </IconButton>
+            )}
           </div>
         </div>
       </Link>
       <div className="item-link-container">
-        <Link 
-          to={`/listing/${itemId}`} 
-          state={{ itemId, userId, name, time, description, imageSrc, liked, title, userIcon, tradeFlag, transactionMethods }} 
+        <Link
+          to={`/listing/${itemId}`}
+          state={{ itemId, userId, name, time, description, imageSrc, liked, title, userIcon, tradeFlag, transactionMethods }}
           className="item-link"
         >
           <div className="item-content">
@@ -110,7 +114,7 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
               <div className="action-buttons">
                 <div className="methods-display">{methodsDisplay}</div>
                 <p className="trade-status">{tradeStatus}</p>
-              </div>            
+              </div>
             </div>
           </div>
         </Link>

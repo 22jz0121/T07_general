@@ -63,10 +63,10 @@
 
   .location-details {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     text-align: center;
-    margin-bottom: 16px;
-    margin-right: 10px;
+    margin: 10px;
   }
   
   .badge {
@@ -95,8 +95,19 @@
     width: 50%;
 
   }
+
+  .profile-div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
   .ppp {
     margin: 16px;
     margin-left: 0;
     margin-right: 0;
+  }
+  .popopo {
+    margin-top: 16px;
   }
