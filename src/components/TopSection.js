@@ -53,11 +53,6 @@ function TopSection() {
     setIsNotificationOpen((prev) => !prev);
   };
 
-  // 通知を削除する関数
-  const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter(notification => notification.id !== id));
-  };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
@@ -94,10 +89,28 @@ function TopSection() {
     setActiveTab(tab); // Update the active tab
   };
 
+  // 画像クリック時にページの一番上に戻る関数
+  const handleLogoClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // スムーズにスクロール
+    });
+  };
+
   return (
     <header>
       <div className="top-section-wrapper">
         <div className="top-bar">
+          <div>
+            <img
+              src='/logo.png'
+              alt="Logo"
+              width="100"
+              id="logo"
+              style={{ cursor: 'pointer' }} // styleをオブジェクト形式に変更
+              onClick={handleLogoClick} // クリックイベントを追加
+            />
+          </div>
           <div className="searchs-container">
             <SearchIcon className="search-icon" />
             <input
@@ -108,25 +121,6 @@ function TopSection() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress} // Enterキーで検索
             />
-          </div>
-          <div className="notification-container" ref={notificationRef}>
-            <Badge badgeContent={notifications.length} color="error" overlap="circular">
-              <NotificationsIcon className="icon bell-icon" onClick={toggleNotificationBar} />
-            </Badge>
-            {isNotificationOpen && (
-              <div className="notification-bar">
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
-                    <div key={notification.id} className="notification-item">
-                      {notification.message}
-                      <button onClick={() => removeNotification(notification.id)} className="remove-button">×</button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="no-notifications">通知はありません</p>
-                )}
-              </div>
-            )}
           </div>
         </div>
         <div className="tab-bar">
