@@ -128,7 +128,7 @@ const Messages = () => {
                           );
                       })
                   ) : (
-                      <p>チャットがありません。</p>
+                      <p className='no-transactions'>チャットがありません。</p>
                   )}
               </div>
           )}

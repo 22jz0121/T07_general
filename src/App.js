@@ -58,7 +58,7 @@ function App() {
           <Route path="/profile/:userId" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
           <Route path="/profile-edit/:userId" element={<PrivateRoute><ProfileEditPage /></PrivateRoute>} />
           <Route path="/liked-items" element={<PrivateRoute><LikedItemsPage /></PrivateRoute>} />
-          <Route path="/history" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
+          <Route path="/history/:id" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
           <Route path="/qa" element={<PrivateRoute><QAPage /></PrivateRoute>} />
           <Route path="/test" element={<PrivateRoute><Push /></PrivateRoute>} />
         </Routes>

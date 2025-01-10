@@ -27,7 +27,9 @@ function RequestList({ showPostButton = true }) {
       const data = await response.json();
 
       if (isMounted.current) {
-        const sortedData = data.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
+        // DisplayFlagが1のリクエストのみをフィルタリング
+        const filteredData = data.filter(request => request.DisplayFlag === 1);
+        const sortedData = filteredData.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
         setRequests(sortedData);
       }
     } catch (error) {

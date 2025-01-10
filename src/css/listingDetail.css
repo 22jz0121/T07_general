@@ -50,21 +50,23 @@
   .tttt {
     font-size: 0.875rem;
     color: #888;
-    margin-right: 12px;
+  }
+
+  .popo {
+    margin-right: 10px;
   }
 
   .transaction-details {
     margin-top: 8px;
     display: flex;
-    justify-content: space-between;
   }
 
   .location-details {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     text-align: center;
-    margin-bottom: 16px;
-    margin-right: 16px;
+    margin: 10px;
   }
   
   .badge {
@@ -93,8 +95,19 @@
     width: 50%;
 
   }
+
+  .profile-div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
   .ppp {
     margin: 16px;
     margin-left: 0;
     margin-right: 0;
+  }
+  .popopo {
+    margin-top: 16px;
   }

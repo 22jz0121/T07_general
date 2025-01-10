@@ -60,7 +60,6 @@
 
 .interaction-bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding-top: 10px;
   margin-left: 10px;
@@ -150,5 +149,10 @@
 .comment-actions .edit-icon:hover,
 .comment-actions .delete-icon:hover {
   color: #000;
+}
+
+.comment-divider {
+  height: 1px;
+  background-color: #e0e0e0;
 }
 

@@ -9,6 +9,10 @@ body {
     padding-bottom: 60px; /* Ensure content doesn't get hidden behind the footer */
 }
 
+.link{
+    text-decoration-line: none;
+}
+
 /* Wrapper to keep top-bar and tab-bar together */
 .top-section-wrapper {
     position: fixed;
@@ -128,6 +132,7 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    border: none; /* 必要に応じてボーダーをなしに設定 */
 }
 
 .avatar {
@@ -139,12 +144,12 @@ body {
 
 .profile-info {
     margin-left: 10px;
+    text-decoration: none !important; /* 下線を強制的に消す。消えんかった */
 }
 
 .name {
     font-weight: bold;
-    font-size: 16px;
-}
+    font-size: 16px;}
 
 .time {
     padding-left: 12px;
@@ -206,16 +211,25 @@ body {
 .trade {
     background-color: #dbf4ff;
     color: #1e40af;
+    padding: 5px;
+    padding-bottom: 8px;
+    border-radius: 20%;
 }
 
 .rental {
     background-color: #d1fae5;
     color: #16a34a;
+    padding: 5px;
+    padding-bottom: 8px;
+    border-radius: 20%;
 }
 
 .exchange {
     background-color: #fed7aa;
     color: #ea580c;
+    padding: 5px;
+    padding-bottom: 8px;
+    border-radius: 20%;
 }
 
 .location {
@@ -326,7 +340,10 @@ body {
     font-weight: bold;
   }
   
-
+.delete-div {
+    display: flex;
+    justify-content: right;
+}
  
 
   

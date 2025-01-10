@@ -16,7 +16,7 @@ const ProfilePage = () => {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const isMounted = useRef(true);
   const [items, setItems] = useState([]);
-  const [requests, setRequests] = useState([]);  
+  const [requests, setRequests] = useState([]);
   const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
@@ -33,7 +33,7 @@ const ProfilePage = () => {
     console.log(myProf);
 
     //自分のページか判定
-    if(userId == myId) {
+    if (userId == myId) {
       setIsCurrentUser(true);
     }
 
@@ -56,9 +56,6 @@ const ProfilePage = () => {
     };
   }, []);
 
-
-
-
   const fetchUserProfile = async (userId) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
@@ -68,11 +65,11 @@ const ProfilePage = () => {
       setRequests(data.Requests);
 
       //ヘッダー画像の先頭部分判定(正直いらない)
-      const image = data.ProfilePicture.startsWith('storage/images/') 
-      ? `https://loopplus.mydns.jp/${data.ProfilePicture}` 
-      : data.ProfilePicture;
+      const image = data.ProfilePicture.startsWith('storage/images/')
+        ? `https://loopplus.mydns.jp/${data.ProfilePicture}`
+        : data.ProfilePicture;
       setHeaderImage(image);
-      
+
       console.log(data.Items);
     } catch (error) {
       console.error('Fetchエラー:', error);
@@ -112,26 +109,62 @@ const ProfilePage = () => {
     });
   }
 
+  const handleDeleteItem = async (itemId) => {
+    console.log("削除するアイテムのID:", itemId);
+
+    // ユーザーに削除の確認を求める
+    const confirmDelete = window.confirm(`アイテムID ${itemId} を削除しますか？`);
+    if (!confirmDelete) {
+      alert('削除がキャンセルされました。');
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ TradeFlag: 3 }),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('アイテムの更新中にエラーが発生しました:', errorData);
+        throw new Error('サーバーでアイテムの削除に失敗しました');
+      }
+
+      setItems((prevItems) => prevItems.filter((item) => item.ItemID !== itemId));
+      alert(`アイテムID ${itemId} が正常に削除されました。`);
+    } catch (error) {
+      console.error('アイテムの削除中にエラーが発生しました:', error);
+      alert('アイテムの削除に失敗しました。');
+    }
+  };
+
+
+
   //ProfilePicture(ヘッダー画像)を変更
-  const handleHeaderImageChange = async(e) => {
+  const handleHeaderImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const imageURL = URL.createObjectURL(file);
       setHeaderImage(imageURL);
 
       const base64 = await convertToBase64(file);
-      const updatedProfile = {'ProfilePicture':base64 };
+      const updatedProfile = { 'ProfilePicture': base64 };
 
       const response = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedProfile),
         credentials: 'include', // 必要に応じてクッキーを送信
       });
       const data = await response.json(); // JSONデータを取得
-      if(data.status == 'success') {
+      if (data.status == 'success') {
         sessionStorage.setItem('MyProfPic', data.ProfilePicture);
       }
     }
@@ -165,13 +198,13 @@ const ProfilePage = () => {
         method: method,
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json(); // エラーレスポンスを取得
         console.error('Error response:', errorData); // エラーレスポンスをログに出力
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log('Response from server:', data);
     } catch (error) {
@@ -179,8 +212,50 @@ const ProfilePage = () => {
     }
   };
 
-  const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/') 
-    ? `https://loopplus.mydns.jp/${userProfile.Icon}` 
+  const handleDeleteRequest = async (requestId) => {
+    console.log("削除するリクエストのID:", requestId);
+
+    // ユーザーに削除の確認を求める
+    const confirmDelete = window.confirm(`リクエストID ${requestId} を削除しますか？`);
+    if (!confirmDelete) {
+      alert('削除がキャンセルされました。');
+      return; // ユーザーがキャンセルした場合は処理を終了
+    }
+
+    try {
+      // サーバーでDisplayFlagを0に更新するためのAPI呼び出しを行う
+      const response = await fetch(`https://loopplus.mydns.jp/api/request/${requestId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ DisplayFlag: 0 }),
+        credentials: 'include', // 必要に応じてクッキーを送信する
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // エラー応答をログに記録
+        console.error('リクエストの更新中にエラーが発生しました:', errorData);
+        throw new Error('サーバーでリクエストの削除に失敗しました');
+      }
+
+      // サーバーが更新を確認した後、ローカルの状態を更新
+      setRequests((prevRequests) => {
+        const updatedRequests = prevRequests.map((request) =>
+          request.RequestID === requestId ? { ...request, DisplayFlag: 0 } : request
+        );
+
+        alert(`リクエストID ${requestId} が正常に削除されました。`);
+        return updatedRequests;
+      });
+    } catch (error) {
+      console.error('リクエストの削除中にエラーが発生しました:', error);
+      alert('リクエストの削除中にエラーが発生しました。');
+    }
+  };
+
+  const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/')
+    ? `https://loopplus.mydns.jp/${userProfile.Icon}`
     : userProfile.Icon;
 
   // headerImage = headerImage && headerImage.startsWith('storage/images/') 
@@ -211,7 +286,7 @@ const ProfilePage = () => {
               style={{ display: 'none' }}
             />
           </label>
-        ): null}
+        ) : null}
       </div>
 
       {/* Profile Header */}
@@ -231,7 +306,7 @@ const ProfilePage = () => {
               >
                 <EditIcon /> 編集
               </button>
-            ): null}
+            ) : null}
           </div>
           <p className="profile-header-num">@{userProfile.Email}</p>
           <p className="profile-header-bio">{userProfile.Comment}</p>
@@ -254,37 +329,60 @@ const ProfilePage = () => {
         </button>
       </div>
 
-      {/* Tab Content */}
       <div className="tab-content">
         {activeTab === 'listing' ? (
           <div>
-            {items.map(item => (
-              <Item 
-                key={item.ItemID} 
-                name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
-                userIcon={iconSrc}
-                itemId={item.ItemID} 
-                title={item.ItemName} 
-                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
-                description={item.Description} 
-                onLike={handleLike}
-                liked={myFavoriteIds.includes(item.ItemID)}
-              />
-            ))}
+            {items.length > 0 ? (
+              items
+                .filter((item) => item.TradeFlag !== 3)
+                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
+                .map((item) => (
+                  <Item
+                    key={item.ItemID}
+                    itemId={item.ItemID}
+                    userId={item.UserID}
+                    name={userProfile.Username || '不明'}
+                    time={item.CreatedAt}
+                    imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                    title={item.ItemName}
+                    description={item.Description}
+                    onLike={handleLike}
+                    liked={myFavoriteIds.includes(item.ItemID)}
+                    userIcon={userProfile.Icon}
+                    tradeFlag={item.TradeFlag}
+                    transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // 修正
+                    showDeleteButton={myId === parseInt(item.UserID, 10)} // Show button if user owns the item
+                    onDelete={myId === parseInt(item.UserID, 10) ? handleDeleteItem : undefined}
+                  />
+                ))
+            ) : (
+              <p className="no-transactions">出品物はありません。</p>
+            )}
+
           </div>
         ) : (
           <div>
-            {requests.map(request => (
-              <RequestItem
-                key={request.RequestID}
-                id={request.RequestID}
-                name={userProfile.Username ? userProfile.Username : '不明'} // ユーザー名を渡す
-                time={request.CreatedAt}
-                imageSrc={request.RequestImage}
-                content={request.RequestContent}
-                userIcon={userProfile.Icon}
-              />
-            ))}
+            {requests.filter(request => request.DisplayFlag === 1).length > 0 ? (
+              requests
+                .filter(request => request.DisplayFlag === 1)
+                .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
+                .map(request => (
+                  <RequestItem
+                    key={request.RequestID}
+                    id={request.RequestID}
+                    name={userProfile.Username ? userProfile.Username : '不明'}
+                    time={request.CreatedAt}
+                    imageSrc={request.RequestImage}
+                    content={request.RequestContent}
+                    userIcon={userProfile.Icon}
+                    onDelete={myId === parseInt(request.UserID, 10) ? handleDeleteRequest : undefined} // Only pass onDelete if the user matches
+                    showDeleteButton={myId === parseInt(request.UserID, 10)} // Pass this prop to show or hide the delete button
+                  />
+                ))
+            ) : (
+              <p className='no-transactions'>リクエストはありません。</p>
+            )}
+
           </div>
         )}
       </div>

@@ -14,3 +14,32 @@
     overflow: hidden;
     background-color: #fff;
 }
+
+.filter-dropdown {
+    margin: 20px; /* 上下のマージンを追加 */
+    display: flex;
+  }
+  
+  #item-filter {
+    padding: 10px; /* 内側の余白 */
+    font-size: 16px; /* フォントサイズ */
+    border: 1px solid #ccc; /* ボーダー */
+    border-radius: 4px; /* 角を丸く */
+    background-color: #fff; /* 背景色 */
+    cursor: pointer; /* カーソルをポインターに */
+    transition: border-color 0.3s; /* ボーダーの色の変化にトランジションを追加 */
+  }
+  
+  #item-filter:focus {
+    outline: none; /* フォーカス時のアウトラインを消す */
+    border-color: #007bff; /* フォーカス時のボーダー色 */
+  }
+  
+  #item-filter option {
+    padding: 10px; /* オプションの内側の余白 */
+  }
+  
+  .no-transactions {
+    text-align: center;  
+    margin: 50px;
+}
