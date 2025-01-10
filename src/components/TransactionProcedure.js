@@ -46,7 +46,11 @@ function TransactionProcedure() {
         console.log(data.roomId);
         if (data.roomId) {
           setChatId(data.roomId); // チャットIDを保存
-        } else {
+        }
+        else if(data.status == 'error') {
+          alert('そのユーザーとは現在取引中です。');
+        } 
+        else {
           throw new Error('チャットIDが取得できませんでした。');
         }
 
@@ -56,33 +60,35 @@ function TransactionProcedure() {
           ChatID: data.roomId,
         };
 
+        if(chatId) {
+          const sendResponse = await fetch('https://loopplus.mydns.jp/api/chat/send', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+          });
+          // console.log(chatId);
+          if (!sendResponse.ok) {
+            const errorText = await sendResponse.text();
+            console.error('Error response:', errorText);
+            throw new Error('メッセージの送信に失敗しました。');
+          }
 
-        const sendResponse = await fetch('https://loopplus.mydns.jp/api/chat/send', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify(payload),
-        });
-        // console.log(chatId);
-        if (!sendResponse.ok) {
-          const errorText = await sendResponse.text();
-          console.error('Error response:', errorText);
-          throw new Error('メッセージの送信に失敗しました。');
-        }
-
-        const result = await sendResponse.json();
-        if (result.message === 'success') {
-          setSuccess('メッセージが送信されました！');
-          setMessage(''); // 入力フィールドをクリア
-          setIsSending(false); // 送信完了後に設定
-          
-          // ここでchatIdを使用する
-          if (data.roomId) {
-            navigate(`/dm/${data.roomId}`, {state: { name, itemName, itemId, userId}}); // 新しく取得したroomIdを使用
+          const result = await sendResponse.json();
+          if (result.message === 'success') {
+            setSuccess('メッセージが送信されました！');
+            setMessage(''); // 入力フィールドをクリア
+            setIsSending(false); // 送信完了後に設定
+            
+            // ここでchatIdを使用する
+            if (data.roomId) {
+              navigate(`/dm/${data.roomId}`, {state: { name, itemName, itemId, userId}}); // 新しく取得したroomIdを使用
+            }
           }
         }
+        
       } catch (error) {
         console.error('Error:', error);
         setError(error.message); // エラーメッセージを設定
