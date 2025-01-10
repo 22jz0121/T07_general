@@ -380,21 +380,26 @@ const DirectMessage = () => {
 
               // 時間のフォーマット
               let formattedTime = '';
-              if (
-                  messageDate.getFullYear() === today.getFullYear() &&
-                  messageDate.getMonth() === today.getMonth() &&
-                  messageDate.getDate() === today.getDate()
-              ) {
-                  // 今日の場合
-                  formattedTime = messageDate.toLocaleTimeString('ja-JP', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false,
-                  });
-              } else {
-                  // 今日以外の日付の場合
-                  formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
-              }
+              formattedTime = messageDate.toLocaleTimeString('ja-JP', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+            });
+              // if (
+              //     messageDate.getFullYear() === today.getFullYear() &&
+              //     messageDate.getMonth() === today.getMonth() &&
+              //     messageDate.getDate() === today.getDate()
+              // ) {
+              //     // 今日の場合
+              //     formattedTime = messageDate.toLocaleTimeString('ja-JP', {
+              //         hour: '2-digit',
+              //         minute: '2-digit',
+              //         hour12: false,
+              //     });
+              // } else {
+              //     // 今日以外の日付の場合
+              //     formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
+              // }
 
               return (
                   <div key={msg.ChatContentID}>
