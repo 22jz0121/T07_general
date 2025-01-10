@@ -251,7 +251,9 @@ const DirectMessage = () => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ itemId: null }), // nullに更新
+            body: JSON.stringify({ 
+              TradeFlag:  2// TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
+            }), // nullに更新
             credentials: 'include',
         });
 
@@ -353,59 +355,79 @@ const DirectMessage = () => {
 
 
       <div className="dm-messages">
-          {messages.map((msg) => {
+          {messages.map((msg, index) => {
+              const messageDate = new Date(msg.CreatedAt); // メッセージの作成日時
+              const today = new Date();
 
+              // 前のメッセージの日付を取得
+              const previousMessageDate = index > 0 ? new Date(messages[index - 1].CreatedAt) : null;
 
-            const messageDate = new Date(msg.CreatedAt); // メッセージの作成日時
-            const today = new Date();
-  
-            let formattedTime;
-            if (
-                messageDate.getFullYear() === today.getFullYear() &&
-                messageDate.getMonth() === today.getMonth() &&
-                messageDate.getDate() === today.getDate()
-            ) {
-                // 今日の場合
-                formattedTime = messageDate.toLocaleTimeString('ja-JP', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                });
-            } else {
-                // 今日以外の日付の場合
-                formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
-            }
-            return (
-              <div
-                  key={msg.ChatContentID}
-                  className={`message-wrapper ${msg.UserID == myId ? 'right' : 'left'}`}
-                  onContextMenu={(e) => {
-                      e.preventDefault();
-                      // 自分のメッセージの場合のみ長押し処理を呼び出す
-                      if (msg.UserID === myId) {
-                          handleLongPress(msg.ChatContentID);
-                      }
-                  }}
-              >
-                <div className="message-bubble">
-                  
-                    <p className="message-text">{msg.Content}</p>
-                    {msg.Image && (
-                        <img
-                            src={`https://loopplus.mydns.jp/${msg.Image}`}
-                            alt="メッセージ画像"
-                            className="message-image"
-                        />
-                    )}
-                </div>
-                <div className="span-time">
-                    <span className="message-time">{formattedTime}</span>
-                </div>
-              </div>
-            );
+              // 日付を表示するかどうかの判断
+              const showDate = (
+                  !previousMessageDate || 
+                  messageDate.getDate() !== previousMessageDate.getDate() || 
+                  messageDate.getMonth() !== previousMessageDate.getMonth() || 
+                  messageDate.getFullYear() !== previousMessageDate.getFullYear()
+              );
+
+              // 日付のフォーマット
+              let formattedDateMessage = '';
+              if (showDate) {
+                  formattedDateMessage = messageDate.toDateString() === today.toDateString() 
+                      ? '今日' 
+                      : `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // MM/DD形式
+              }
+
+              // 時間のフォーマット
+              let formattedTime = '';
+              if (
+                  messageDate.getFullYear() === today.getFullYear() &&
+                  messageDate.getMonth() === today.getMonth() &&
+                  messageDate.getDate() === today.getDate()
+              ) {
+                  // 今日の場合
+                  formattedTime = messageDate.toLocaleTimeString('ja-JP', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                  });
+              } else {
+                  // 今日以外の日付の場合
+                  formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
+              }
+
+              return (
+                  <div key={msg.ChatContentID}>
+                      {showDate && <div className="date-message">{formattedDateMessage}</div>} {/* 日付の表示 */}
+                      <div
+                          className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
+                          onContextMenu={(e) => {
+                              e.preventDefault();
+                              if (msg.UserID === myId) {
+                                  handleLongPress(msg.ChatContentID);
+                              }
+                          }}
+                      >
+                          <div className="message-bubble">
+                              <p className={`message-text ${msg.DisplayFlag === 1 ? 'on' : 'off'}`}>{msg.Content}</p>
+                              {msg.Image && (
+                                  <img
+                                      src={`https://loopplus.mydns.jp/${msg.Image}`}
+                                      alt="メッセージ画像"
+                                      className="message-image"
+                                  />
+                              )}
+                          </div>
+                          <div className="span-time">
+                              <span className="message-time">{formattedTime}</span>
+                          </div>
+                      </div>
+                  </div>
+              );
           })}
           <div ref={messageEndRef} />
       </div>
+
 
       <div className="dm-input">
           <button className="image-upload-button" onClick={openFileDialog}>

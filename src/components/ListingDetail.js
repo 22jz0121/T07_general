@@ -167,13 +167,17 @@ function ListingDetail() {
 
           <div className="transaction-details">
             <div className="transaction-methods">
-              <span className='popo'>希望取引方法:</span>
+              <span className="popo">希望取引方法:</span>
               {itemDetails.transactionMethods && itemDetails.transactionMethods.length > 0 ? (
-                itemDetails.transactionMethods.map((method, index) => (
-                  <span key={index} className={`method-badge ${method === '譲渡' ? 'trade' : method === 'レンタル' ? 'rental' : 'exchange'}`}>
-                    {method}
-                  </span>
-                ))
+                Array.isArray(itemDetails.transactionMethods)
+                  ? itemDetails.transactionMethods.flatMap(method =>
+                    method.split(',').map(m => m.trim())
+                  ).map((method, index) => (
+                    <span key={index} className={`method-badge ${method === '譲渡' ? 'trade' : method === 'レンタル' ? 'rental' : 'exchange'}`}>
+                      {method}
+                    </span>
+                  ))
+                  : <span className="badge">取引方法が選択されていません</span>
               ) : (
                 <span className="badge">取引方法が選択されていません</span>
               )}

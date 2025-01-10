@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import '../css/top.css';
 
-function Item({ itemId, userId, name, time, imageSrc, title, description, onLike, liked: initialLiked, userIcon, tradeFlag, transactionMethods = [0], showDeleteButton, onDelete }) {
+function Item({ itemId, userId, name, time, imageSrc, title, description, onLike, liked: initialLiked, userIcon, tradeFlag, transactionMethods = '', showDeleteButton, onDelete }) {
   const [liked, setLiked] = useState(initialLiked);
 
   useEffect(() => {
@@ -57,20 +57,28 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
       tradeStatus = "状態不明";
   }
 
-  // Method CSS class assignment
   const methodClassMapping = {
     譲渡: 'trade',
     レンタル: 'rental',
     交換: 'exchange',
   };
 
-  const methodsDisplay = transactionMethods.length > 0
-    ? transactionMethods.map((method, index) => (
-      <span key={index} className={`method-badge ${methodClassMapping[method] || ''}`}>
+  const methodsArray = Array.isArray(transactionMethods)
+    ? transactionMethods.flatMap(method => method.split(',').map(m => m.trim())) // Split and trim each element
+    : typeof transactionMethods === 'string'
+      ? transactionMethods.split(',').map(method => method.trim())
+      : []; 
+
+  const methodsDisplay = methodsArray.length > 0
+    ? methodsArray.map((method, index) => (
+      <span
+        key={index}
+        className={`method-badge ${methodClassMapping[method] || ''}`}
+      >
         {method}
       </span>
     ))
-    : "取引方法が選択されていません";
+    : <span>取引方法が選択されていません</span>;
 
   return (
     <div className="item">

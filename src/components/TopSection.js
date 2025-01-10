@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search as SearchIcon, NotificationsNone as NotificationsIcon } from '@mui/icons-material';
-import Badge from '@mui/material/Badge';
 import ItemList from './ItemList'; // Import ItemList
 import RequestList from './RequestList'; // Import RequestList
 import '../css/top.css';
@@ -10,7 +9,6 @@ function TopSection() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState([  ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('listing');
   const notificationRef = useRef(null);
@@ -43,15 +41,6 @@ function TopSection() {
     if (event.key === 'Enter') {
       handleSearch(); // Enterキーで検索
     }
-  };
-
-  const toggleNotificationBar = () => {
-    setIsNotificationOpen((prev) => !prev);
-  };
-
-  // 通知を削除する関数
-  const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter(notification => notification.id !== id));
   };
 
   useEffect(() => {
@@ -90,10 +79,28 @@ function TopSection() {
     setActiveTab(tab); // Update the active tab
   };
 
+  // 画像クリック時にページの一番上に戻る関数
+  const handleLogoClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // スムーズにスクロール
+    });
+  };
+
   return (
     <header>
       <div className="top-section-wrapper">
         <div className="top-bar">
+          <div>
+            <img
+              src='/logo.png'
+              alt="Logo"
+              width="90"
+              id="logo"
+              style={{ cursor: 'pointer' }} // styleをオブジェクト形式に変更
+              onClick={handleLogoClick} // クリックイベントを追加
+            />
+          </div>
           <div className="searchs-container">
             <SearchIcon className="search-icon" />
             <input
@@ -104,25 +111,6 @@ function TopSection() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress} // Enterキーで検索
             />
-          </div>
-          <div className="notification-container" ref={notificationRef}>
-            <Badge badgeContent={notifications.length} color="error" overlap="circular">
-              <NotificationsIcon className="icon bell-icon" onClick={toggleNotificationBar} />
-            </Badge>
-            {isNotificationOpen && (
-              <div className="notification-bar">
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
-                    <div key={notification.id} className="notification-item">
-                      {notification.message}
-                      <button onClick={() => removeNotification(notification.id)} className="remove-button">×</button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="no-notifications">通知はありません</p>
-                )}
-              </div>
-            )}
           </div>
         </div>
         <div className="tab-bar">

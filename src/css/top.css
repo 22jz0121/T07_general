@@ -344,6 +344,12 @@ body {
     display: flex;
     justify-content: right;
 }
+
+.method-badge {
+    margin-right: 5px;
+}
+
+
  
 
   
