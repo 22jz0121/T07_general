@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search as SearchIcon, NotificationsNone as NotificationsIcon } from '@mui/icons-material';
-import Badge from '@mui/material/Badge';
 import ItemList from './ItemList'; // Import ItemList
 import RequestList from './RequestList'; // Import RequestList
 import '../css/top.css';
@@ -10,11 +9,6 @@ function TopSection() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: '新しいメッセージが届きました' },
-    { id: 2, message: '取引が完了しました' },
-    { id: 3, message: 'リクエストが承認されました' }
-  ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('listing');
   const notificationRef = useRef(null);
@@ -47,10 +41,6 @@ function TopSection() {
     if (event.key === 'Enter') {
       handleSearch(); // Enterキーで検索
     }
-  };
-
-  const toggleNotificationBar = () => {
-    setIsNotificationOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -105,7 +95,7 @@ function TopSection() {
             <img
               src='/logo.png'
               alt="Logo"
-              width="100"
+              width="90"
               id="logo"
               style={{ cursor: 'pointer' }} // styleをオブジェクト形式に変更
               onClick={handleLogoClick} // クリックイベントを追加
