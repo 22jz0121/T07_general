@@ -10,11 +10,7 @@ function TopSection() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: '新しいメッセージが届きました' },
-    { id: 2, message: '取引が完了しました' },
-    { id: 3, message: 'リクエストが承認されました' }
-  ]);
+  const [notifications, setNotifications] = useState([  ]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('listing');
   const notificationRef = useRef(null);

@@ -5,6 +5,8 @@ const Push = () => {
     const myId = parseInt(sessionStorage.getItem('MyID'), 10);
 
     const handleClick = async () => {
+
+        //プッシュ通知を使えるか判定
         const getPushSubscription = async () => {
             if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
                 alert('このブラウザはプッシュ通知に対応していません');
@@ -31,6 +33,7 @@ const Push = () => {
         await getPushSubscription();
     };
 
+    //プッシュ通知のための情報を保存
     const saveSubscription = async (subscription) => {
         console.log(myId)
         try {
@@ -56,9 +59,11 @@ const Push = () => {
         }
     };
 
+    //通知を送信
     const sendPushNotification = async () => {
-        const userId = 4;
+        const userId = 3;
         const message = "オヌヌメの商品のご紹介！！"; // 送信するメッセージ内容
+        const url = "https://www.jec.ac.jp/?utm_source=g&utm_medium=kw&utm_campaign=lis&gad_source=1&gclid=CjwKCAiAhP67BhAVEiwA2E_9g8iHNceHOepij2pWdBNSAml-FiO5h0k4vf6TzO6jZmu7xA8D8cbRJxoC-MUQAvD_BwE"
 
         try {
             const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
@@ -66,13 +71,12 @@ const Push = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId, message }),
+                body: JSON.stringify({ userId, message, url }),
             });
 
             const data = await response.json();
             if (data.success) {
                 alert('プッシュ通知が送信されました！');
-                // showNotification(message); // 通知を表示
                 addMessageToDisplay(message); // メッセージを表示
             } else {
                 alert('通知の送信に失敗しました。');
@@ -83,20 +87,10 @@ const Push = () => {
         }
     };
 
+    //送った通知の内容を自分の画面に表示(テスト用)
     const addMessageToDisplay = (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
     };
-
-    // const showNotification = (message) => {
-    //     Notification.requestPermission().then((permission) => {
-    //         if (permission === 'granted') {
-    //             new Notification('新しいメッセージ', {
-    //                 body: message,
-    //                 icon: '/icon.png', // アイコンのパス
-    //             });
-    //         }
-    //     });
-    // };
 
     return (
         <>
@@ -115,6 +109,7 @@ const Push = () => {
                         <li key={index} dangerouslySetInnerHTML={{ __html: msg }} />
                     ))}
                 </ul>
+                <img src='/icon.svg' />
             </div>
         </>
     );
