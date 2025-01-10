@@ -150,7 +150,6 @@
 .message-wrapper {
   display: flex;
   flex-direction: column;
-  max-width: 70%; /* Ensure bubble does not exceed 70% width */
 }
 
 /* Right aligned messages */
@@ -180,6 +179,18 @@
 .message-wrapper.left .message-bubble {
   background-color: #ffffff; /* White for left bubble */
   border: 1px solid #ddd;
+}
+
+.message-text.on {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.message-text.off {
+  margin: 0;
+  font-size: 14px;
+  color: #d3cccc;
 }
 
 .message-text {
