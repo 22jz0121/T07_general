@@ -427,7 +427,7 @@ const DirectMessage = () => {
                           }}
                       >
                           <div className="message-bubble">
-                              <p className={`message-text ${msg.DisplayFlag === 1 ? 'on' : 'off'}`}>{msg.Content}</p>
+                              <p className={`message-text ${msg.DisplayFlag == 1 ? 'on' : 'off'}`}>{msg.Content}</p>
                               {msg.Image && (
                                   <img
                                       src={`https://loopplus.mydns.jp/${msg.Image}`}
