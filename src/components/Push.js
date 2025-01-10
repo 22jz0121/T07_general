@@ -58,7 +58,7 @@ const Push = () => {
 
     const sendPushNotification = async () => {
         const userId = 4;
-        const message = "このブラウザはウイルスに感染しています！"; // 送信するメッセージ内容
+        const message = "オヌヌメの商品のご紹介！！"; // 送信するメッセージ内容
 
         try {
             const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
@@ -72,7 +72,7 @@ const Push = () => {
             const data = await response.json();
             if (data.success) {
                 alert('プッシュ通知が送信されました！');
-                showNotification(message); // 通知を表示
+                // showNotification(message); // 通知を表示
                 addMessageToDisplay(message); // メッセージを表示
             } else {
                 alert('通知の送信に失敗しました。');
@@ -87,16 +87,16 @@ const Push = () => {
         setMessages((prevMessages) => [...prevMessages, message]);
     };
 
-    const showNotification = (message) => {
-        Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-                new Notification('新しいメッセージ', {
-                    body: message,
-                    icon: '/icon.png', // アイコンのパス
-                });
-            }
-        });
-    };
+    // const showNotification = (message) => {
+    //     Notification.requestPermission().then((permission) => {
+    //         if (permission === 'granted') {
+    //             new Notification('新しいメッセージ', {
+    //                 body: message,
+    //                 icon: '/icon.png', // アイコンのパス
+    //             });
+    //         }
+    //     });
+    // };
 
     return (
         <>
