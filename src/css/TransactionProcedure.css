@@ -62,7 +62,7 @@
   .transaction-procedure-send-message-button {
     width: 100%;
     padding: 12px;
-    background-color: #ff7f7f;
+    background-color: #48a9f8;
     color: white;
     border: none;
     border-radius: 8px;
@@ -73,6 +73,6 @@
   }
   
   .transaction-procedure-send-message-button:hover {
-    background-color: #ff5252;
+    background-color: #48a9f8;
   }
   
