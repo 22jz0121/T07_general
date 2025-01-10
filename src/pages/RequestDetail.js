@@ -212,9 +212,6 @@ function RequestDetail() {
       </div>
 
       <div className="dm-input">
-        <button className="image-upload-button">
-          <AddIcon className="add-icon" />
-        </button>
         <input
           type="text"
           placeholder="メッセージを入力..."
