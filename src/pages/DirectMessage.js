@@ -82,6 +82,18 @@ const DirectMessage = () => {
     }
   }, [messages]);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+      const fetchData = async () => {
+          await fetchTraderId(); // traderIDを取得
+          await fetchChatMessages(); // チャットメッセージを取得
+          setIsLoaded(true); // データの取得が完了したらisLoadedをtrueに設定
+      };
+
+      fetchData();
+  }, [id]);
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -307,50 +319,51 @@ const DirectMessage = () => {
       </div>
 
       <div className="top-buttons">
-        {/* ItemIDがnullかつ、tradeFlagが2の場合メッセージを表示 */}
-          {itemId === null ? (
-              <span className="item-status">
-                  現在取引中の物品はありません
-              </span>
-          ) : hostUserId === myId && TraderID === null ? (
-              <
-                button className="top-button primary" 
-                onClick={handleSetTrader}
-                disabled={isProcessing}
-              >
-                  引渡し予定者にする
-              </button>
-          ) : TraderID === otherUserId ? (
-              <>
-                  <button 
-                      className="top-button secondary" 
-                      onClick={handleCancelTrade} 
-                      disabled={isProcessing}
-                  >
-                      取引を中止する
-                  </button>
-                  <button 
-                      className="top-button success" 
-                      onClick={handleCompleteTrade} 
-                      disabled={isProcessing}
-                  >
-                      取引を完了する
-                  </button>
-              </>
-          ) : hostUserId != myId && TraderID === myId ? (
-              <span>
-                  現在 {itemName} の引渡し予定者に選ばれています
-              </span>
-          ) : hostUserId !== myId && TraderID === null ? (
-              <span className={`item-status`}>
-                  現在 {itemName} を取引しています
-              </span>
-          ) : hostUserId !== myId && TraderID !== myId ? (
-            <span>
-                現在他のユーザーがの引渡し予定者に選ばれました
-            </span>
-          ) : null
-          }
+          {isLoaded && ( // isLoadedがtrueのときのみ表示
+            <>
+                {itemId === null ? (
+                    <span className="item-status">
+                        現在取引中の物品はありません
+                    </span>
+                ) : hostUserId === myId && TraderID === null ? (
+                    <button className="top-button primary" 
+                        onClick={handleSetTrader}
+                        disabled={isProcessing}
+                    >
+                        引渡し予定者にする
+                    </button>
+                ) : TraderID === otherUserId ? (
+                    <>
+                        <button 
+                            className="top-button secondary" 
+                            onClick={handleCancelTrade} 
+                            disabled={isProcessing}
+                        >
+                            取引を中止する
+                        </button>
+                        <button 
+                            className="top-button success" 
+                            onClick={handleCompleteTrade} 
+                            disabled={isProcessing}
+                        >
+                            取引を完了する
+                        </button>
+                    </>
+                ) : hostUserId !== myId && TraderID === myId ? (
+                    <span>
+                        現在 {itemName} の引渡し予定者に選ばれています
+                    </span>
+                ) : hostUserId !== myId && TraderID === null ? (
+                    <span className={`item-status`}>
+                        現在 {itemName} を取引しています
+                    </span>
+                ) : hostUserId !== myId && TraderID !== myId ? (
+                    <span>
+                        現在他のユーザーが引渡し予定者に選ばれました
+                    </span>
+                ) : null}
+            </>
+        )}
       </div>
 
 
