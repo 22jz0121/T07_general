@@ -1,9 +1,6 @@
-// src/pages/Search.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import SearchIcon from '@mui/icons-material/Search';
 import '../css/search.css';
 
 const Search = () => {
@@ -66,7 +63,7 @@ const Search = () => {
         </div>
 
         <button className="search-button" onClick={handleSearch}>
-          <SearchIcon className="search-icon" />
+          
           <span className="search-text">探す</span>
         </button>
       </div>
