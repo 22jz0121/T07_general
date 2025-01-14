@@ -129,8 +129,10 @@ const Messages = () => {
                                   )}
                                   <div className="message-info">
                                       <div className="message-header">
-                                          <span className="names">{chat.OtherUser.UserName}</span>
-                                          <span className="time">{formatDateMessage(chat.LastContent.CreatedAt)}</span>
+                                            <span className="names">{chat.OtherUser.UserName}</span>
+                                            <span className="time">
+                                                {chat.LastContent.CreatedAt ? formatDateMessage(chat.LastContent.CreatedAt) : '--:--'}
+                                            </span>
                                       </div>
                                       <p className="message-content">{chat.LastContent?.Image 
                                           ? '画像が送信されました' 
