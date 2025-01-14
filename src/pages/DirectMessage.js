@@ -200,6 +200,9 @@ const DirectMessage = () => {
         sessionStorage.setItem('TraderID', otherUserId); // ローカルストレージを更新
         console.log('Trader set successfully');
         console.log('Other User ID:', otherUserId);
+        const message = `あなたが${itemName}の引渡し予定者に選ばれました。`;
+
+        sendPushNotification(otherUserId, message);
       } else {
         console.error('Failed to set trader');
       }
@@ -212,6 +215,29 @@ const DirectMessage = () => {
 
   };
 
+  const sendPushNotification = async (userId,message) => {
+      const url = "https://www.jec.ac.jp/?utm_source=g&utm_medium=kw&utm_campaign=lis&gad_source=1&gclid=CjwKCAiAhP67BhAVEiwA2E_9g8iHNceHOepij2pWdBNSAml-FiO5h0k4vf6TzO6jZmu7xA8D8cbRJxoC-MUQAvD_BwE"
+
+      try {
+          const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userId, message, url }),
+          });
+
+          const data = await response.json();
+          if (data.success) {
+              alert('プッシュ通知が送信されました！');
+          } else {
+              alert('通知の送信に失敗しました。');
+          }
+      } catch (error) {
+          console.error('エラー:', error);
+          alert('エラーが発生しました。');
+      }
+  };
   const handleCancelTrade = async () => {
     if (isProcessing) return; // 連投防止
     setIsProcessing(true);
