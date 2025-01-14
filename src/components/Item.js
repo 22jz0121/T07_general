@@ -121,7 +121,6 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
               <p>{description}</p>
               <div className="action-buttons">
                 <div className="methods-display">{methodsDisplay}</div>
-                <p className="trade-status">{tradeStatus}</p>
               </div>
             </div>
           </div>

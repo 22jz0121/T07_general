@@ -1,74 +1,43 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import '../css/search.css';
+import '../css/search.css'; // 新しいCSSファイルを作成
 
-const Search = () => {
+const Notifications = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState('');
 
-  const handleSearch = async () => {
-    if (searchQuery.trim() || category) {
-      try {
-        const response = await fetch(`https://loopplus.mydns.jp/api/searchitem?word=${encodeURIComponent(searchQuery)}&category=${encodeURIComponent(category)}`);
-        const data = await response.json();
-
-        // 検索結果が取得できたら、結果画面に遷移
-        if (response.ok) {
-          navigate('/search-results', {
-            state: { results: data }, // APIからの結果を渡す
-          });
-        } else {
-          alert('検索に失敗しました。');
-        }
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-        alert('検索中にエラーが発生しました。');
-      }
-    } else {
-      alert('キーワードまたはカテゴリを入力してください。');
-    }
-  };
+  // サンプルの通知データ
+  const notifications = [
+    { id: 1, message: '新しいメッセージがあります。', date: '2025-01-14' },
+    { id: 2, message: 'システムメンテナンスのお知らせ。', date: '2025-01-13' },
+    { id: 3, message: '新しい機能が追加されました。', date: '2025-01-12' },
+  ];
 
   return (
-    <div className="search-container">
+    <div className="notifications-container">
       <div className="top-navigation">
         <button className="back-button" onClick={() => navigate('/')}>
           <ArrowBackIcon className="back-icon" />
         </button>
-        <h1 className="page-title">探す</h1>
+        <h1 className="page-title">通知</h1>
       </div>
 
-      <div className="search-form">
-        <input
-          type="text"
-          placeholder="キーワードを入力"
-          className="input-field"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        <div className="dropdown-container">
-          <select
-            className="dropdown-select"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">カテゴリ</option>
-            <option value="electronics">電子機器</option>
-            <option value="furniture">家具</option>
-            <option value="books">本</option>
-          </select>
+      <div className='notifications-div'>
+        <div className="notifications-list">
+          {notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <div key={notification.id} className="notification-item">
+                <p className="notification-message">{notification.message}</p>
+                <span className="notification-date">{notification.date}</span>
+              </div>
+            ))
+          ) : (
+            <p className="no-notifications">通知はありません。</p>
+          )}
         </div>
-
-        <button className="search-button" onClick={handleSearch}>
-          
-          <span className="search-text">探す</span>
-        </button>
       </div>
     </div>
   );
 };
 
-export default Search;
+export default Notifications;

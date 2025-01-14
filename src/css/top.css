@@ -349,6 +349,30 @@ body {
     margin-right: 5px;
 }
 
+/* ItemList.css */
+
+ 
+  .select-container select {
+    margin-bottom: 5px;
+    margin-left: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc; /* ボーダーの色 */
+    border-radius: 4px; /* 角を丸くする */
+    background-color: #f9f9f9; /* 背景色 */
+    cursor: pointer; /* カーソルをポインターに */
+    transition: border-color 0.3s; /* ボーダーの色の変化にトランジションを追加 */
+  }
+  
+  .select-container select:hover {
+    border-color: #888; /* ホバー時のボーダーの色 */
+  }
+  
+  .select-container select:focus {
+    outline: none; /* フォーカス時のアウトラインを消す */
+    border-color: #007bff; /* フォーカス時のボーダーの色 */
+  }
+  
 
  
 

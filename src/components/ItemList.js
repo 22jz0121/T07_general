@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import Item from './Item';
 
 function ItemList() {
-  const [items, setItems] = useState([]);                 //表示するアイテム
+  const [items, setItems] = useState([]);                 
   const [loading, setLoading] = useState(true);
-  const [likedItems, setLikedItems] = useState([]);       // ユーザーがいいねしたアイテム
-  const [myFavoriteIds, setMyFavoriteIds] = useState([]); // /ユーザーがいいねしているアイテムのID
+  const [likedItems, setLikedItems] = useState([]);       
+  const [myFavoriteIds, setMyFavoriteIds] = useState([]); 
   const [error, setError] = useState(null);
+  const [selectedTradeFlag, setSelectedTradeFlag] = useState(0); // トレードフラグの状態を管理
   const isMounted = useRef(true);
 
-  //最初に行う処理
   useEffect(() => {
     isMounted.current = true;
 
@@ -21,7 +21,6 @@ function ItemList() {
     };
   }, []);
 
-  //アイテムを取得
   const fetchItems = async () => {
     try {
       const response = await fetch('https://loopplus.mydns.jp/item');
@@ -41,7 +40,6 @@ function ItemList() {
     }
   };
 
-  //自分のお気に入りを取得
   const fetchMyFavorites = async () => {
     try {
       const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
@@ -60,27 +58,18 @@ function ItemList() {
     }
   };
 
-
-  //お気に入りボタンが押されたときの処理
   const handleLike = (itemId) => {
-    console.log('handleLike called with itemId:', itemId);
-    //likedItems 配列に itemId が含まれているかを確認し、含まれていれば isLiked が trueに
     const isLiked = likedItems.includes(itemId);
-    //↑の亜種
-    const isMyFavorite = myFavoriteIds.includes(itemId); // /myfavoriteから取得したIDと比較
+    const isMyFavorite = myFavoriteIds.includes(itemId); 
 
-    // DELETEかPOSTかを判断し切り替え処理へ
     const method = isMyFavorite ? 'DELETE' : 'POST';
     sendFavoriteRequest(itemId, method);
 
-    // likedItemsの更新
     setLikedItems((prevLikedItems) => {
       return isLiked ? prevLikedItems.filter(id => id !== itemId) : [...prevLikedItems, itemId];
     });
   };
 
-
-  //お気に入り切り替え処理
   const sendFavoriteRequest = async (itemId, method) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
@@ -89,8 +78,8 @@ function ItemList() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json(); // エラーレスポンスを取得
-        console.error('Error response:', errorData); // エラーレスポンスをログに出力
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
 
@@ -101,37 +90,47 @@ function ItemList() {
     }
   };
 
+  const handleTradeFlagChange = (event) => {
+    setSelectedTradeFlag(Number(event.target.value)); // 選択されたトレードフラグを設定
+  };
+
   if (loading) {
     return <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>;
   }
 
   return (
     <div className='listing'>
+      <div className="select-container">
+        <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
+          <option value={0}>出品中</option>
+          <option value={1}>取引中</option>
+          <option value={2}>取引完了</option>
+        </select>
+      </div>
       {items
-        .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)) // Sort items by CreatedAt in descending order
+        .filter(item => item.TradeFlag === selectedTradeFlag) // 選択されたトレードフラグでフィルタリング
+        .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
         .map(item => (
-          // Only display items with TradeFlag not equal to 3
           item.TradeFlag !== 3 && (
             <Item
               key={item.ItemID}
-              name={item.User ? item.User.UserName : '不明'} // Pass user name
+              name={item.User ? item.User.UserName : '不明'}
               userIcon={item.User && item.User.Icon}
               userId={item.UserID}
               itemId={item.ItemID}
               title={item.ItemName}
               imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
               description={item.Description}
-              tradeFlag={item.TradeFlag} // Pass tradeFlag to Item
+              tradeFlag={item.TradeFlag}
               onLike={handleLike}
               liked={myFavoriteIds.includes(item.ItemID)}
-              transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // Fix trade method
-              time={item.CreatedAt} // Pass CreatedAt time
+              transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
+              time={item.CreatedAt}
             />
           )
         ))}
     </div>
   );
-
 }
 
 export default ItemList;

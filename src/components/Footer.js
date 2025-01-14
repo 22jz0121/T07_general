@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home as HomeIcon, Search as SearchIcon, Upload as CloudUploadIcon, ChatBubbleOutline as MessageIcon, AccountCircle as MyPageIcon } from '@mui/icons-material'; // Import Material UI icons
+import { Home as HomeIcon, Notifications as NotificationsIcon, Upload as CloudUploadIcon, ChatBubbleOutline as MessageIcon, AccountCircle as MyPageIcon } from '@mui/icons-material'; // Import Material UI icons
 import '../css/top.css';
 
 function Footer() {
@@ -13,9 +13,9 @@ function Footer() {
           <HomeIcon className="footer-icon" />
           <span className="nav-label">ホーム</span>
         </div>
-        <div className="nav-item" onClick={() => navigate('/search')}> {/* Navigate to search */}
-          <SearchIcon className="footer-icon" />
-          <span className="nav-label">探す</span>
+        <div className="nav-item" onClick={() => navigate('/search')}> {/* Navigate to notifications */}
+          <NotificationsIcon className="footer-icon" />
+          <span className="nav-label">通知</span>
         </div>
         <div className="nav-item" onClick={() => navigate('/upload')}> {/* Navigate to upload */}
           <CloudUploadIcon className="footer-icon" />

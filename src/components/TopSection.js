@@ -106,7 +106,7 @@ function TopSection() {
             <input
               type="text"
               className="search-box"
-              placeholder="欲しいものを探す"
+              placeholder="キーワードで探す"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress} // Enterキーで検索
