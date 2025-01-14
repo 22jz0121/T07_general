@@ -23,6 +23,7 @@ import LikedItemsPage from './pages/LikedItemsPage';
 import HistoryPage from './pages/HistoryPage';
 import QAPage from './pages/QAPage';
 import Push from './components/Push';
+import Ban from './pages/Ban';
 import PrivateRoute from './components/PrivateRoute'; // PrivateRouteをインポート
 
 import './css/top.css';
@@ -61,6 +62,7 @@ function App() {
           <Route path="/history/:id" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
           <Route path="/qa" element={<PrivateRoute><QAPage /></PrivateRoute>} />
           <Route path="/test" element={<PrivateRoute><Push /></PrivateRoute>} />
+          <Route path="/youdead" element={<PrivateRoute><Ban setIsFooterVisible={setIsFooterVisible} /></PrivateRoute>} />
         </Routes>
         {isFooterVisible && <Footer />}
       </div>

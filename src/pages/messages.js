@@ -53,6 +53,22 @@ const Messages = () => {
     navigate(`/dm/${id}`, { state: { name, itemId, hostUserId, itemName, otherUserId} });
   };
 
+  const formatDateMessage = (createdAt) => {
+    const date = new Date(createdAt);
+    const today = new Date();
+    
+    // 今日の日付を比較
+    if (date.getDate() === today.getDate() && 
+        date.getMonth() === today.getMonth() && 
+        date.getFullYear() === today.getFullYear()) {
+      // 今日の場合、時間と分を表示
+      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    } else {
+      // 今日でない場合、日付を表示
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+  };
+
   return (
       <div className="message-list">
           <div className="top-navigation">
@@ -72,10 +88,10 @@ const Messages = () => {
                       <p className="error-message">{error}</p>
                   ) : myChats.length > 0 ? (
                       myChats.map((chat) => {
-                          const iconSrc = chat.OtherUser.Icon && chat.OtherUser.Icon.startsWith('storage/images/') 
-                              ? `https://loopplus.mydns.jp/${chat.OtherUser.Icon}` 
-                              : chat.OtherUser.Icon;
-
+                        const iconSrc = chat.OtherUser.Icon && chat.OtherUser.Icon.startsWith('storage/images/') 
+                            ? `https://loopplus.mydns.jp/${chat.OtherUser.Icon}` 
+                            : chat.OtherUser.Icon;
+                              
                           return (
                               <div
                                   key={chat.ChatID}
@@ -114,7 +130,7 @@ const Messages = () => {
                                   <div className="message-info">
                                       <div className="message-header">
                                           <span className="names">{chat.OtherUser.UserName}</span>
-                                          <span className="time">{new Date(chat.lastMessage?.CreatedAt).toLocaleString()}</span>
+                                          <span className="time">{formatDateMessage(chat.LastContent.CreatedAt)}</span>
                                       </div>
                                       <p className="message-content">{chat.LastContent?.Image 
                                           ? '画像が送信されました' 
