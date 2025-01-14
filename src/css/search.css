@@ -9,6 +9,7 @@ body {
 }
 .notifications-list {
   margin-top: 20px;
+ 
 }
 
 .notifications-div {
@@ -25,6 +26,8 @@ body {
   padding: 15px;
   margin-bottom: 10px;
   transition: box-shadow 0.3s; /* ホバー時の影の効果 */
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); /* 下に薄い影を追加 */
+
 }
 
 .notification-item:hover {

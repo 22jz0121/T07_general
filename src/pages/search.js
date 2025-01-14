@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import '../css/search.css'; // 新しいCSSファイルを作成
+import '../css/search.css'; 
 
 const Notifications = () => {
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]); // ステートを初期化
+  const [loading, setLoading] = useState(true); // ローディング状態を管理
+  const myUserID = 5; // 現在のユーザーID（例として5を使用）
 
-  // サンプルの通知データ
-  const notifications = [
-    { id: 1, message: '新しいメッセージがあります。', date: '2025-01-14' },
-    { id: 2, message: 'システムメンテナンスのお知らせ。', date: '2025-01-13' },
-    { id: 3, message: '新しい機能が追加されました。', date: '2025-01-12' },
-  ];
+  useEffect(() => {
+    // 特定のアナウンスメントを取得する関数
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await fetch('https://loopplus.mydns.jp/api/announcements');
+        if (!response.ok) {
+          throw new Error('ネットワークエラー');
+        }
+        const data = await response.json();
+        
+        // UserIDがmyUserIDと一致するアナウンスメントのみをフィルタリング
+        const filteredNotifications = data.filter(notification => notification.UserID === myUserID);
+        setNotifications(filteredNotifications); // フィルタリングしたデータをステートに保存
+      } catch (error) {
+        console.error('エラー:', error);
+      } finally {
+        setLoading(false); // ローディングを終了
+      }
+    };
+
+    fetchAnnouncements(); // 関数を呼び出す
+  }, []); // 空の依存配列でコンポーネントのマウント時に実行
 
   return (
     <div className="notifications-container">
@@ -24,11 +43,13 @@ const Notifications = () => {
 
       <div className='notifications-div'>
         <div className="notifications-list">
-          {notifications.length > 0 ? (
+          {loading ? ( // ローディング中の表示
+            <div className="loading"><img src="/Loading.gif" alt="Loading" /></div>
+          ) : notifications.length > 0 ? (
             notifications.map((notification) => (
-              <div key={notification.id} className="notification-item">
-                <p className="notification-message">{notification.message}</p>
-                <span className="notification-date">{notification.date}</span>
+              <div key={notification.AnnounceID} className="notification-item">
+                <p className="notification-message">{notification.Content}</p>
+                <span className="notification-date">{new Date(notification.CreatedAt).toLocaleString()}</span>
               </div>
             ))
           ) : (
