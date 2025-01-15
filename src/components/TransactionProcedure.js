@@ -106,7 +106,7 @@ function TransactionProcedure() {
   const sendPushNotification = async (roomId) => {
     const notification = {
       userId: userId,
-      message: `野生の${itemName}取引希望者が飛び出してきた！`,
+      message: `あっ！野生の${itemName}取引希望者が飛び出してきた！`,
       url: `https://loopplus.mydns.jp/dm/${roomId}`
     };
 
