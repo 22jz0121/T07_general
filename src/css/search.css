@@ -51,3 +51,7 @@ body {
   color: #888; /* メッセージの色 */
   font-size: 16px;
 }
+
+.notification-item.warning {
+  background-color: rgb(255, 191, 191);
+}

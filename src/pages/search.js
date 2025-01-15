@@ -37,12 +37,14 @@ const Notifications = () => {
   }, []); // 空の依存配列でコンポーネントのマウント時に実行
 
 
-  const formattedContent = content.split('\n').map((notifications.Content, index) => (
-    <React.Fragment key={index}>
+  const formattedContent = (content) => {
+    return content.split('\n').map((item, index) => (
+      <React.Fragment key={index}>
         {item}
-        {index < content.split('\n').length - 1 && <br />}
-    </React.Fragment>
-  ));
+        {index < content.split('\n').length - 1 && <br/>}
+      </React.Fragment>
+    ));
+  };
   return (
     <div className="notifications-container">
       <div className="top-navigation">
@@ -58,8 +60,11 @@ const Notifications = () => {
             <div className="loading"><img src="/Loading.gif" alt="Loading" /></div>
           ) : notifications.length > 0 ? (
             notifications.map((notification) => (
-              <div key={notification.AnnounceID} className="notification-item">
-                <p className="notification-message">{formattedContent}</p>
+              <div 
+                key={notification.AnnounceID} 
+                className={`notification-item ${notification.WarnFlag === 1 ? 'warning' : ''}`}
+              >
+                <p className="notification-message">{formattedContent(notification.Content)}</p>
                 <span className="notification-date">{new Date(notification.CreatedAt).toLocaleString()}</span>
               </div>
             ))

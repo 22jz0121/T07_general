@@ -48,23 +48,23 @@ const MyPage = () => {
     //　　　　　　プッシュ通知ON/OFF処理
     //---------------------------------------------------
     const changeNotification = () => {
-        const msg = '';
+        var msg = '';
         if(localStorage.getItem('Notification') == 'disable') {
-            msg = '現在、プッシュ通知はOFFになっています。\r\nONにしますか？'
+            msg = '現在、プッシュ通知はOFFになっています。\r\nONにしますか？';
             setNotification(true);
         }
         else {
-            msg = '現在、プッシュ通知はONになっています。\r\nOFFにしますか？'
+            msg = '現在、プッシュ通知はONになっています。\r\nOFFにしますか？';
             setNotification(false);
         }
 
 
         const result = window.confirm(msg);
-        if (result && NTFstatus == 'true') {
+        if (result && NTFstatus) {
             localStorage.setItem('Notification', 'enable');
             getPushSubscription();
         } 
-        else if(result && NTFstatus == 'false') {
+        else if(result && !NTFstatus) {
             localStorage.setItem('Notification', 'disable');
             //プッシュ通知を切るメソッドを追加する
         }
@@ -96,7 +96,7 @@ const MyPage = () => {
         });
 
         await saveSubscription(subscription); // サブスクリプションを保存
-        alert('サブスクリプションが保存されました！');
+        console.log('サブスクリプションが保存されました！');
     };
 
 
