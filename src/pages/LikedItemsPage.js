@@ -140,6 +140,7 @@ const LikedItemsPage = () => {
                   description={item.Description} 
                   onLike={handleLike}
                   liked={myFavoriteIds.includes(item.ItemID)}
+                  time={item.CreatedAt}
                 />
               ))}
             </div>
