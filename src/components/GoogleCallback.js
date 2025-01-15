@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/GoogleCallback.css'
 
 function GoogleCallback({ setIsFooterVisible }) {
   const navigate = useNavigate();
@@ -38,7 +39,12 @@ function GoogleCallback({ setIsFooterVisible }) {
     return () => setIsFooterVisible(true);
   }, [navigate, setIsFooterVisible]);
 
-  return <div>LOOP+へようこそ</div>;
+  return (
+    <div className="google-callback-container">
+      <img src='/logo.png' alt="Logo" width="100" id="logo" />
+      <h1>LOOP+へようこそ</h1>
+    </div>
+  );
 }
 
 export default GoogleCallback;
