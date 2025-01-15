@@ -117,6 +117,7 @@ const HistoryPage = () => {
                 title={item.ItemName} // アイテム名を渡す
                 imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`} // アイテム画像を渡す
                 description={item.Description} // 説明を渡す
+                transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
               />
             </div>
           ))
