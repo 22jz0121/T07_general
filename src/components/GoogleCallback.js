@@ -26,6 +26,12 @@ function GoogleCallback({ setIsFooterVisible }) {
           sessionStorage.setItem('MyMail', data.Email);
           sessionStorage.setItem('MyComment', data.Comment);
           sessionStorage.setItem('MyProfPic', data.ProfilePicture);
+          if(localStorage.getItem('Notification')) {
+            sessionStorage.setItem('Notification', 'enable');
+          }
+          else {
+            sessionStorage.setItem('Notification', 'disable');
+          }
           navigate('/');  // ログイン後のページへリダイレクト
         }
       } catch (error) {
