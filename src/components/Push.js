@@ -62,7 +62,7 @@ const Push = () => {
     //通知を送信
     const sendPushNotification = async () => {
         const userId = 3;
-        const message = "オヌヌメの商品のご紹介！！"; // 送信するメッセージ内容
+        const message = "ひぃぃぃぃやｈｈｈｈｈｈっはぁぁぁぁぁぁぁぁぁぁああああああああ！！！！！"; // 送信するメッセージ内容
         const url = "https://www.jec.ac.jp/?utm_source=g&utm_medium=kw&utm_campaign=lis&gad_source=1&gclid=CjwKCAiAhP67BhAVEiwA2E_9g8iHNceHOepij2pWdBNSAml-FiO5h0k4vf6TzO6jZmu7xA8D8cbRJxoC-MUQAvD_BwE"
 
         try {
