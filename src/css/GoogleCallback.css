@@ -1,0 +1,19 @@
+.google-callback-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* ビューポートの高さに合わせる */
+    background-color: #f9f9f9; /* 背景色 */
+    text-align: center;
+}
+
+#logo {
+    margin-bottom: 20px; /* ロゴとテキストの間にスペースを追加 */
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px; /* フォントサイズ */
+    color: #333; /* テキストの色 */
+    font-family: 'Noto Sans JP', sans-serif;}
