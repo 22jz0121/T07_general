@@ -77,13 +77,13 @@ const HistoryPage = () => {
           className={`tab ${activeTab === 'myItems' ? 'active' : ''}`}
           onClick={() => setActiveTab('myItems')}
         >
-          自分の商品
+          自分の物品
         </button>
         <button
           className={`tab ${activeTab === 'others' ? 'active' : ''}`}
           onClick={() => setActiveTab('others')}
         >
-          他人の商品
+          他人の物品
         </button>
       </div>
 
