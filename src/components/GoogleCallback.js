@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/GoogleCallback.css'
+import '../css/GoogleCallback.css';
 
 function GoogleCallback({ setIsFooterVisible }) {
   const navigate = useNavigate();
@@ -8,6 +8,9 @@ function GoogleCallback({ setIsFooterVisible }) {
   useEffect(() => {
     // フッターを非表示にする
     setIsFooterVisible(false);
+
+    // スクロールを禁止
+    document.body.style.overflow = 'hidden';
 
     const fetchMyinfo = async () => {
       try {
@@ -35,8 +38,11 @@ function GoogleCallback({ setIsFooterVisible }) {
 
     fetchMyinfo();
 
-    // クリーンアップ関数でフッターを再表示
-    return () => setIsFooterVisible(true);
+    // クリーンアップ関数でフッターを再表示し、スクロールを再度有効にする
+    return () => {
+      setIsFooterVisible(true);
+      document.body.style.overflow = 'auto'; // スクロールを再度有効にする
+    };
   }, [navigate, setIsFooterVisible]);
 
   return (
