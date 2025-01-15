@@ -1,23 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import RequestList from '../components/RequestList'; // Corrected path
 import Item from '../components/Item';
 import '../css/LikedItemsPage.css';
 
-//2024/11/27　なんか適当に
 const LikedItemsPage = () => {
   const navigate = useNavigate();
-  const [items, setItems] = useState([]);  
+  const [items, setItems] = useState([]);
   const [myFavoriteIds, setMyFavoriteIds] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
+  const [selectedTradeFlag, setSelectedTradeFlag] = useState(0); // トレードフラグの状態
   const isMounted = useRef(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     isMounted.current = true;
-  
+
     const fetchItems = async () => {
       try {
         const response = await fetch('https://loopplus.mydns.jp/item');
@@ -36,7 +35,7 @@ const LikedItemsPage = () => {
         }
       }
     };
-  
+
     const fetchMyFavorites = async () => {
       try {
         const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
@@ -54,62 +53,65 @@ const LikedItemsPage = () => {
         console.error('Error fetching favorites:', error);
       }
     };
-  
+
     fetchItems();
     fetchMyFavorites();
-  
-    // クリーンアップ関数
+
     return () => {
-      isMounted.current = false; // アンマウント時にフラグを更新
+      isMounted.current = false; // クリーンアップ時にフラグを更新
     };
-  }, []); // 依存配列は空のまま
-  
-  // myFavoriteIds に基づいて storedLikedItems を設定
+  }, []);
+
   useEffect(() => {
     if (items.length > 0 && myFavoriteIds.length > 0) {
       const storedLikedItems = items.filter(item => myFavoriteIds.includes(item.ItemID));
-      setFavoriteItems(storedLikedItems);
+      const sortedLikedItems = storedLikedItems.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
+      setFavoriteItems(sortedLikedItems);
     }
-  }, [items, myFavoriteIds]); // items と myFavoriteIds に依存
-  
+  }, [items, myFavoriteIds]);
 
-  //お気に入りボタンが押されたときの処理
   const handleLike = (itemId) => {
     console.log('handleLike called with itemId:', itemId);
     const isLiked = likedItems.includes(itemId);
-    const isMyFavorite = myFavoriteIds.includes(itemId); // /myfavoriteから取得したIDと比較
+    const isMyFavorite = myFavoriteIds.includes(itemId);
 
-    // DELETEかPOSTかを判断し切り替え処理へ
     const method = isMyFavorite ? 'DELETE' : 'POST';
     sendFavoriteRequest(itemId, method);
 
-    // likedItemsの更新
     setLikedItems((prevLikedItems) => {
       return isLiked ? prevLikedItems.filter(id => id !== itemId) : [...prevLikedItems, itemId];
     });
   };
 
-
-  //お気に入り切り替え処理
   const sendFavoriteRequest = async (itemId, method) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
         method: method,
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
-        const errorData = await response.json(); // エラーレスポンスを取得
-        console.error('Error response:', errorData); // エラーレスポンスをログに出力
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log('Response from server:', data);
     } catch (error) {
       console.error('Error sending request:', error);
     }
   };
+
+  const handleTradeFlagChange = (event) => {
+    const value = Number(event.target.value);
+    console.log('Trade Flag Changed to:', value);
+    setSelectedTradeFlag(value);
+  };
+
+  const filteredFavoriteItems = favoriteItems.filter(
+    (item) => item.TradeFlag === selectedTradeFlag
+  );
 
   return (
     <div className="liked-items-page">
@@ -121,23 +123,32 @@ const LikedItemsPage = () => {
         <h1 className="page-title">いいねした物品</h1>
       </div>
 
+      {/* トレードフラグの選択 */}
+      <div className="selects-container">
+        <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
+          <option value={0}>出品中</option>
+          <option value={1}>取引中</option>
+          <option value={2}>取引完了</option>
+        </select>
+      </div>
+
       {loading ? (
-        <div className='loading'>
-          <img src='/Loading.gif' alt="Loading"/>
+        <div className="loading">
+          <img src="/Loading.gif" alt="Loading" />
         </div>
       ) : (
         <div className="tab-content">
-          {favoriteItems.length > 0 ? (
+          {filteredFavoriteItems.length > 0 ? (
             <div>
-              {favoriteItems.map(item => (
-                <Item 
-                  key={item.ItemID} 
+              {filteredFavoriteItems.map(item => (
+                <Item
+                  key={item.ItemID}
                   name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
                   userIcon={item.User && item.User.Icon}
-                  itemId={item.ItemID} 
-                  title={item.ItemName} 
+                  itemId={item.ItemID}
+                  title={item.ItemName}
                   imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
-                  description={item.Description} 
+                  description={item.Description}
                   onLike={handleLike}
                   liked={myFavoriteIds.includes(item.ItemID)}
                   time={item.CreatedAt}
@@ -146,7 +157,7 @@ const LikedItemsPage = () => {
               ))}
             </div>
           ) : (
-            <p className="pp">いいねした物品がありません。</p>
+            <p className="pp">いいねした物品はありません。</p>
           )}
         </div>
       )}

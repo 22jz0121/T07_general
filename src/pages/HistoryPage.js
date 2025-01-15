@@ -10,6 +10,8 @@ const HistoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('myItems'); // タブの状態管理
   const [itemFilter, setItemFilter] = useState('ongoing'); // アイテムフィルタの状態管理
+  const [likedItems, setLikedItems] = useState([]); // お気に入りアイテムのIDを格納
+  const [myFavoriteIds, setMyFavoriteIds] = useState([]); // ユーザーのお気に入りアイテムのIDを格納
 
   // ユーザーのID（MyID）をセッションストレージなどから取得
   const myID = sessionStorage.getItem('MyID');
@@ -45,6 +47,43 @@ const HistoryPage = () => {
     };
   }, []);
 
+  // お気に入りボタンが押されたときの処理
+  const handleLike = (itemId) => {
+    console.log('handleLike called with itemId:', itemId);
+    const isLiked = likedItems.includes(itemId);
+    const isMyFavorite = myFavoriteIds.includes(itemId); // /myfavoriteから取得したIDと比較
+
+    // DELETEかPOSTかを判断し切り替え処理へ
+    const method = isMyFavorite ? 'DELETE' : 'POST';
+    sendFavoriteRequest(itemId, method);
+
+    // likedItemsの更新
+    setLikedItems((prevLikedItems) => {
+      return isLiked ? prevLikedItems.filter(id => id !== itemId) : [...prevLikedItems, itemId];
+    });
+  };
+
+  // お気に入り切り替え処理
+  const sendFavoriteRequest = async (itemId, method) => {
+    try {
+      const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
+        method: method,
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // エラーレスポンスを取得
+        console.error('Error response:', errorData); // エラーレスポンスをログに出力
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('Response from server:', data);
+    } catch (error) {
+      console.error('Error sending request:', error);
+    }
+  };
+
   // 現在のタブとプルダウンの状態に基づいて取引履歴をフィルタリング
   const filteredItems = items.filter(item => {
     const isOngoing = itemFilter === 'ongoing' && item.TradeFlag === 1;
@@ -59,7 +98,7 @@ const HistoryPage = () => {
       return isOngoing || isCompleted;
     }
     return false;
-  });
+  }).sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)); // 新しい順にソート
 
   return (
     <div className="history-page-container">
@@ -72,7 +111,7 @@ const HistoryPage = () => {
       </div>
 
       {/* タブバー */}
-      <div className="tab-bar">    
+      <div className="tab-bar">
         <button
           className={`tab ${activeTab === 'myItems' ? 'active' : ''}`}
           onClick={() => setActiveTab('myItems')}
@@ -101,7 +140,7 @@ const HistoryPage = () => {
 
       <div className="transaction-list">
         {loading ? (
-          <p>Loading transactions...</p> // ローディング中の表示
+          <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>
         ) : filteredItems.length > 0 ? (
           filteredItems.map(item => (
             <div
@@ -110,22 +149,27 @@ const HistoryPage = () => {
               style={{ cursor: 'pointer' }}
             >
               <Item
+                key={item.ItemID}
+                name={item.User ? item.User.UserName : '不明'}
+                userIcon={item.User && item.User.Icon}
+                userId={item.UserID}
                 itemId={item.ItemID}
-                name={item.User ? item.User.UserName : '不明'} // ユーザー名を表示（Userがnullの場合は'不明'を表示）
-                userIcon={item.User ? item.User.Icon : 'default-icon-url'} // ユーザーアイコンを表示
-                createdAt={item.CreatedAt} // 作成日を渡す
-                title={item.ItemName} // アイテム名を渡す
-                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`} // アイテム画像を渡す
-                description={item.Description} // 説明を渡す
+                title={item.ItemName}
+                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                description={item.Description}
+                tradeFlag={item.TradeFlag}
+                onLike={handleLike}
+                liked={myFavoriteIds.includes(item.ItemID)}
                 transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
+                time={item.CreatedAt}
               />
             </div>
           ))
         ) : (
           <p className="no-transactions">
             {activeTab === 'others'
-              ? '他人の商品はありません。'
-              : '自分の商品はありません。'}
+              ? '他人の物品はありません。'
+              : '自分の物品はありません。'}
           </p>
         )}
       </div>
