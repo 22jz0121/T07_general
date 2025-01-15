@@ -100,6 +100,7 @@ function SearchResults() {
               onLike={() => handleLike(item.ItemID)} // お気に入りの切り替え
               liked={myFavoriteIds.includes(item.ItemID)} // いいね状態を設定
               time={item.CreatedAt}
+              transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
             />
           ))
         ) : (
