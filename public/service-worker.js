@@ -10,19 +10,29 @@ self.addEventListener('push', (event) => {
         }
     };
 
+    console.log(data);
+
     // プッシュ通知を表示
     event.waitUntil(
         self.registration.showNotification(data.title, options)
     );
 
     // クライアントにメッセージを送信
+    // event.waitUntil(
+    //     self.clients.matchAll().then(clients => {
+    //         clients.forEach(client => {
+    //             client.postMessage({
+    //                 body: data.body,
+    //             });
+    //         });
+    //     })
+    // );
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    console.log(event.notification);
     event.waitUntil(
-        self.clients.matchAll().then(clients => {
-            clients.forEach(client => {
-                client.postMessage({
-                    body: data.body,
-                });
-            });
-        })
+        clients.openWindow(event.notification.data.url)
     );
 });
