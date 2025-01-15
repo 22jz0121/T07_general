@@ -23,7 +23,7 @@ function TransactionProcedure() {
     setError(null); // エラーをリセット
     setSuccess(null); // 成功メッセージをリセット
     setIsSending(true); // 送信中フラグを立てる
-
+  
     if (message.trim()) {
       // チャットルームを作成
       console.log('userID:', userId);
@@ -41,52 +41,25 @@ function TransactionProcedure() {
           console.error('Error response:', errorText);
           throw new Error('部屋の作成に失敗しました。');
         }
-
+  
         const data = await createRoomResponse.json();
         console.log(data.roomId);
         if (data.roomId) {
+          console.log('data.roomId', data.roomId);
+
           setChatId(data.roomId); // チャットIDを保存
-        }
-        else if(data.status == 'error') {
+
+          await sendMessage(data.roomId); // ここでメッセージを送信
+
+          alert('メッセージを送信しました！');
+
+          navigate(`/dm/${data.roomId}`, { state: { name, itemName, itemId, userId }}); // 新しく取得したroomIdを使用
+
+          await sendPushNotification(data.roomId);// ここでプッシュ通知を送信
+        } else if (data.status === 'error') {
           alert('そのユーザーとは現在取引中です。');
-        } 
-        else {
+        } else {
           throw new Error('チャットIDが取得できませんでした。');
-        }
-
-        // メッセージを送信
-        const payload = {
-          Content: message,
-          ChatID: data.roomId,
-        };
-
-        if(chatId) {
-          const sendResponse = await fetch('https://loopplus.mydns.jp/api/chat/send', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify(payload),
-          });
-          // console.log(chatId);
-          if (!sendResponse.ok) {
-            const errorText = await sendResponse.text();
-            console.error('Error response:', errorText);
-            throw new Error('メッセージの送信に失敗しました。');
-          }
-
-          const result = await sendResponse.json();
-          if (result.message === 'success') {
-            setSuccess('メッセージが送信されました！');
-            setMessage(''); // 入力フィールドをクリア
-            setIsSending(false); // 送信完了後に設定
-            
-            // ここでchatIdを使用する
-            if (data.roomId) {
-              navigate(`/dm/${data.roomId}`, {state: { name, itemName, itemId, userId}}); // 新しく取得したroomIdを使用
-            }
-          }
         }
         
       } catch (error) {
@@ -95,6 +68,66 @@ function TransactionProcedure() {
       }
     } else {
       setError('メッセージを入力してください。');
+    }
+  };
+  
+  const sendMessage = async (ChatID) => {
+    // メッセージを送信
+    const payload = {
+      Content: message,
+      ChatID: ChatID,
+    };
+  
+    const sendResponse = await fetch('https://loopplus.mydns.jp/api/chat/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+  
+    if (!sendResponse.ok) {
+      const errorText = await sendResponse.text();
+      console.error('Error response:', errorText);
+      throw new Error('メッセージの送信に失敗しました。');
+    }
+  
+    const result = await sendResponse.json();
+    if (result.message === 'success') {
+      setSuccess('メッセージが送信されました！');
+      setMessage(''); // 入力フィールドをクリア
+      setIsSending(false); // 送信完了後に設定
+    }
+  };
+  
+
+  //通知を送信
+  const sendPushNotification = async (roomId) => {
+    const notification = {
+      userId: userId,
+      message: `野生の${itemName}取引希望者が飛び出してきた！`,
+      url: `https://loopplus.mydns.jp/dm/${roomId}`
+    };
+
+    try {
+        const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ notification }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            console.log('プッシュ通知が送信されました！');
+        } else {
+            console.log('通知の送信に失敗しました。');
+        }
+    } catch (error) {
+        console.error('エラー:', error);
+        alert('エラーが発生しました。');
     }
   };
 
