@@ -1,7 +1,6 @@
-Login.css
-
 body, html {
     /* display: flex; */
+    font-family: 'Noto Sans JP', sans-serif;
     justify-content: center;
     align-items: center;
   }
