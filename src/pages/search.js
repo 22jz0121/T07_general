@@ -21,7 +21,11 @@ const Notifications = () => {
         
         // UserIDがmyUserIDと一致するアナウンスメントのみをフィルタリング
         const filteredNotifications = data.filter(notification => notification.UserID === myUserID);
-        setNotifications(filteredNotifications); // フィルタリングしたデータをステートに保存
+        
+        // 新しい順にソート
+        const sortedNotifications = filteredNotifications.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
+        
+        setNotifications(sortedNotifications); // フィルタリングしたデータをステートに保存
       } catch (error) {
         console.error('エラー:', error);
       } finally {

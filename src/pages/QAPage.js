@@ -20,8 +20,7 @@ function QAPage() {
                 setFaqData(data);
             } catch (error) {
                 setError(error.message);
-            }
-            finally {
+            } finally {
                 setLoading(false);
             }
         };
@@ -33,6 +32,12 @@ function QAPage() {
         return <div>Error: {error}</div>;
     }
 
+    // CreatedAtで新しい順にソート
+    const sortedFaqData = faqData.sort((a, b) => {
+        const dateA = new Date(a.CreatedAt);
+        const dateB = new Date(b.CreatedAt);
+        return dateB - dateA; // 新しい順にするためにbを前に
+    });
 
     return (
         <div className="qa-page">
@@ -48,7 +53,7 @@ function QAPage() {
                 </div>
             ) : (
                 <div className="faq-section">
-                    {faqData.map((faq, index) => (
+                    {sortedFaqData.map((faq, index) => (
                         <div key={index} className="faq-item">
                             <h3 className="faq-question">{faq.QuestionContent}</h3>
                             <p className="faq-answer">{faq.AnswerContent}</p>
