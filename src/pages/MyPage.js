@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -14,25 +14,125 @@ import '../css/MyPage.css';
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const myID = sessionStorage.getItem('MyID');
+    const myID= sessionStorage.getItem('MyID');
     const myName = sessionStorage.getItem('MyName');
     const myIcon = sessionStorage.getItem('MyIcon');
+    const [NTFstatus, setNotification] = useState();
 
-    // Navigate to profile page
+    //--------------------------------------------------
+    //　　　　　　プロフィールページへ
+    //---------------------------------------------------
     const handleProfileClick = () => {
         navigate(`/profile/${myID}`);
     };
 
-    // Navigate to history page with myID
+
+    //--------------------------------------------------
+    //　　　　　　取引履歴へ・・・！！
+    //---------------------------------------------------
     const handleHistoryClick = () => {
         navigate(`/history/${myID}`);
     };
 
+
+    //--------------------------------------------------
+    //　　　　　　学校のホームページへ・・・！！
+    //---------------------------------------------------
     // Redirect to external URL
     const handleSchoolInfoClick = () => {
         window.location.href = 'https://www.jec.ac.jp/school-outline/current-student/';
     };
 
+
+    //--------------------------------------------------
+    //　　　　　　プッシュ通知ON/OFF処理
+    //---------------------------------------------------
+    const changeNotification = () => {
+        const msg = '';
+        if(localStorage.getItem('Notification') == 'disable') {
+            msg = '現在、プッシュ通知はOFFになっています。\r\nONにしますか？'
+            setNotification(true);
+        }
+        else {
+            msg = '現在、プッシュ通知はONになっています。\r\nOFFにしますか？'
+            setNotification(false);
+        }
+
+
+        const result = window.confirm(msg);
+        if (result && NTFstatus == 'true') {
+            localStorage.setItem('Notification', 'enable');
+            getPushSubscription();
+        } 
+        else if(result && NTFstatus == 'false') {
+            localStorage.setItem('Notification', 'disable');
+            //プッシュ通知を切るメソッドを追加する
+        }
+        else {}
+    };
+
+
+
+    //--------------------------------------------------
+    //　　　　　　プッシュ通知を使えるか判定
+    //---------------------------------------------------
+    const getPushSubscription = async () => {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+            alert('このブラウザはプッシュ通知に対応していません');
+            return;
+        }
+
+        const permission = await Notification.requestPermission();
+        if (permission === 'denied' || permission === 'default') {
+            alert('プッシュ通知が許可されていません。ブラウザの設定を変更してください');
+            return;
+        }
+
+        const registration = await navigator.serviceWorker.ready;
+
+        const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: process.env.REACT_APP_WEB_PUSH_VAPID_PUBLIC_KEY,
+        });
+
+        await saveSubscription(subscription); // サブスクリプションを保存
+        alert('サブスクリプションが保存されました！');
+    };
+
+
+
+    //--------------------------------------------------
+    //　　　　　　プッシュ通知のための情報を保存
+    //---------------------------------------------------
+    const saveSubscription = async (subscription) => {
+        try {
+            const response = await fetch('https://loopplus.mydns.jp/api/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    endpoint: subscription.endpoint,
+                    keys: subscription.toJSON().keys,
+                    user_id: myID, // ユーザーIDを追加
+                }),
+            });
+
+            const data = await response.json();
+            if (!data.success) {
+                alert('サブスクリプションの保存に失敗しました。');
+            }
+        } catch (error) {
+            console.error('エラー:', error);
+            alert('エラーが発生しました。');
+        }
+    };
+
+
+
+    //--------------------------------------------------
+    //　　　　　　ログアウト処理
+    //---------------------------------------------------
     const handleLogout = () => {
         fetch('https://loopplus.mydns.jp/api/logout', {
             method: 'GET',
@@ -95,6 +195,12 @@ const MyPage = () => {
                     <QuestionAnswerIcon className="menu-icon" />
                     <span className="menu-label">Q&A</span>
                 </div>
+
+                <div className="menu-item" onClick={changeNotification}>
+                    <QuestionAnswerIcon className="menu-icon" />
+                    <span className="menu-label">プッシュ通知</span>
+                </div>
+
                 <div className="menu-item" onClick={handleLogout}>
                     <ExitToAppIcon className="menu-icon" />
                     <span className="menu-label">ログアウト</span>

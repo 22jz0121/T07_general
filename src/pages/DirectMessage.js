@@ -16,6 +16,7 @@ const DirectMessage = () => {
   const [isSending, setIsSending] = useState(false);
   const messageEndRef = useRef(null);
   const myId = parseInt(sessionStorage.getItem('MyID'), 10);
+  const myName = sessionStorage.getItem('MyName');
   const [TraderID, setTraderId] = useState(undefined); // traderIdを状態として管理
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -41,6 +42,8 @@ const DirectMessage = () => {
     };
   }, [id,itemId]);
 
+
+  
   // itemIdを使ってtraderIDを取得する関数
   const fetchTraderId = async () => {
     if(itemId !== null){
@@ -94,14 +97,27 @@ const DirectMessage = () => {
       fetchData();
   }, [id]);
 
+
+  //--------------------------------------------------
+  //　　　　　　なにこれ！！
+  //---------------------------------------------------
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
+
+  //--------------------------------------------------
+  //　　　　　　画像アップ処理
+  //---------------------------------------------------
   const handleImageUpload = (event) => {
     setImageFile(event.target.files[0]);
   };
 
+
+
+  //--------------------------------------------------
+  //　　　　　　チャットメッセージ送信
+  //---------------------------------------------------
   const handleSendMessage = async () => {
     if (inputValue.trim() || imageFile) {
       setIsSending(true);
@@ -131,6 +147,10 @@ const DirectMessage = () => {
     }
   };
 
+
+  //--------------------------------------------------
+  //　　　　　　長押し時処理
+  //---------------------------------------------------
   const handleLongPress = (chatContentID) => {
     const confirmDelete = window.confirm('このメッセージを削除しますか？');
     if (confirmDelete) {
@@ -138,7 +158,11 @@ const DirectMessage = () => {
     }
   };
 
-  //チャットメッセージ非表示化処理
+
+
+  //--------------------------------------------------
+  //　　　　　　チャットメッセージ非表示化処理
+  //---------------------------------------------------
   const deleteMessage = async (chatContentID) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/chat/message/${chatContentID}`, {
@@ -173,6 +197,10 @@ const DirectMessage = () => {
     }
   };
 
+
+  //--------------------------------------------------
+  //　　　　　　引き渡し予定者決定
+  //---------------------------------------------------
   // 引渡し予定者にするボタンがクリックされたときの処理
   const handleSetTrader = async () => {
     if (isProcessing) return; // 連投防止
@@ -215,29 +243,10 @@ const DirectMessage = () => {
 
   };
 
-  const sendPushNotification = async (userId,message) => {
-      const url = "https://www.jec.ac.jp/?utm_source=g&utm_medium=kw&utm_campaign=lis&gad_source=1&gclid=CjwKCAiAhP67BhAVEiwA2E_9g8iHNceHOepij2pWdBNSAml-FiO5h0k4vf6TzO6jZmu7xA8D8cbRJxoC-MUQAvD_BwE"
 
-      try {
-          const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ userId, message, url }),
-          });
-
-          const data = await response.json();
-          if (data.success) {
-              alert('プッシュ通知が送信されました！');
-          } else {
-              alert('通知の送信に失敗しました。');
-          }
-      } catch (error) {
-          console.error('エラー:', error);
-          alert('エラーが発生しました。');
-      }
-  };
+  //--------------------------------------------------
+  //　　　　　　取引中断
+  //---------------------------------------------------
   const handleCancelTrade = async () => {
     if (isProcessing) return; // 連投防止
     setIsProcessing(true);
@@ -277,6 +286,10 @@ const DirectMessage = () => {
 
   };
 
+
+  //--------------------------------------------------
+  //　　　　　　取引完了
+  //---------------------------------------------------
   const handleCompleteTrade = async () => {
     if (isProcessing) return; // 連投防止
     setIsProcessing(true);
@@ -315,6 +328,9 @@ const DirectMessage = () => {
             const updateData = await updateResponse.json();
             if (updateData.result === 'success') {
                 console.log('チャットのitemIDがnullに更新されました');
+                const message = `${myName}との取引が完了しました！`;
+
+                sendPushNotification(otherUserId, message);
                 
                 navigate('/messages');
                 
@@ -332,6 +348,34 @@ const DirectMessage = () => {
       setIsProcessing(false); // 処理終了
     }
     console.log('取引が完了しました');
+  };
+
+
+  //--------------------------------------------------
+  //　　　　　　プッシュ通知送信
+  //---------------------------------------------------
+  const sendPushNotification = async (userId,message) => {
+    const url = "https://www.jec.ac.jp/?utm_source=g&utm_medium=kw&utm_campaign=lis&gad_source=1&gclid=CjwKCAiAhP67BhAVEiwA2E_9g8iHNceHOepij2pWdBNSAml-FiO5h0k4vf6TzO6jZmu7xA8D8cbRJxoC-MUQAvD_BwE"
+
+    try {
+        const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, message, url }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log('プッシュ通知が送信されました！');
+        } else {
+          console.log('通知の送信に失敗しました。');
+        }
+    } catch (error) {
+        console.error('エラー:', error);
+        alert('エラーが発生しました。');
+    }
   };
 
 

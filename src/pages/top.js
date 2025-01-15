@@ -10,19 +10,22 @@ function Top() {
   const myId = parseInt(sessionStorage.getItem('MyID'), 10);
 
   useEffect(() => {
-    if(!localStorage.getItem('Notification') && sessionStorage.getItem('Notification') == 'enable') {
+    if(!localStorage.getItem('Notification')) {
       const result = window.confirm('LOOP+は通知を送信します。宜しいですか？');
       if (result) {
-        localStorage.setItem('Notification', 'enable');
         getPushSubscription();
       } else {
-        sessionStorage.setItem('Notification', 'disable');
+        localStorage.setItem('Notification', 'disable');
+        alert('プッシュ通知はマイページからいつでもONにできます。')
       }
     }
   }, []);
 
 
-  //プッシュ通知を使えるか判定
+
+  //--------------------------------------------------
+  //　　　　　　プッシュ通知を使えるか判定
+  //---------------------------------------------------
   const getPushSubscription = async () => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         alert('このブラウザはプッシュ通知に対応していません');
@@ -43,10 +46,13 @@ function Top() {
     });
 
     await saveSubscription(subscription); // サブスクリプションを保存
-    alert('サブスクリプションが保存されました！');
   };
 
-  //プッシュ通知のための情報を保存
+
+
+  //--------------------------------------------------
+  //　　　　　　プッシュ通知のための情報を保存
+  //---------------------------------------------------
   const saveSubscription = async (subscription) => {
     console.log(myId)
     try {
@@ -66,6 +72,10 @@ function Top() {
         if (!data.success) {
             alert('サブスクリプションの保存に失敗しました。');
         }
+        else {
+          localStorage.setItem('Notification', 'enable');
+        }
+        
     } catch (error) {
         console.error('エラー:', error);
         alert('エラーが発生しました。');
