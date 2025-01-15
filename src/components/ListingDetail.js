@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'; // useEffectをイ�
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation, Link } from 'react-router-dom';
 import '../css/listingDetail.css';
 
 function ListingDetail() {
@@ -149,6 +149,7 @@ function ListingDetail() {
       </div>
 
       <div className="listing-content">
+      <Link to={`/profile/${userId}`} className="link">
         <div className="listing-header">
           {userIcon ? (
             <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
@@ -158,6 +159,7 @@ function ListingDetail() {
           <span className="user-name">{UserName || 'ユーザー名が取得できません'}</span> {/* ユーザー名 */}
           <span className="listing-time">{formatDate(CreatedAt)}</span>
         </div>
+        </Link>
 
         <img src={itemImage} alt="Listing" className="listing-image" />
 

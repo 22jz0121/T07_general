@@ -36,6 +36,13 @@ const Notifications = () => {
     fetchAnnouncements(); // 関数を呼び出す
   }, []); // 空の依存配列でコンポーネントのマウント時に実行
 
+
+  const formattedContent = content.split('\n').map((notifications.Content, index) => (
+    <React.Fragment key={index}>
+        {item}
+        {index < content.split('\n').length - 1 && <br />}
+    </React.Fragment>
+  ));
   return (
     <div className="notifications-container">
       <div className="top-navigation">
@@ -52,7 +59,7 @@ const Notifications = () => {
           ) : notifications.length > 0 ? (
             notifications.map((notification) => (
               <div key={notification.AnnounceID} className="notification-item">
-                <p className="notification-message">{notification.Content}</p>
+                <p className="notification-message">{formattedContent}</p>
                 <span className="notification-date">{new Date(notification.CreatedAt).toLocaleString()}</span>
               </div>
             ))
