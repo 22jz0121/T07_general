@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Send as SendIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from '@mui/icons-material';
 import '../css/RequestDetail.css';
@@ -14,7 +14,6 @@ function RequestDetail() {
   const [error, setError] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [liked, setLiked] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -30,15 +29,16 @@ function RequestDetail() {
 
         // Fetch request data
         if (location.state) {
-          const { id, name, time, content, imageSrc, liked, userIcon } = location.state;
-          setRequest({ id, UserName: name, CreatedAt: time, RequestContent: content, RequestImage: imageSrc, UserIcon: userIcon });
-          setLiked(liked);
-        } else {
+          const { id, userId, name, time, content, imageSrc, userIcon } = location.state;
+          setRequest({
+            id, UserID: userId, UserName: name, CreatedAt: time, RequestContent: content, RequestImage: imageSrc, UserIcon: userIcon
+          });
+        }
+        else {
           const requestResponse = await fetch(`https://loopplus.mydns.jp/request/${id}`);
-          if (!requestResponse.ok) throw new Error('Failed to fetch request details');
+          if (!requestResponse.ok) throw new Error('ログインセッションが切れています。ログインし直してください。');
           const requestData = await requestResponse.json();
           setRequest(requestData);
-          setLiked(requestData.isLiked);
         }
 
         // Fetch comments
@@ -90,19 +90,25 @@ function RequestDetail() {
         }
 
         const createdComment = await response.json();
+
+        // Include all necessary fields in the new comment
         const newCommentData = {
-          ...createdComment,
-          UserName: currentUser.Username,
-          UserIcon: currentUser.Icon,
-          CreatedAt: new Date().toISOString(),
+          ReplyID: createdComment.ReplyID || new Date().getTime(), // Unique ID for React rendering
+          UserID: currentUser.UserID, // Ensure the current user's ID is included
+          UserName: currentUser.Username, // Current user's name
+          UserIcon: currentUser.Icon, // Current user's icon
+          ReplyContent: newComment, // The text of the comment
+          CreatedAt: new Date().toISOString(), // Set the current timestamp
         };
-        setComments((prevComments) => [...prevComments, newCommentData]);
-        setNewComment('');
+
+        setComments((prevComments) => [...prevComments, newCommentData]); // Append to comments
+        setNewComment(''); // Clear the input field
       } catch (err) {
         console.error('Error submitting comment:', err.message);
       }
     }
   };
+
 
   const getIconSrc = (iconPath) => {
     return iconPath && iconPath.startsWith('storage/images/')
@@ -124,31 +130,33 @@ function RequestDetail() {
 
       {request && (
         <div className="request-item">
-          <div className="profile">
-            {request?.UserIcon ? (
-              <img
-                src={getIconSrc(request.UserIcon)}
-                alt="User Icon"
-                className="avatar-icon"
-                style={{ width: '36px', height: '36px', borderRadius: '50%' }}
-              />
-            ) : (
-              <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-            )}
-            <div className="profile-info">
-              <span className="name">{request?.UserName || '不明'}</span>
-              <span className="time">
-                {request?.CreatedAt &&
-                  new Date(request.CreatedAt).toLocaleString('ja-JP', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-              </span>
+          <Link to={`/profile/${request?.UserID}`} className="link">
+            <div className="profile">
+              {request?.UserIcon ? (
+                <img
+                  src={getIconSrc(request.UserIcon)}
+                  alt="User Icon"
+                  className="avatar-icon"
+                  style={{ width: '36px', height: '36px', borderRadius: '50%' }}
+                />
+              ) : (
+                <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+              )}
+              <div className="profile-info">
+                <span className="name">{request?.UserName || '不明'}</span>
+                <span className="time">
+                  {request?.CreatedAt &&
+                    new Date(request.CreatedAt).toLocaleString('ja-JP', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                </span>
+              </div>
             </div>
-          </div>
+          </Link>
 
           <div className="content">
             <p>{request.RequestContent}</p>
@@ -214,7 +222,7 @@ function RequestDetail() {
       <div className="dm-input">
         <input
           type="text"
-          placeholder="メッセージを入力..."
+          placeholder="コメントを入力..."
           className="input-box"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}

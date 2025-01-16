@@ -42,7 +42,7 @@ function RequestList({ showPostButton = true }) {
   };
 
   if (loading) {
-    return <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>; 
+    return <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>;
   }
 
   if (error) {
@@ -56,6 +56,7 @@ function RequestList({ showPostButton = true }) {
           <RequestItem
             key={request.RequestID}
             id={request.RequestID}
+            userId={request.UserID} // Correctly pass userId
             name={request.User ? request.User.UserName : '不明'}
             time={request.CreatedAt}
             content={request.RequestContent}

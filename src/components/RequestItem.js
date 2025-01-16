@@ -5,9 +5,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import '../css/RequestPage.css';
 
-function RequestItem({ id, name, time, content, imageSrc, userIcon, onDelete, showDeleteButton }) {
-  const iconSrc = userIcon && userIcon.startsWith('storage/images/') 
-    ? `https://loopplus.mydns.jp/${userIcon}` 
+function RequestItem({ id, userId, name, time, content, imageSrc, userIcon, onDelete, showDeleteButton }) {
+  const iconSrc = userIcon && userIcon.startsWith('storage/images/')
+    ? `https://loopplus.mydns.jp/${userIcon}`
     : userIcon;
 
   const formatDate = (dateString) => {
@@ -19,26 +19,28 @@ function RequestItem({ id, name, time, content, imageSrc, userIcon, onDelete, sh
     <div className="request-item">
       <Link
         to={`/request/${id}`}
-        state={{ id, name, time, content, imageSrc, userIcon }}
+        state={{ id, userId, name, time, content, imageSrc, userIcon }}
         className="request-link"
       >
-        <div className="profile">
-          {userIcon ? (
+        <Link to={`/profile/${userId}`} className="link">
+          <div className="profile">
+            {userIcon ? (
               <img src={iconSrc} alt="User Icon" className="avatar-icon" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
-          ) : (
+            ) : (
               <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-          )}
-          <div className="profile-info">
-            <span className="name">{name}</span>
-            <span className="time">{formatDate(time)}</span>
+            )}
+            <div className="profile-info">
+              <span className="name">{name}</span>
+              <span className="time">{formatDate(time)}</span>
+            </div>
           </div>
-        </div>
+        </Link>
         <div className="content">
-          <p>{content}</p>
+          <p className='content-ppp'>{content}</p>
           {imageSrc && <img src={imageSrc} alt="Request" className="request-image" />}
         </div>
       </Link>
-      {showDeleteButton && onDelete && ( 
+      {showDeleteButton && onDelete && (
         <IconButton onClick={() => onDelete(id)} aria-label="delete" className="delete-button">
           <DeleteIcon />
         </IconButton>

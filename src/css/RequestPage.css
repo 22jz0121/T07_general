@@ -70,6 +70,9 @@ body {
   color: #888; /* default inactive color */
 }
 
+.content-ppp {
+  font-size: 18px;
+}
 
 /* Request List */
 .request-list {

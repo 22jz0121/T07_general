@@ -113,7 +113,7 @@ const ProfilePage = () => {
     console.log("削除するアイテムのID:", itemId);
 
     // ユーザーに削除の確認を求める
-    const confirmDelete = window.confirm(`アイテムID ${itemId} を削除しますか？`);
+    const confirmDelete = window.confirm(`この出品物を削除しますか？`);
     if (!confirmDelete) {
       alert('削除がキャンセルされました。');
       return;
@@ -131,15 +131,15 @@ const ProfilePage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('アイテムの更新中にエラーが発生しました:', errorData);
-        throw new Error('サーバーでアイテムの削除に失敗しました');
+        console.error('出品物の更新中にエラーが発生しました:', errorData);
+        throw new Error('サーバーで出品物の削除に失敗しました');
       }
 
       setItems((prevItems) => prevItems.filter((item) => item.ItemID !== itemId));
-      alert(`アイテムID ${itemId} が正常に削除されました。`);
+      alert(`出品物が削除されました。`);
     } catch (error) {
-      console.error('アイテムの削除中にエラーが発生しました:', error);
-      alert('アイテムの削除に失敗しました。');
+      console.error('出品物の削除中にエラーが発生しました:', error);
+      alert('出品物の削除に失敗しました。');
     }
   };
 
@@ -216,7 +216,7 @@ const ProfilePage = () => {
     console.log("削除するリクエストのID:", requestId);
 
     // ユーザーに削除の確認を求める
-    const confirmDelete = window.confirm(`リクエストID ${requestId} を削除しますか？`);
+    const confirmDelete = window.confirm(`このリクエストを削除しますか？`);
     if (!confirmDelete) {
       alert('削除がキャンセルされました。');
       return; // ユーザーがキャンセルした場合は処理を終了
@@ -245,7 +245,7 @@ const ProfilePage = () => {
           request.RequestID === requestId ? { ...request, DisplayFlag: 0 } : request
         );
 
-        alert(`リクエストID ${requestId} が正常に削除されました。`);
+        alert(`リクエストが削除されました。`);
         return updatedRequests;
       });
     } catch (error) {

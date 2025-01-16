@@ -7,6 +7,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SchoolIcon from '@mui/icons-material/School';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import {Notifications as NotificationsIcon} from '@mui/icons-material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Footer from '../components/Footer';
@@ -197,7 +198,7 @@ const MyPage = () => {
                 </div>
 
                 <div className="menu-item" onClick={changeNotification}>
-                    <QuestionAnswerIcon className="menu-icon" />
+                    <NotificationsIcon className="menu-icon" />
                     <span className="menu-label">プッシュ通知</span>
                 </div>
 

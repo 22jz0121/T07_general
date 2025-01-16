@@ -102,6 +102,11 @@
   max-width: 70%;
 }
 
+.comment-text {
+  font-size: 16px;
+  margin: 0 10px 5px;
+}
+
 /* 他のユーザーのコメント */
 .other-comment {
   align-items: flex-start;
