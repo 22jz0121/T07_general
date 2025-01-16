@@ -74,7 +74,9 @@ const DirectMessage = () => {
     }
   };
 
-
+  //--------------------------------------------------
+  //　自動スクロールの条件
+  //---------------------------------------------------
   useEffect(() => {
     if (messageEndRef.current && messageEndRef.current.parentElement) {
       const container = messageEndRef.current.parentElement;
