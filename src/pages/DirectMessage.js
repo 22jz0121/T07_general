@@ -74,16 +74,24 @@ const DirectMessage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchTraderId(); // traderIDを取得
-    fetchChatMessages(); // チャットメッセージを取得
-  }, [id]);
 
   useEffect(() => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (messageEndRef.current && messageEndRef.current.parentElement) {
+      const container = messageEndRef.current.parentElement;
+      
+      const isOverflowing = container.scrollHeight > container.clientHeight;
+      if (isOverflowing) {
+        const paddingBottom = parseInt(window.getComputedStyle(container).paddingBottom, 5) || 0;
+        const scrollOffset = container.scrollHeight - container.scrollTop - container.clientHeight;
+        
+        // スクロールが必要か判定
+        if (scrollOffset > paddingBottom) {
+          messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     }
   }, [messages]);
+  
 
   const [isLoaded, setIsLoaded] = useState(false);
 
