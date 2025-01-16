@@ -71,45 +71,52 @@ function RequestDetail() {
     fetchData();
   }, [id, location.state]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // 送信中の状態管理
 
   const handleCommentSubmit = async () => {
-    if (newComment.trim()) {
-      try {
-        const response = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: newComment }),
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Failed to send comment: ${errorData.message || 'Unknown error'}`);
-        }
-
-        const createdComment = await response.json();
-
-        // Include all necessary fields in the new comment
-        const newCommentData = {
-          ReplyID: createdComment.ReplyID || new Date().getTime(), // Unique ID for React rendering
-          UserID: currentUser.UserID, // Ensure the current user's ID is included
-          UserName: currentUser.Username, // Current user's name
-          UserIcon: currentUser.Icon, // Current user's icon
-          ReplyContent: newComment, // The text of the comment
-          CreatedAt: new Date().toISOString(), // Set the current timestamp
-        };
-
-        setComments((prevComments) => [...prevComments, newCommentData]); // Append to comments
-        setNewComment(''); // Clear the input field
-      } catch (err) {
-        console.error('Error submitting comment:', err.message);
+    if (isSubmitting || !newComment.trim()) return; // 送信中またはコメントが空の場合は処理しない
+  
+    const confirmPost = window.confirm('このコメントを投稿しますか？');
+    if (!confirmPost) {
+      return; // ユーザーがキャンセルを選択
+    }
+  
+    try {
+      setIsSubmitting(true); // 送信処理開始
+      const response = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: newComment }),
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`コメントの送信に失敗しました: ${errorData.message || '不明なエラー'}`);
       }
+  
+      const createdComment = await response.json();
+  
+      const newCommentData = {
+        ReplyID: createdComment.ReplyID || new Date().getTime(),
+        UserID: currentUser.UserID,
+        UserName: currentUser.Username,
+        UserIcon: currentUser.Icon,
+        ReplyContent: newComment,
+        CreatedAt: new Date().toISOString(),
+      };
+  
+      setComments((prevComments) => [...prevComments, newCommentData]);
+      setNewComment('');
+    } catch (err) {
+      console.error('コメント送信エラー:', err.message);
+    } finally {
+      setIsSubmitting(false); // 送信処理終了
     }
   };
-
-
+ 
   const getIconSrc = (iconPath) => {
     return iconPath && iconPath.startsWith('storage/images/')
       ? `https://loopplus.mydns.jp/${iconPath}`
@@ -230,7 +237,7 @@ function RequestDetail() {
         <button
           className="send-button"
           onClick={handleCommentSubmit}
-          disabled={!newComment.trim()}
+          disabled={!newComment.trim() || isSubmitting} // 無効化条件に送信中を追加
         >
           <SendIcon className="send-icon" />
         </button>
