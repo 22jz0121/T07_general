@@ -323,15 +323,12 @@ const DirectMessage = () => {
         if (data.result === 'success') {
             // 取引完了後にチャットのitemIDをnullに更新
             console.log('chatID : ', id);
-            const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/${id}`, {
+            const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({
-                    itemId: null // itemIDをnullに更新
-                }),
                 credentials: 'include',
             });
 
