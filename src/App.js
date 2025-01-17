@@ -26,22 +26,6 @@ import Push from './components/Push';
 import Ban from './pages/Ban';
 import PrivateRoute from './components/PrivateRoute'; // PrivateRouteをインポート
 
-//管理ページ
-import UserManagement from './pages/UserManagement/UserManagement';
-import UserProfile from './pages/UserProfile/UserProfile';
-import UserItemList from './pages/UserItemList/UserItemList';
-import UserRequestList from './pages/UserRequestList/UserRequestList';
-import UserTradingHistory from './pages/UserTradingHistory/UserTradingHistory';
-import QAList from './pages/QAList/QAList';
-import QAadd from './pages/QAadd/QAadd';
-import UserWarning from './pages/UserWarning/UserWarning';
-import ProductWarning from './pages/ProductWarning/ProductWarning';
-import ListedProducts from './pages/ListedProducts/ListedProducts';
-import ProductDetail from './pages/ProductDetail/ProductDetail';
-import SearchResult from './components/SearchBar/SearchResult';
-
-
-
 import './css/top.css';
 
 function App() {
@@ -56,7 +40,6 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          {/* ユーザーサイド */}
           <Route path="/" element={<PrivateRoute><Top /></PrivateRoute>} />
           <Route path="/listings" element={<ItemList />} />
           <Route path="/listing/:listingId" element={<ListingDetail />} />
@@ -80,23 +63,6 @@ function App() {
           <Route path="/qa" element={<PrivateRoute><QAPage /></PrivateRoute>} />
           <Route path="/test" element={<PrivateRoute><Push /></PrivateRoute>} />
           <Route path="/error" element={<Ban setIsFooterVisible={setIsFooterVisible} />} />
-
-
-          {/* 管理ページ */}
-          <Route path="/adminlogin" element={<Login setIsFooterVisible={setIsFooterVisible} />} />
-          <Route path="/user-management" element={<UserManagement />} />
-          <Route path="/user-profile/:id" element={<UserProfile />} />
-          <Route path="/useritemlist" element={<UserItemList />} />
-          <Route path="/userrequestlist" element={<UserRequestList />} />
-          <Route path="/usertradinghistorylist" element={<UserTradingHistory />} />
-          <Route path="/qalist" element={<QAList />} />
-          <Route path="/qaadd" element={<QAadd />} />
-          <Route path="/user-warning/:userId" element={<UserWarning />} />
-          <Route path="/listedproducts" element={<ListedProducts />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/product-warning/:productId" element={<ProductWarning />} />
-          <Route path="/searchresult" element={<SearchResult />} />
-          <Route path="/product-detail" element={<ProductDetail />} />
         </Routes>
         {isFooterVisible && <Footer />}
       </div>
