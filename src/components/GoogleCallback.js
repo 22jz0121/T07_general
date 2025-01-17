@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/GoogleCallback.css';
 
 function GoogleCallback({ setIsFooterVisible }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // URLのクエリパラメータを取得
+  const queryParams = new URLSearchParams(location.search);
+  const status = queryParams.get('status');
 
   useEffect(() => {
     // フッターを非表示にする
@@ -36,7 +41,12 @@ function GoogleCallback({ setIsFooterVisible }) {
           else {
             sessionStorage.setItem('Notification', 'disable');
           }
-          navigate('/');  // ログイン後のページへリダイレクト
+          if (status == 'admin') {
+            sessionStorage.setItem('admin', data.AdminFlag);
+            window.location.href = "https://loopplus.mydns.jp/admin"
+          } else {
+            navigate('/'); // 一般ユーザー用のページへナビゲート
+          }
         }
       } catch (error) {
         console.error('Error fetching user ID:', error);
