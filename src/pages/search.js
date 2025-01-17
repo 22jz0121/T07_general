@@ -7,25 +7,19 @@ const Notifications = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]); // ステートを初期化
   const [loading, setLoading] = useState(true); // ローディング状態を管理
-  const myUserID = 5; // 現在のユーザーID（例として5を使用）
+  const myUserID= sessionStorage.getItem('MyID');
 
   useEffect(() => {
     // 特定のアナウンスメントを取得する関数
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch('https://loopplus.mydns.jp/api/announcements');
+        const response = await fetch(`https://loopplus.mydns.jp/api/announcements/${myUserID}`);
         if (!response.ok) {
           throw new Error('ネットワークエラー');
         }
         const data = await response.json();
         
-        // UserIDがmyUserIDと一致するアナウンスメントのみをフィルタリング
-        const filteredNotifications = data.filter(notification => notification.UserID === myUserID);
-        
-        // 新しい順にソート
-        const sortedNotifications = filteredNotifications.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
-        
-        setNotifications(sortedNotifications); // フィルタリングしたデータをステートに保存
+        setNotifications(data); // フィルタリングしたデータをステートに保存
       } catch (error) {
         console.error('エラー:', error);
       } finally {
