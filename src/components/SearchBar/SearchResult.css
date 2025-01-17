@@ -1,0 +1,92 @@
+.productitems {
+    width: 181vh;
+    border-radius: 5px;
+    overflow-y: scroll;
+    height: 80vh;
+}
+
+.productitems li {
+    list-style: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #d6d6d6;
+}
+
+.productimage {
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+.productdetails {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    font-size: 12px; 
+    line-height: 2;
+    flex-grow: 1;
+    margin: 10px;
+}
+
+p {
+    font-size: 12px;
+}
+
+.product-details-title {
+    margin-bottom: 10px; 
+}
+
+.product-details-title p {
+    font-size: 12px;
+}
+
+.poduct-location {
+    margin-top: auto; 
+    font-style: italic;
+}
+
+.imagedetail-flex {
+    display: flex;
+}
+
+.product-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.product-actions button {
+    padding: 5px;
+    margin: 5px;
+    width: 100px;
+    border-radius: 5px;
+}
+
+.product-manager {
+    margin: 10px 0px 0px 0px;
+    padding: 5px;
+}
+
+.location-text {
+    color: rgb(1, 128, 179);
+  }
+
+  .loading {
+    margin-top: 200px;
+    text-align: center;
+  }
+  .loading img {
+    max-width: 80%;
+    max-height: 100px;
+  }
+
+  .productdetails-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.productitem-scroll {
+    overflow-y: scroll;
+}

@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+.Profile {
+    margin: 10px;
+}
+
+
+.ProfileList {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 1px solid black;
+}
+
+
+
+
+.Profilerow {
+    line-height: normal;
+}
+
+.ProfileList .row:hover {
+    cursor: pointer;
+    background-color: rgb(143, 143, 143);
+  }
+

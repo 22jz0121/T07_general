@@ -1,0 +1,59 @@
+Login.css
+
+body, html {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    background-color: #eeeeee;
+
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    width: 400px;
+    text-align: center;
+  }
+  
+  .login-form h1 {
+    color: rgb(0, 255, 0);
+    padding: 10px;
+    font-size: 40px;
+    font-weight: 900;
+    margin-left: 40px;
+}
+  
+  .login-button {
+    margin-top: 1rem;
+  }
+  
+/* Login.css */
+
+/* Button専用スタイル */
+.login-button button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Google Sign-In ボタンのサイズ調整 */
+.login-button button img {
+  width: 100%;
+  max-width: 300px;  /* 必要に応じてサイズ調整 */
+  height: auto;
+  transition: filter 0.3s ease;  /* スムーズな色変化のために遷移効果を追加 */
+}
+
+/* ホバー時に画像を暗くする */
+.login-button button:hover img {
+  filter: brightness(0.8);  /* 明るさを少し暗くする */
+}

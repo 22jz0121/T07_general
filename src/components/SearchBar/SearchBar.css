@@ -1,0 +1,38 @@
+.searchBar {
+    position: absolute;
+    top: 60px;  /* 上からの距離 */
+    right: 10px;  /* 右からの距離 */
+    display: flex;  /* アイコンと入力フィールドを横並びにする */
+    align-items: center;  /* アイコンと入力フィールドを縦中央揃え */
+    background-color: white; /* 背景色を設定 */
+    border: 1px solid #ccc;
+    border-radius: 25px; /* 全体を丸くする */
+    padding: 5px 15px;
+    margin-top: 7px;
+
+}
+
+.searchBar input {
+    width: 330px; /* アイコンがある分、入力フィールドの幅を調整 */
+    padding: 10px;
+    border: none;
+    font-size: 16px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.searchBar input:focus {
+    border-color: transparent; /* フォーカス時、ボーダー色は無視 */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.searchBar input::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+.searchIcon {
+    color: #888; /* アイコンの色 */
+    margin-right: 10px; /* アイコンと入力フィールドの間に余白 */
+}

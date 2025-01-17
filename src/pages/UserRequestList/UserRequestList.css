@@ -1,0 +1,67 @@
+.item-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .item-content {
+    display: flex;
+    align-items: center;
+    flex: 1; /* アイテムコンテンツが残りのスペースを占める */
+  }
+  
+  .item-image {
+    width: 100px; /* 適切なサイズに調整 */
+    height: auto;
+    margin-right: 10px; /* 画像とテキストの間にスペース */
+  }
+  
+  .item-details {
+    flex: 1; /* 詳細部分が余白を占める */
+  }
+  
+  .item-actions {
+    display: flex;
+    flex-direction: column; /* ボタンを縦に並べる */
+  }
+  
+  .action-button {
+    background-color: black; /* ボタンの色を黒に */
+    color: white; /* ボタンの文字色を白に */
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 5px; /* ボタンの間にスペース */
+  }
+  
+  .action-button:hover {
+    opacity: 0.8; /* ホバー時の効果 */
+  }
+  
+
+p {
+    font-size: medium;
+    line-height: normal;
+}
+
+h3 {
+    font-size: large;
+    line-height: normal;
+}
+
+.item-actions button {
+    margin: 5px;
+    width: 80px;
+    border-radius: 5px;
+}
