@@ -26,6 +26,7 @@ const ProfilePage = () => {
   const myProf = sessionStorage.getItem('MyProfPic');
   const myMail = sessionStorage.getItem('MyMail');
   const myComment = sessionStorage.getItem('MyComment');
+  const [selectedTradeFlag, setSelectedTradeFlag] = useState(0);
 
   useEffect(() => {
     isMounted.current = true;
@@ -258,9 +259,9 @@ const ProfilePage = () => {
     ? `https://loopplus.mydns.jp/${userProfile.Icon}`
     : userProfile.Icon;
 
-  // headerImage = headerImage && headerImage.startsWith('storage/images/') 
-  // ? `https://loopplus.mydns.jp/${headerImage}` 
-  // : headerImage;
+  const handleTradeFlagChange = (event) => {
+    setSelectedTradeFlag(Number(event.target.value)); // 選択されたトレードフラグを設定
+  };
 
   return (
     <div className="profile-page">
@@ -332,9 +333,16 @@ const ProfilePage = () => {
       <div className="tab-content">
         {activeTab === 'listing' ? (
           <div>
+            <div className="select-container">
+              <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
+                <option value={0}>出品中</option>
+                <option value={1}>取引中</option>
+                <option value={2}>取引完了</option>
+              </select>
+            </div>
             {items.length > 0 ? (
               items
-                .filter((item) => item.TradeFlag !== 3)
+                .filter(item => item.TradeFlag === selectedTradeFlag)
                 .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
                 .map((item) => (
                   <Item
@@ -362,6 +370,13 @@ const ProfilePage = () => {
           </div>
         ) : (
           <div>
+            <div className="select-container">
+              <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
+                <option value={0}>出品中</option>
+                <option value={1}>取引中</option>
+                <option value={2}>取引完了</option>
+              </select>
+            </div>
             {requests.filter(request => request.DisplayFlag === 1).length > 0 ? (
               requests
                 .filter(request => request.DisplayFlag === 1)

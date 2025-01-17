@@ -23,6 +23,7 @@ function GoogleCallback({ setIsFooterVisible }) {
 
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           sessionStorage.setItem('MyID', data.UserID);
           sessionStorage.setItem('MyName', data.Username);
           sessionStorage.setItem('MyIcon', data.Icon);
