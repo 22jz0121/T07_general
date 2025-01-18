@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PullToRefresh from "react-simple-pull-to-refresh";
 import PostButton from './PostButton';
 import RequestItem from './RequestItem';
 import '../css/RequestPage.css';
@@ -51,23 +52,25 @@ function RequestList({ showPostButton = true }) {
 
   return (
     <div className="request-list">
-      {requests.length > 0 ? (
-        requests.map((request) => (
-          <RequestItem
-            key={request.RequestID}
-            id={request.RequestID}
-            userId={request.UserID} // Correctly pass userId
-            name={request.User ? request.User.UserName : '不明'}
-            time={request.CreatedAt}
-            content={request.RequestContent}
-            imageSrc={request.RequestImage ? `https://loopplus.mydns.jp/${request.RequestImage}` : null}
-            userIcon={request.User && request.User.Icon}
-          />
-        ))
-      ) : (
-        <p>リクエストはありません。</p>
-      )}
-      {showPostButton && <PostButton />}
+      <PullToRefresh onRefresh={fetchRequests} pullingContent={<></>}>
+        {requests.length > 0 ? (
+          requests.map((request) => (
+            <RequestItem
+              key={request.RequestID}
+              id={request.RequestID}
+              userId={request.UserID} // Correctly pass userId
+              name={request.User ? request.User.UserName : '不明'}
+              time={request.CreatedAt}
+              content={request.RequestContent}
+              imageSrc={request.RequestImage ? `https://loopplus.mydns.jp/${request.RequestImage}` : null}
+              userIcon={request.User && request.User.Icon}
+            />
+          ))
+        ) : (
+          <p>リクエストはありません。</p>
+        )}
+        {showPostButton && <PostButton />}
+      </PullToRefresh>
     </div>
   );
 }

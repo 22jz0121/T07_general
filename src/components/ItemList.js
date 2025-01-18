@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import PullToRefresh from "react-simple-pull-to-refresh";
 import Item from './Item';
 
 function ItemList() {
@@ -107,28 +108,30 @@ function ItemList() {
           <option value={2}>取引完了</option>
         </select>
       </div>
-      {items
-        .filter(item => item.TradeFlag === selectedTradeFlag) // 選択されたトレードフラグでフィルタリング
-        .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
-        .map(item => (
-          item.TradeFlag !== 3 && (
-            <Item
-              key={item.ItemID}
-              name={item.User ? item.User.UserName : '不明'}
-              userIcon={item.User && item.User.Icon}
-              userId={item.UserID}
-              itemId={item.ItemID}
-              title={item.ItemName}
-              imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
-              description={item.Description}
-              tradeFlag={item.TradeFlag}
-              onLike={handleLike}
-              liked={myFavoriteIds.includes(item.ItemID)}
-              transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
-              time={item.CreatedAt}
-            />
-          )
-        ))}
+      <PullToRefresh onRefresh={fetchItems} pullingContent={<></>}>
+        {items
+          .filter(item => item.TradeFlag === selectedTradeFlag) // 選択されたトレードフラグでフィルタリング
+          .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
+          .map(item => (
+            item.TradeFlag !== 3 && (
+              <Item
+                key={item.ItemID}
+                name={item.User ? item.User.UserName : '不明'}
+                userIcon={item.User && item.User.Icon}
+                userId={item.UserID}
+                itemId={item.ItemID}
+                title={item.ItemName}
+                imageSrc={`https://loopplus.mydns.jp/${item.ItemImage}`}
+                description={item.Description}
+                tradeFlag={item.TradeFlag}
+                onLike={handleLike}
+                liked={myFavoriteIds.includes(item.ItemID)}
+                transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
+                time={item.CreatedAt}
+              />
+            )
+          ))}
+      </PullToRefresh>
     </div>
   );
 }
