@@ -130,6 +130,7 @@
 	border-radius: 100vh;
 	transition: 0.5s;
   margin: auto;
+  margin-top: 10px;
 }
 
 .top-button.success {
