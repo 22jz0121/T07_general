@@ -57,6 +57,10 @@ const ProfilePage = () => {
     };
   }, []);
 
+
+  //--------------------------------------------------
+  //　　　　　　ユーザー情報取得
+  //---------------------------------------------------
   const fetchUserProfile = async (userId) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
@@ -77,6 +81,12 @@ const ProfilePage = () => {
     }
   }
 
+
+
+
+  //--------------------------------------------------
+  //　　　　　　自分のお気に入りを取得
+  //---------------------------------------------------
   const fetchMyFavorites = async () => {
     try {
       const response = await fetch('https://loopplus.mydns.jp/api/myfavorite', {
@@ -96,7 +106,10 @@ const ProfilePage = () => {
   };
 
 
-  //画像ファイルをbase64形式に変換
+
+  //--------------------------------------------------
+  //　　　　　　画像ファイルをbase64形式に変換
+  //---------------------------------------------------
   function convertToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -110,6 +123,11 @@ const ProfilePage = () => {
     });
   }
 
+
+
+  //--------------------------------------------------
+  //　　　　　　アイテム削除時処理
+  //---------------------------------------------------
   const handleDeleteItem = async (itemId) => {
     console.log("削除するアイテムのID:", itemId);
 
@@ -146,7 +164,9 @@ const ProfilePage = () => {
 
 
 
-  //ProfilePicture(ヘッダー画像)を変更
+  //--------------------------------------------------
+  //　　　　　　ProfilePicture(ヘッダー画像)を変更
+  //---------------------------------------------------
   const handleHeaderImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -171,11 +191,21 @@ const ProfilePage = () => {
     }
   };
 
+
+
+  //--------------------------------------------------
+  //　　　　　　タブ切り替え(出品物/リクエスト)処理
+  //---------------------------------------------------
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
-  //お気に入りボタンが押されたときの処理
+
+
+
+  //--------------------------------------------------
+  //　　　　　　お気に入りボタンが押されたときの処理
+  //---------------------------------------------------
   const handleLike = (itemId) => {
     console.log('handleLike called with itemId:', itemId);
     const isLiked = likedItems.includes(itemId);
@@ -192,7 +222,9 @@ const ProfilePage = () => {
   };
 
 
-  //お気に入り切り替え処理
+  //--------------------------------------------------
+  //　　　　　　お気に入り切り替え処理
+  //---------------------------------------------------
   const sendFavoriteRequest = async (itemId, method) => {
     try {
       const response = await fetch(`https://loopplus.mydns.jp/api/favorite/change/${itemId}`, {
@@ -213,6 +245,11 @@ const ProfilePage = () => {
     }
   };
 
+
+
+  //--------------------------------------------------
+  //　　　　　　リクエスト削除処理
+  //---------------------------------------------------
   const handleDeleteRequest = async (requestId) => {
     console.log("削除するリクエストのID:", requestId);
 
@@ -255,16 +292,29 @@ const ProfilePage = () => {
     }
   };
 
+
+
+  //--------------------------------------------------
+  //　　　　　　アイコンパス処理
+  //---------------------------------------------------
   const iconSrc = userProfile.Icon && userProfile.Icon.startsWith('storage/images/')
     ? `https://loopplus.mydns.jp/${userProfile.Icon}`
     : userProfile.Icon;
 
+
+
+  //--------------------------------------------------
+  //　　　　　　絞り込み処理
+  //---------------------------------------------------
   const handleTradeFlagChange = (event) => {
     setSelectedTradeFlag(Number(event.target.value)); // 選択されたトレードフラグを設定
   };
 
   const filteredItems = items.filter(item => item.TradeFlag === selectedTradeFlag);
 
+
+
+  
   return (
     <div className="profile-page">
       {/* Top Navigation */}
