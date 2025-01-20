@@ -366,7 +366,7 @@ const DirectMessage = () => {
 
     try {
         // ItemIDをnullにする処理
-        const response = await fetch(`${itemId}`, {
+        const response = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
