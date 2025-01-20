@@ -119,7 +119,8 @@
 	transition: 0.5s;
   margin-left: 50px;
 }
-.top-button.stop {
+
+.top-button-stop{
   text-align: center;
 	text-decoration: none;
 	padding: 10px;
