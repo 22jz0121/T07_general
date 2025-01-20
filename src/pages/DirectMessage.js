@@ -498,7 +498,7 @@ const DirectMessage = () => {
                           className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
                           onContextMenu={(e) => {
                               e.preventDefault();
-                              if (msg.UserID === myId) {
+                              if (msg.UserID === myId && msg.DisplayFlag === 1) {
                                   handleLongPress(msg.ChatContentID);
                               }
                           }}
