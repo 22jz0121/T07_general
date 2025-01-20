@@ -104,6 +104,9 @@
 	transition: 0.5s;
 }
 
+.item-status {
+  text-align: center;
+}
 .top-button.secondary {
   text-align: center;
 	text-decoration: none;
@@ -115,6 +118,17 @@
 	border-radius: 100vh;
 	transition: 0.5s;
   margin-left: 50px;
+}
+.top-button.stop {
+  text-align: center;
+	text-decoration: none;
+	padding: 10px;
+	font-weight: bold;
+	border: 2px solid #e11d48;;
+	color: #e11d48;;
+  background-color: #fff;
+	border-radius: 100vh;
+	transition: 0.5s;
 }
 
 .top-button.success {
