@@ -80,6 +80,11 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
     ))
     : <span>取引方法が選択されていません</span>;
 
+
+  const truncatedDescription = description.length > 36 
+    ? description.slice(0, 35) + '…' 
+    : description;
+
   return (
     <div className="item">
       <Link to={`/profile/${userId}`} className="link">
@@ -118,7 +123,7 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
             <img src={imageSrc} alt="アイテム画像" className="item-image" />
             <div className="item-info">
               <h3>{title}</h3>
-              <p>{description}</p>
+              <p>{truncatedDescription}</p>
               <div className="action-buttons">
                 <div className="methods-display">{methodsDisplay}</div>
               </div>
