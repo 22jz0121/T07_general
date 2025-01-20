@@ -51,7 +51,7 @@ function App() {
           <Route path="/search" element={<PrivateRoute><Search /></PrivateRoute>} />
           <Route path="/search-results" element={<PrivateRoute><SearchResults /></PrivateRoute>} />
           <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
-          <Route path="/dm/:id" element={<PrivateRoute><DirectMessage /></PrivateRoute>} />
+          <Route path="/dm/:id" element={<PrivateRoute><DirectMessage setIsFooterVisible={setIsFooterVisible} /></PrivateRoute>} />
           <Route path="/login" element={<Login setIsFooterVisible={setIsFooterVisible} />} />
           <Route path="/callback" element={<GoogleCallback setIsFooterVisible={setIsFooterVisible} />} />
           <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />

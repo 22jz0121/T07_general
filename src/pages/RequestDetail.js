@@ -226,7 +226,7 @@ function RequestDetail() {
         ))}
       </div>
 
-      <div className="dm-input">
+      <div className="cm-input">
         <input
           type="text"
           placeholder="コメントを入力..."

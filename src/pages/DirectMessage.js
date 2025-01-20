@@ -5,7 +5,7 @@ import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
 import Pusher from 'pusher-js';
 import '../css/directMessage.css';
 
-const DirectMessage = () => {
+const DirectMessage = ({ setIsFooterVisible }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -42,6 +42,16 @@ const DirectMessage = () => {
       channel.unsubscribe();
     };
   }, [id,itemId]);
+
+
+  //フッター非表示
+  useEffect(() => {
+    // フッターを非表示にする
+    setIsFooterVisible(false);
+
+    // クリーンアップ関数でフッターを再表示
+    return () => setIsFooterVisible(true);
+  }, [setIsFooterVisible]);
 
 
   
