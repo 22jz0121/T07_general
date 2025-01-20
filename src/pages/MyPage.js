@@ -19,6 +19,7 @@ const MyPage = () => {
     const myName = sessionStorage.getItem('MyName');
     const myIcon = sessionStorage.getItem('MyIcon');
     const [NTFstatus, setNotification] = useState();
+    
 
     //--------------------------------------------------
     //　　　　　　プロフィールページへ
@@ -48,29 +49,31 @@ const MyPage = () => {
     //--------------------------------------------------
     //　　　　　　プッシュ通知ON/OFF処理
     //---------------------------------------------------
-    const changeNotification = () => {
-        var msg = '';
-        if(localStorage.getItem('Notification') == 'disable') {
-            msg = '現在、プッシュ通知はOFFになっています。\r\nONにしますか？';
-            setNotification(true);
-        }
-        else {
-            msg = '現在、プッシュ通知はONになっています。\r\nOFFにしますか？';
-            setNotification(false);
-        }
-
+    // プッシュ通知ON/OFF処理
+    const changeNotification = async () => {
+        const currentStatus = localStorage.getItem('Notification') === 'enable';
+        const msg = currentStatus 
+            ? '現在、プッシュ通知はONになっています。\r\nOFFにしますか？'
+            : '現在、プッシュ通知はOFFになっています。\r\nONにしますか？';
 
         const result = window.confirm(msg);
-        if (result && NTFstatus) {
-            localStorage.setItem('Notification', 'enable');
-            getPushSubscription();
-        } 
-        else if(result && !NTFstatus) {
-            localStorage.setItem('Notification', 'disable');
-            //プッシュ通知を切るメソッドを追加する
+        if (result) {
+            const newStatus = !currentStatus; // 新しいステータスを決定
+            setNotification(newStatus);
+            localStorage.setItem('Notification', newStatus ? 'enable' : 'disable');
+
+            if (newStatus) {
+                await getPushSubscription();
+            } else {
+                // プッシュ通知を切るメソッドを追加する
+            }
         }
-        else {}
     };
+
+    // 状態が変わったときに実行される
+    useEffect(() => {
+        setNotification(localStorage.getItem('Notification') === 'enable');
+    }, []);
 
 
 
@@ -153,6 +156,10 @@ const MyPage = () => {
         .catch(error => console.error('エラー:', error));
     };
 
+    const iconSrc = myIcon && myIcon.startsWith('storage/images/')
+        ? `https://loopplus.mydns.jp/${myIcon}`
+        : myIcon;
+
     return (
         <div className="mypage-container">
             {/* Top Navigation */}
@@ -166,7 +173,7 @@ const MyPage = () => {
             {/* Profile Section */}
             <div className="profile-section" onClick={handleProfileClick}>
                 {myIcon ? (
-                    <img src={`https://loopplus.mydns.jp/${myIcon}`} alt="User Avatar" className="profile-avatar" />
+                    <img src={iconSrc} alt="User Avatar" className="profile-avatar" />
                 ) : (
                     <AccountCircleIcon className="profile-icon" />
                 )}

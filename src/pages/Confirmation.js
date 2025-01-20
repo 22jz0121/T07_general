@@ -26,7 +26,9 @@ const Confirmation = () => {
         formData.append('TradeMethod', transactionMethods.join(','));
 
         if (image) {
-            formData.append('ItemImage', image);
+            const base64 = await convertToBase64(image);
+            console.log(base64);
+            formData.append('ItemImage', base64);
         }
 
         try {
@@ -49,6 +51,20 @@ const Confirmation = () => {
             setIsSubmitting(false); // 処理が完了したらボタンを再度有効にする
         }
     };
+
+    //画像ファイルをbase64形式に変換
+    function convertToBase64(file) {
+        return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+        reader.onerror = () => {
+            reject(new Error('Failed to read the file.'));
+        };
+        reader.readAsDataURL(file);
+        });
+    }
 
     // 取引方法のクラスマッピング
     const methodClassMapping = {

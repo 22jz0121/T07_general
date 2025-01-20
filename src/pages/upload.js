@@ -32,7 +32,7 @@ const Upload = () => {
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const validTypes = ["image/jpeg", "image/png", "image/gif"];
+            const validTypes = ["image/jpeg", "image/png", "image/gif", "image/heic"];
             if (!validTypes.includes(file.type)) {
                 setUploadError("サポートされていないファイル形式です。JPEG, PNG, または GIF のみが許可されています。");
                 return;

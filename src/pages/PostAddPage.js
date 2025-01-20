@@ -14,11 +14,11 @@ function PostAddPage({ onRequestAdded }) {
   const [uploadError, setUploadError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false); // 送信中のフラグ
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async(e) => {
     const file = e.target.files[0];
 
     if (file) {
-      const validTypes = ["image/jpeg", "image/png", "image/gif"];
+      const validTypes = ["image/jpeg", "image/png", "image/gif", "image/heic"];
       if (!validTypes.includes(file.type)) {
         setUploadError("サポートされていないファイル形式です。JPEG, PNG, または GIF のみが許可されています。");
         return;
@@ -30,11 +30,26 @@ function PostAddPage({ onRequestAdded }) {
         return;
       }
 
+      const base64 = await convertToBase64(file);
       setUploadError(null);
-      setImage(file);
+      setImage(base64);
       setImagePreview(URL.createObjectURL(file));
     }
   };
+
+  //画像ファイルをbase64形式に変換
+  function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+        resolve(reader.result);
+    };
+    reader.onerror = () => {
+        reject(new Error('Failed to read the file.'));
+    };
+    reader.readAsDataURL(file);
+    });
+  }
 
   const handlePostSubmit = async () => {
     if (postText.trim() || image) {
