@@ -263,6 +263,8 @@ const ProfilePage = () => {
     setSelectedTradeFlag(Number(event.target.value)); // 選択されたトレードフラグを設定
   };
 
+  const filteredItems = items.filter(item => item.TradeFlag === selectedTradeFlag);
+
   return (
     <div className="profile-page">
       {/* Top Navigation */}
@@ -340,9 +342,8 @@ const ProfilePage = () => {
                 <option value={2}>取引完了</option>
               </select>
             </div>
-            {items.length > 0 ? (
-              items
-                .filter(item => item.TradeFlag === selectedTradeFlag)
+            {filteredItems.length > 0 ? (
+              filteredItems
                 .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
                 .map((item) => (
                   <Item
@@ -358,8 +359,8 @@ const ProfilePage = () => {
                     liked={myFavoriteIds.includes(item.ItemID)}
                     userIcon={userProfile.Icon}
                     tradeFlag={item.TradeFlag}
-                    transactionMethods={item.TradeMethod ? [item.TradeMethod] : []} // 修正
-                    showDeleteButton={myId === parseInt(item.UserID, 10)} // Show button if user owns the item
+                    transactionMethods={item.TradeMethod ? [item.TradeMethod] : []}
+                    showDeleteButton={myId === parseInt(item.UserID, 10)}
                     onDelete={myId === parseInt(item.UserID, 10) ? handleDeleteItem : undefined}
                   />
                 ))
@@ -370,13 +371,6 @@ const ProfilePage = () => {
           </div>
         ) : (
           <div>
-            <div className="select-container">
-              <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
-                <option value={0}>出品中</option>
-                <option value={1}>取引中</option>
-                <option value={2}>取引完了</option>
-              </select>
-            </div>
             {requests.filter(request => request.DisplayFlag === 1).length > 0 ? (
               requests
                 .filter(request => request.DisplayFlag === 1)
