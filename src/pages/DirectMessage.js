@@ -437,7 +437,7 @@ const DirectMessage = () => {
                     <span className="item-status">
                         現在取引中の物品はありません
                     </span>
-                  ) : hostUserId !== myId && chatItemID !== null ? ( // 追加された条件
+                  ) : hostUserId !== myId && itemId !== null ? ( // 追加された条件
                         <button 
                             className="top-button secondary" 
                             onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
