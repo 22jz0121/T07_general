@@ -19,6 +19,7 @@ const DirectMessage = () => {
   const myName = sessionStorage.getItem('MyName');
   const [TraderID, setTraderId] = useState(undefined); // traderIdを状態として管理
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentItemId, setCurrentItemId] = useState(itemId); // itemIdを状態として管理
 
   //Pusherの設定
   useEffect(() => {
@@ -73,6 +74,15 @@ const DirectMessage = () => {
       console.error('Error fetching chat messages:', error);
     }
   };
+
+  //--------------------------------------------------
+  // itemIdが変更されたときにページを再読み込み
+  //---------------------------------------------------
+  useEffect(() => {
+    if (itemId !== currentItemId) {
+      window.location.reload(); // ページを再読み込み
+    }
+  }, [itemId, currentItemId]);
 
   //--------------------------------------------------
   //　自動スクロールの条件
@@ -437,14 +447,6 @@ const DirectMessage = () => {
                     <span className="item-status">
                         現在取引中の物品はありません
                     </span>
-                  ) : hostUserId !== myId && itemId !== null ? ( // 追加された条件
-                        <button 
-                            className="top-button secondary" 
-                            onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
-                            disabled={isProcessing}
-                        >
-                            取引をキャンセルする
-                        </button>
                   ) : hostUserId === myId && TraderID === null ? (
                     <button className="top-button primary" 
                         onClick={handleSetTrader}
@@ -473,10 +475,18 @@ const DirectMessage = () => {
                       <span>
                           現在 {itemName} の引渡し予定者に選ばれています
                       </span>
-                  ) : hostUserId !== myId && TraderID === null ? (
+                  ) : hostUserId !== myId && TraderID === null && itemId !== null ? (
                       <span className={`item-status`}>
                           現在 {itemName} を取引しています
+                          <button 
+                              className="top-button secondary" 
+                              onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
+                              disabled={isProcessing}
+                          >
+                              取引をキャンセルする
+                          </button>
                       </span>
+                      
                   ) : hostUserId !== myId && TraderID !== myId ? (
                       <span>
                           現在他のユーザーが引渡し予定者に選ばれました
