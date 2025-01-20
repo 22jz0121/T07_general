@@ -621,7 +621,6 @@ const DirectMessage = () => {
           </button>
       </div>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>成功</DialogTitle>
           <DialogContent>
               <DialogContentText>
                   取引を辞退されました。
