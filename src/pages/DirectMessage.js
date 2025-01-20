@@ -479,7 +479,7 @@ const DirectMessage = () => {
                       <span className={`item-status`}>
                           現在 {itemName} を取引しています
                           <button 
-                              className="top-button secondary" 
+                              className="top-button-stop" 
                               onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
                               disabled={isProcessing}
                           >
