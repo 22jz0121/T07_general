@@ -357,12 +357,47 @@ const DirectMessage = () => {
     console.log('取引が完了しました');
   };
 
+  //--------------------------------------------------
+  //　　　　　　申し込みを辞退する処理
+  //---------------------------------------------------
+  const handleSetItemIDNull = async () => {
+    if (isProcessing) return; // 連投防止
+    setIsProcessing(true);
+
+    try {
+        // ItemIDをnullにする処理
+        const response = await fetch(`${itemId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ ItemID: null }), // ここでItemIDをnullに設定
+            credentials: 'include',
+        });
+
+        const data = await response.json();
+        console.log(data.result);
+        if (data.result === 'success') {
+            console.log('ItemIDがnullに更新されました');
+            // 成功した場合の処理をここに書く（状態をリフレッシュするなど）
+        } else {
+            console.error('ItemIDの更新に失敗しました');
+        }
+    } catch (error) {
+        console.error('ItemIDの設定中にエラー:', error);
+    } finally {
+        setIsProcessing(false); // 処理終了
+    }
+    console.log('ItemIDがnullに設定されました');
+  };
+
 
   //--------------------------------------------------
   //　　　　　　プッシュ通知送信
   //---------------------------------------------------
   const sendPushNotification = async (userId,message) => {
-    const url = "https://www.jec.ac.jp/?utm_source=g&utm_medium=kw&utm_campaign=lis&gad_source=1&gclid=CjwKCAiAhP67BhAVEiwA2E_9g8iHNceHOepij2pWdBNSAml-FiO5h0k4vf6TzO6jZmu7xA8D8cbRJxoC-MUQAvD_BwE"
+    const url = "https://loopplus.mydns.jp/message"
 
     try {
         const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
@@ -402,43 +437,51 @@ const DirectMessage = () => {
                     <span className="item-status">
                         現在取引中の物品はありません
                     </span>
-                ) : hostUserId === myId && TraderID === null ? (
+                  ) : hostUserId !== myId && chatItemID !== null ? ( // 追加された条件
+                        <button 
+                            className="top-button secondary" 
+                            onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
+                            disabled={isProcessing}
+                        >
+                            取引をキャンセルする
+                        </button>
+                  ) : hostUserId === myId && TraderID === null ? (
                     <button className="top-button primary" 
                         onClick={handleSetTrader}
                         disabled={isProcessing}
                     >
                         引渡し予定者にする
                     </button>
-                ) : TraderID === otherUserId ? (
-                    <>
-                        <button 
-                            className="top-button secondary" 
-                            onClick={handleCancelTrade} 
-                            disabled={isProcessing}
-                        >
-                            取引を中止する
-                        </button>
-                        <button 
-                            className="top-button success" 
-                            onClick={handleCompleteTrade} 
-                            disabled={isProcessing}
-                        >
-                            取引を完了する
-                        </button>
-                    </>
-                ) : hostUserId !== myId && TraderID === myId ? (
-                    <span>
-                        現在 {itemName} の引渡し予定者に選ばれています
-                    </span>
-                ) : hostUserId !== myId && TraderID === null ? (
-                    <span className={`item-status`}>
-                        現在 {itemName} を取引しています
-                    </span>
-                ) : hostUserId !== myId && TraderID !== myId ? (
-                    <span>
-                        現在他のユーザーが引渡し予定者に選ばれました
-                    </span>
-                ) : null}
+                  ) : TraderID === otherUserId ? (
+                      <>
+                          <button 
+                              className="top-button secondary" 
+                              onClick={handleCancelTrade} 
+                              disabled={isProcessing}
+                          >
+                              取引を中止する
+                          </button>
+                          <button 
+                              className="top-button success" 
+                              onClick={handleCompleteTrade} 
+                              disabled={isProcessing}
+                          >
+                              取引を完了する
+                          </button>
+                      </>
+                  ) : hostUserId !== myId && TraderID === myId ? (
+                      <span>
+                          現在 {itemName} の引渡し予定者に選ばれています
+                      </span>
+                  ) : hostUserId !== myId && TraderID === null ? (
+                      <span className={`item-status`}>
+                          現在 {itemName} を取引しています
+                      </span>
+                  ) : hostUserId !== myId && TraderID !== myId ? (
+                      <span>
+                          現在他のユーザーが引渡し予定者に選ばれました
+                      </span>
+                  ) : null}
             </>
         )}
       </div>
