@@ -390,7 +390,7 @@ const DirectMessage = () => {
         console.log(data.result);
         if (data.result === 'success') {
             console.log('ItemIDがnullに更新されました');
-            // 成功した場合の処理をここに書く（状態をリフレッシュするなど）
+            setOpenDialog(true); // ダイアログを表示
         } else {
             console.error('ItemIDの更新に失敗しました');
         }
@@ -402,7 +402,14 @@ const DirectMessage = () => {
     console.log('ItemIDがnullに設定されました');
   };
 
+  // ダイアログの状態を管理
+  const [openDialog, setOpenDialog] = useState(false);
 
+  // ダイアログを閉じて一つ前のページに遷移
+  const handleCloseDialog = () => {
+    setOpenDialog(false); // ダイアログを閉じる
+    navigate('/messages'); // 一つ前のページに遷移
+  };
   //--------------------------------------------------
   //　　　　　　プッシュ通知送信
   //---------------------------------------------------
@@ -478,6 +485,7 @@ const DirectMessage = () => {
                   ) : hostUserId !== myId && TraderID === null && itemId !== null ? (
                       <span className={`item-status`}>
                           現在 {itemName} を取引しています
+                          <br />
                           <button 
                               className="top-button-stop" 
                               onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
@@ -605,6 +613,19 @@ const DirectMessage = () => {
               <SendIcon className="send-icon" />
           </button>
       </div>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>成功</DialogTitle>
+          <DialogContent>
+              <DialogContentText>
+                  取引を辞退されました。
+              </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleCloseDialog} color="primary">
+                  OK
+              </Button>
+          </DialogActions>
+      </Dialog>
     </div>
   );
 };
