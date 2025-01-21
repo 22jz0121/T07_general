@@ -148,7 +148,7 @@ body {
 /* Post Button */
 .post-button {
     position: fixed;  /* Fix the button to the screen */
-    bottom: 80px;     /* Position it 20px from the bottom */
+    bottom: 100px;     /* Position it 20px from the bottom */
     right: 20px;      /* Position it 20px from the right */
     background-color: #48a9f8;  /* Button background color */
     color: white;  /* Icon color */
