@@ -110,7 +110,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       
       const isOverflowing = container.scrollHeight > container.clientHeight;
       if (isOverflowing) {
-        const paddingBottom = parseInt(window.getComputedStyle(container).paddingBottom, 5) || 0;
+        const paddingBottom = parseInt(window.getComputedStyle(container).paddingBottom) || 0;
         const scrollOffset = container.scrollHeight - container.scrollTop - container.clientHeight;
         
         // スクロールが必要か判定
