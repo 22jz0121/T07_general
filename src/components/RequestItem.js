@@ -10,6 +10,11 @@ function RequestItem({ id, userId, name, time, content, imageSrc, userIcon, onDe
     ? `https://loopplus.mydns.jp/${userIcon}`
     : userIcon;
 
+
+  const Image = imageSrc && imageSrc.startsWith('storage/images/')
+  ? `https://loopplus.mydns.jp/${imageSrc}`
+  : imageSrc;
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
@@ -37,7 +42,7 @@ function RequestItem({ id, userId, name, time, content, imageSrc, userIcon, onDe
         </Link>
         <div className="content">
           <p className='content-ppp'>{content}</p>
-          {imageSrc && <img src={imageSrc} alt="Request" className="request-image" />}
+          {imageSrc && <img src={Image} alt="Request" className="request-image" />}
         </div>
       </Link>
       {showDeleteButton && onDelete && (
