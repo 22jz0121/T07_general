@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSwipeable } from "react-swipeable";
 import { Search as SearchIcon, NotificationsNone as NotificationsIcon } from '@mui/icons-material';
 import ItemList from './ItemList'; // Import ItemList
 import RequestList from './RequestList'; // Import RequestList
@@ -87,6 +88,19 @@ function TopSection() {
     });
   };
 
+  const handleSwipe = useSwipeable({
+    onSwiped: (event) => {
+        console.log(event);
+        if (event.dir == "Left") {
+          navigate('/request');
+        }
+        if (event.dir == "Right") {
+          navigate('/');
+        }
+    },
+    trackMouse: true, //マウス操作でのスワイプを許可する場合はtrue
+  });
+
   return (
     <header>
       <div className="top-section-wrapper">
@@ -128,9 +142,11 @@ function TopSection() {
           </button>
         </div>
       </div>
-      {/* Embed ItemList or RequestList component based on activeTab */}
-      {activeTab === 'listing' && <ItemList />}
-      {activeTab === 'request' && <RequestList />}
+      <div {...handlers}>
+        {activeTab === 'listing' && <ItemList />}
+        {activeTab === 'request' && <RequestList />}
+      </div>
+      
     </header>
   );
 }
