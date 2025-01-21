@@ -72,6 +72,7 @@ const Messages = () => {
     }
   };
 
+
   return (
     <div className="message-list">
       <div className="top-navigation">
@@ -143,7 +144,9 @@ const Messages = () => {
                         {chat.LastContent?.Image
                           ? '画像が送信されました'
                           : chat.LastContent?.Content
-                          ? chat.LastContent.Content
+                          ? chat.LastContent.Content.length > 16
+                            ? `${chat.LastContent.Content.slice(0, 16)}…`
+                            : chat.LastContent.Content
                           : 'メッセージがありません'}
                       </p>
                     </div>
