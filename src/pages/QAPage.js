@@ -12,7 +12,7 @@ function QAPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://loopplus.mydns.jp/qa');
+                const response = await fetch('https://loopplus.mydns.jp/api/qa');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

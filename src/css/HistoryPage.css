@@ -4,6 +4,7 @@
 
 .transaction-list {
     padding: 16px;
+    padding-bottom: 60px;
 }
 
 .transaction-item {

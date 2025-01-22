@@ -19,7 +19,7 @@ const LikedItemsPage = () => {
 
     const fetchItems = async () => {
       try {
-        const response = await fetch('https://loopplus.mydns.jp/item');
+        const response = await fetch('https://loopplus.mydns.jp/api/item');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

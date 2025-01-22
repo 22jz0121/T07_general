@@ -106,10 +106,9 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-
-
 .listing {
     padding: 10px;
+    padding-bottom: 60px;
 }
 
 .p {
