@@ -142,7 +142,7 @@ function TopSection() {
           </button>
         </div>
       </div>
-      <div {...handlers}>
+      <div {...handleSwipe}>
         {activeTab === 'listing' && <ItemList />}
         {activeTab === 'request' && <RequestList />}
       </div>
