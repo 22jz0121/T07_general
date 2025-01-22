@@ -17,7 +17,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { name, itemName, itemId, hostUserId, otherUserId} = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
+  const { name, itemName, itemId, hostUserId, otherUserId } = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -49,7 +49,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, [id,itemId]);
+  }, [id, itemId]);
 
 
   //フッター非表示
@@ -62,10 +62,10 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   }, [setIsFooterVisible]);
 
 
-  
+
   // itemIdを使ってtraderIDを取得する関数
   const fetchTraderId = async () => {
-    if(itemId !== null){
+    if (itemId !== null) {
       try {
         const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`);
         if (!response.ok) {
@@ -105,34 +105,52 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //--------------------------------------------------
   //　自動スクロールの条件
   //---------------------------------------------------
-  useEffect(() => {
-    if (messageEndRef.current && messageEndRef.current.parentElement) {
-      const container = messageEndRef.current.parentElement;
-      
-      const isOverflowing = container.scrollHeight > container.clientHeight;
-      if (isOverflowing) {
-        const paddingBottom = parseInt(window.getComputedStyle(container).paddingBottom, 5) || 0;
-        const scrollOffset = container.scrollHeight - container.scrollTop - container.clientHeight;
-        
-        // スクロールが必要か判定
-        if (scrollOffset > paddingBottom) {
+  // 初回ロード時とメッセージ更新後に限界までスクロールする
+useEffect(() => {
+  const forceScrollToBottom = () => {
+    const dmMessagesContainer = document.querySelector('.dm-messages');
+    if (dmMessagesContainer) {
+      dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
+    }
+  };
+
+  // 初回ロード時のスクロール（複数回試行）
+  setTimeout(forceScrollToBottom, 100);  // 100ms後
+  setTimeout(forceScrollToBottom, 300);  // 300ms後
+  setTimeout(forceScrollToBottom, 500);  // 500ms後
+}, []);  // 初回ロード時のみ
+
+useEffect(() => {
+  const scrollToBottomWithRetries = () => {
+    const dmMessagesContainer = document.querySelector('.dm-messages');
+    if (dmMessagesContainer) {
+      // 強制スクロール処理
+      dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
+
+      // 少し遅延させてさらにスクロール位置を強制
+      setTimeout(() => {
+        dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
+        if (messageEndRef.current) {
           messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-      }
+      }, 100);
     }
-  }, [messages]);
-  
+  };
+
+  scrollToBottomWithRetries();  // メッセージ更新時に確実にスクロール
+}, [messages]);
+
 
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-      const fetchData = async () => {
-          await fetchTraderId(); // traderIDを取得
-          await fetchChatMessages(); // チャットメッセージを取得
-          setIsLoaded(true); // データの取得が完了したらisLoadedをtrueに設定
-      };
+    const fetchData = async () => {
+      await fetchTraderId(); // traderIDを取得
+      await fetchChatMessages(); // チャットメッセージを取得
+      setIsLoaded(true); // データの取得が完了したらisLoadedをtrueに設定
+    };
 
-      fetchData();
+    fetchData();
   }, [id]);
 
 
@@ -210,7 +228,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       //自分のコメントだけ非表示にできるように後で制限掛ける
 
       if (response.ok) {
-      console.error('メッセージ削除に成功しました');//デバック用message
+        console.error('メッセージ削除に成功しました');//デバック用message
       } else {
         console.error('メッセージ削除に失敗しました');
       }
@@ -224,7 +242,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   };
 
   const handleKeyDown = (event) => {
-    if (isSending){
+    if (isSending) {
       return
     }
     if (event.key === 'Enter') {
@@ -251,13 +269,13 @@ const DirectMessage = ({ setIsFooterVisible }) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           TraderID: otherUserId, // TraderIDを設定
           TradeFlag: 1 // TradeFlagを2に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
-         }),
+        }),
         credentials: 'include',
       });
-      
+
       const data = await response.json();
       console.log(data.result);
       if (data.result == 'success') {
@@ -297,10 +315,10 @@ const DirectMessage = ({ setIsFooterVisible }) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           TraderID: null, // TraderIDにnull設定
           TradeFlag: 0 // TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
-         }),
+        }),
         credentials: 'include',
       });
 
@@ -314,7 +332,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       } else {
         console.error('Failed to set trader');
       }
-      
+
     } catch (error) {
       console.error('Error setting trader:', error);
     } finally {
@@ -333,52 +351,52 @@ const DirectMessage = ({ setIsFooterVisible }) => {
     setIsProcessing(true);
 
     try {
-        // 取引を完了する処理
-        const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ 
-              TradeFlag:  2// TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
-            }), // nullに更新
-            credentials: 'include',
+      // 取引を完了する処理
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          TradeFlag: 2// TradeFlagを0に設定 0＝出品中、1＝取引中、2＝取引完了、3＝非表示中
+        }), // nullに更新
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      console.log(data.result);
+      if (data.result === 'success') {
+        // 取引完了後にチャットのitemIDをnullに更新
+        console.log('chatID : ', id);
+        const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'include',
         });
 
-        const data = await response.json();
-        console.log(data.result);
-        if (data.result === 'success') {
-            // 取引完了後にチャットのitemIDをnullに更新
-            console.log('chatID : ', id);
-            const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                credentials: 'include',
-            });
+        const updateData = await updateResponse.json();
+        if (updateData.result === 'success') {
+          console.log('チャットのitemIDがnullに更新されました');
+          const message = `${myName}との取引が完了しました！`;
 
-            const updateData = await updateResponse.json();
-            if (updateData.result === 'success') {
-                console.log('チャットのitemIDがnullに更新されました');
-                const message = `${myName}との取引が完了しました！`;
+          sendPushNotification(otherUserId, message);
 
-                sendPushNotification(otherUserId, message);
-                
-                navigate('/messages');
-                
-            } else {
-                console.error('チャットのitemIDの更新に失敗しました');
-            }
-            console.log('Update Response:', updateResponse);
+          navigate('/messages');
 
         } else {
-            console.error('Failed to Reset ItemID');
+          console.error('チャットのitemIDの更新に失敗しました');
         }
+        console.log('Update Response:', updateResponse);
+
+      } else {
+        console.error('Failed to Reset ItemID');
+      }
     } catch (error) {
-        console.error('Error setting trader:', error);
+      console.error('Error setting trader:', error);
     } finally {
       setIsProcessing(false); // 処理終了
     }
@@ -393,29 +411,29 @@ const DirectMessage = ({ setIsFooterVisible }) => {
     setIsProcessing(true);
 
     try {
-        // ItemIDをnullにする処理
-        const response = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ ItemID: null }), // ここでItemIDをnullに設定
-            credentials: 'include',
-        });
+      // ItemIDをnullにする処理
+      const response = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ ItemID: null }), // ここでItemIDをnullに設定
+        credentials: 'include',
+      });
 
-        const data = await response.json();
-        console.log(data.result);
-        if (data.result === 'success') {
-            console.log('ItemIDがnullに更新されました');
-            setOpenDialog(true); // ダイアログを表示
-        } else {
-            console.error('ItemIDの更新に失敗しました');
-        }
+      const data = await response.json();
+      console.log(data.result);
+      if (data.result === 'success') {
+        console.log('ItemIDがnullに更新されました');
+        setOpenDialog(true); // ダイアログを表示
+      } else {
+        console.error('ItemIDの更新に失敗しました');
+      }
     } catch (error) {
-        console.error('ItemIDの設定中にエラー:', error);
+      console.error('ItemIDの設定中にエラー:', error);
     } finally {
-        setIsProcessing(false); // 処理終了
+      setIsProcessing(false); // 処理終了
     }
     console.log('ItemIDがnullに設定されました');
   };
@@ -433,27 +451,27 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //--------------------------------------------------
   //　　　　　　プッシュ通知送信
   //---------------------------------------------------
-  const sendPushNotification = async (userId,message) => {
+  const sendPushNotification = async (userId, message) => {
     const url = "https://loopplus.mydns.jp/message"
 
     try {
-        const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId, message, url }),
-        });
+      const response = await fetch('https://loopplus.mydns.jp/api/send-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, message, url }),
+      });
 
-        const data = await response.json();
-        if (data.success) {
-          console.log('プッシュ通知が送信されました！');
-        } else {
-          console.log('通知の送信に失敗しました。');
-        }
+      const data = await response.json();
+      if (data.success) {
+        console.log('プッシュ通知が送信されました！');
+      } else {
+        console.log('通知の送信に失敗しました。');
+      }
     } catch (error) {
-        console.error('エラー:', error);
-        alert('エラーが発生しました。');
+      console.error('エラー:', error);
+      alert('エラーが発生しました。');
     }
   };
 
@@ -476,192 +494,192 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   return (
     <div className="dm-container">
       <div className="top-navigation">
-          <button className="back-button" onClick={() => navigate('/messages')}>
-              <ArrowBackIcon className="back-icon" />
-          </button>
-          <h1 className="page-title">{name}</h1>
+        <button className="back-button" onClick={() => navigate('/messages')}>
+          <ArrowBackIcon className="back-icon" />
+        </button>
+        <h1 className="page-title">{name}</h1>
       </div>
 
       <div className="top-buttons">
-          {isLoaded && ( // isLoadedがtrueのときのみ表示
-            <>
-                {itemId === null ? (
-                    <span className="item-status">
-                        現在取引中の物品はありません
-                    </span>
-                  ) : hostUserId === myId && TraderID === null ? (
-                    <button className="top-button primary" 
-                        onClick={handleSetTrader}
-                        disabled={isProcessing}
-                    >
-                        引渡し予定者にする
-                    </button>
-                  ) : TraderID === otherUserId ? (
-                      <>
-                          <button 
-                              className="top-button secondary" 
-                              onClick={handleCancelTrade} 
-                              disabled={isProcessing}
-                          >
-                              取引を中止する
-                          </button>
-                          <button 
-                              className="top-button success" 
-                              onClick={handleCompleteTrade} 
-                              disabled={isProcessing}
-                          >
-                              取引を完了する
-                          </button>
-                      </>
-                  ) : hostUserId !== myId && TraderID === myId ? (
-                      <span>
-                          現在 {itemName} の引渡し予定者に選ばれています
-                      </span>
-                  ) : hostUserId !== myId && TraderID === null && itemId !== null ? (
-                      <span className={`item-status`}>
-                          現在 {itemName} を取引しています
-                          <br />
-                          <button 
-                              className="top-button-stop" 
-                              onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
-                              disabled={isProcessing}
-                          >
-                              取引をキャンセルする
-                          </button>
-                      </span>
-                      
-                  ) : hostUserId !== myId && TraderID !== myId ? (
-                      <span>
-                          現在他のユーザーが引渡し予定者に選ばれました
-                      </span>
-                  ) : null}
-            </>
+        {isLoaded && ( // isLoadedがtrueのときのみ表示
+          <>
+            {itemId === null ? (
+              <span className="item-status">
+                現在取引中の物品はありません
+              </span>
+            ) : hostUserId === myId && TraderID === null ? (
+              <button className="top-button primary"
+                onClick={handleSetTrader}
+                disabled={isProcessing}
+              >
+                引渡し予定者にする
+              </button>
+            ) : TraderID === otherUserId ? (
+              <>
+                <button
+                  className="top-button secondary"
+                  onClick={handleCancelTrade}
+                  disabled={isProcessing}
+                >
+                  取引を中止する
+                </button>
+                <button
+                  className="top-button success"
+                  onClick={handleCompleteTrade}
+                  disabled={isProcessing}
+                >
+                  取引を完了する
+                </button>
+              </>
+            ) : hostUserId !== myId && TraderID === myId ? (
+              <span>
+                現在 {itemName} の引渡し予定者に選ばれています
+              </span>
+            ) : hostUserId !== myId && TraderID === null && itemId !== null ? (
+              <span className={`item-status`}>
+                現在 {itemName} を取引しています
+                <br />
+                <button
+                  className="top-button-stop"
+                  onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
+                  disabled={isProcessing}
+                >
+                  取引をキャンセルする
+                </button>
+              </span>
+
+            ) : hostUserId !== myId && TraderID !== myId ? (
+              <span>
+                現在他のユーザーが引渡し予定者に選ばれました
+              </span>
+            ) : null}
+          </>
         )}
       </div>
 
 
       <div className="dm-messages">
-          {messages.map((msg, index) => {
-              const messageDate = new Date(msg.CreatedAt); // メッセージの作成日時
-              const today = new Date();
+        {messages.map((msg, index) => {
+          const messageDate = new Date(msg.CreatedAt); // メッセージの作成日時
+          const today = new Date();
 
-              // 前のメッセージの日付を取得
-              const previousMessageDate = index > 0 ? new Date(messages[index - 1].CreatedAt) : null;
+          // 前のメッセージの日付を取得
+          const previousMessageDate = index > 0 ? new Date(messages[index - 1].CreatedAt) : null;
 
-              // 日付を表示するかどうかの判断
-              const showDate = (
-                  !previousMessageDate || 
-                  messageDate.getDate() !== previousMessageDate.getDate() || 
-                  messageDate.getMonth() !== previousMessageDate.getMonth() || 
-                  messageDate.getFullYear() !== previousMessageDate.getFullYear()
-              );
+          // 日付を表示するかどうかの判断
+          const showDate = (
+            !previousMessageDate ||
+            messageDate.getDate() !== previousMessageDate.getDate() ||
+            messageDate.getMonth() !== previousMessageDate.getMonth() ||
+            messageDate.getFullYear() !== previousMessageDate.getFullYear()
+          );
 
-              // 日付のフォーマット
-              let formattedDateMessage = '';
-              if (showDate) {
-                  formattedDateMessage = messageDate.toDateString() === today.toDateString() 
-                      ? '今日' 
-                      : `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // MM/DD形式
-              }
+          // 日付のフォーマット
+          let formattedDateMessage = '';
+          if (showDate) {
+            formattedDateMessage = messageDate.toDateString() === today.toDateString()
+              ? '今日'
+              : `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // MM/DD形式
+          }
 
-              // 時間のフォーマット
-              let formattedTime = '';
-              formattedTime = messageDate.toLocaleTimeString('ja-JP', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
-            });
+          // 時間のフォーマット
+          let formattedTime = '';
+          formattedTime = messageDate.toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          });
 
-              // if (
-              //     messageDate.getFullYear() === today.getFullYear() &&
-              //     messageDate.getMonth() === today.getMonth() &&
-              //     messageDate.getDate() === today.getDate()
-              // ) {
-              //     // 今日の場合
-              //     formattedTime = messageDate.toLocaleTimeString('ja-JP', {
-              //         hour: '2-digit',
-              //         minute: '2-digit',
-              //         hour12: false,
-              //     });
-              // } else {
-              //     // 今日以外の日付の場合
-              //     formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
-              // }
+          // if (
+          //     messageDate.getFullYear() === today.getFullYear() &&
+          //     messageDate.getMonth() === today.getMonth() &&
+          //     messageDate.getDate() === today.getDate()
+          // ) {
+          //     // 今日の場合
+          //     formattedTime = messageDate.toLocaleTimeString('ja-JP', {
+          //         hour: '2-digit',
+          //         minute: '2-digit',
+          //         hour12: false,
+          //     });
+          // } else {
+          //     // 今日以外の日付の場合
+          //     formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
+          // }
 
-              return (
-                  <div key={msg.ChatContentID}>
-                      {showDate && <div className="date-message">{formattedDateMessage}</div>} {/* 日付の表示 */}
-                      <div
-                          className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
-                          onContextMenu={(e) => {
-                              e.preventDefault();
-                              if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                                  handleLongPress(msg.ChatContentID);
-                              }
-                          }}
-                      >
-                          <div className="message-bubble"
-                            data-chat-content-id={msg.ChatContentID}
-                          >
-                              <p className={`message-text ${msg.DisplayFlag == 0 ? 'off' : 'on'}`}>{msg.Content}</p>
-                              {msg.Image && (
-                                  <img
-                                      src={`https://loopplus.mydns.jp/${msg.Image}`}
-                                      alt="メッセージ画像"
-                                      className="message-image"
-                                  />
-                              )}
-                          </div>
-                          <div className="span-time">
-                              <span className="message-time">{formattedTime}</span>
-                          </div>
-                      </div>
-                  </div>
-              );
-          })}
-          <div ref={messageEndRef} />
+          return (
+            <div key={msg.ChatContentID}>
+              {showDate && <div className="date-message">{formattedDateMessage}</div>} {/* 日付の表示 */}
+              <div
+                className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  if (msg.UserID === myId && msg.DisplayFlag === 1) {
+                    handleLongPress(msg.ChatContentID);
+                  }
+                }}
+              >
+                <div className="message-bubble"
+                  data-chat-content-id={msg.ChatContentID}
+                >
+                  <p className={`message-text ${msg.DisplayFlag == 0 ? 'off' : 'on'}`}>{msg.Content}</p>
+                  {msg.Image && (
+                    <img
+                      src={`https://loopplus.mydns.jp/${msg.Image}`}
+                      alt="メッセージ画像"
+                      className="message-image"
+                    />
+                  )}
+                </div>
+                <div className="span-time">
+                  <span className="message-time">{formattedTime}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        <div ref={messageEndRef} />
       </div>
 
 
       <div className="dm-input">
-          <button className="image-upload-button" onClick={openFileDialog}>
-              <AddIcon className="add-icon" />
-          </button>
-          <input
-              type="file"
-              id="image-upload"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{ display: 'none' }}
-              onKeyDown={handleKeyDown}
-          />
-          <input
-              type="text"
-              placeholder="メッセージを入力..."
-              className="input-box"
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-          />
-          <button 
-              className="send-button" 
-              onClick={handleSendMessage} 
-              disabled={!inputValue.trim() && !imageFile || isSending}
-          >
-              <SendIcon className="send-icon" />
-          </button>
+        <button className="image-upload-button" onClick={openFileDialog}>
+          <AddIcon className="add-icon" />
+        </button>
+        <input
+          type="file"
+          id="image-upload"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+          onKeyDown={handleKeyDown}
+        />
+        <input
+          type="text"
+          placeholder="メッセージを入力..."
+          className="input-box"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+        />
+        <button
+          className="send-button"
+          onClick={handleSendMessage}
+          disabled={!inputValue.trim() && !imageFile || isSending}
+        >
+          <SendIcon className="send-icon" />
+        </button>
       </div>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogContent>
-              <DialogContentText>
-                  取引を辞退されました。
-              </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary">
-                  OK
-              </Button>
-          </DialogActions>
+        <DialogContent>
+          <DialogContentText>
+            取引を辞退されました。
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            OK
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
