@@ -462,20 +462,20 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //　　　　　　スワイプ時の処理
   //---------------------------------------------------
   // スワイプハンドラーを定義
-  const swipeHandlers = useSwipeable({
-    onSwiped: (eventData) => {
-      const target = eventData.event.currentTarget;
-      const chatContentID = target.getAttribute('data-chat-content-id');
-      if (chatContentID) {
-        handleSwipe(chatContentID);
-      }
-    },
-  });
+  // const swipeHandlers = useSwipeable({
+  //   onSwiped: (eventData) => {
+  //     const target = eventData.event.currentTarget;
+  //     const chatContentID = target.getAttribute('data-chat-content-id');
+  //     if (chatContentID) {
+  //       handleSwipe(chatContentID);
+  //     }
+  //   },
+  // });
 
-  const handleSwipe = (chatContentID) => {
-    console.log(`Swiped Chat Content ID: ${chatContentID}`);
-    handleSwipe(chatContentID);
-  };
+  // const handleSwipe = (chatContentID) => {
+  //   console.log(`Swiped Chat Content ID: ${chatContentID}`);
+  //   handleSwipe(chatContentID);
+  // };
 
 
   return (
@@ -607,7 +607,6 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                       >
                           <div className="message-bubble"
                             data-chat-content-id={msg.ChatContentID}
-                            {...swipeHandlers}
                           >
                               <p className={`message-text ${msg.DisplayFlag == 0 ? 'off' : 'on'}`}>{msg.Content}</p>
                               {msg.Image && (
