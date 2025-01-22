@@ -70,7 +70,9 @@ body, html {
       align-items: center;
       padding: 2rem;
       margin: 0 auto;
-      border-radius: 8px;
+      border: none;
+      border-radius: none;
+      box-shadow: none;
       background-color: #fff;
       width: 100%;
       text-align: center;
