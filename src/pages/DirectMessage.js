@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useSwipeable } from "react-swipeable";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Add as AddIcon, Send as SendIcon } from '@mui/icons-material';
 import Pusher from 'pusher-js';
@@ -81,7 +82,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
 
   const fetchChatMessages = async () => {
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/chat/room/${id}`);
+      const response = await fetch(`https://loopplus.mydns.jp/api/chat/room/${id}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -110,7 +111,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       
       const isOverflowing = container.scrollHeight > container.clientHeight;
       if (isOverflowing) {
-        const paddingBottom = parseInt(window.getComputedStyle(container).paddingBottom) || 0;
+        const paddingBottom = parseInt(window.getComputedStyle(container).paddingBottom, 5) || 0;
         const scrollOffset = container.scrollHeight - container.scrollTop - container.clientHeight;
         
         // スクロールが必要か判定
@@ -427,6 +428,8 @@ const DirectMessage = ({ setIsFooterVisible }) => {
     setOpenDialog(false); // ダイアログを閉じる
     navigate('/messages'); // 一つ前のページに遷移
   };
+
+
   //--------------------------------------------------
   //　　　　　　プッシュ通知送信
   //---------------------------------------------------
@@ -452,6 +455,26 @@ const DirectMessage = ({ setIsFooterVisible }) => {
         console.error('エラー:', error);
         alert('エラーが発生しました。');
     }
+  };
+
+
+  //--------------------------------------------------
+  //　　　　　　スワイプ時の処理
+  //---------------------------------------------------
+  // スワイプハンドラーを定義
+  const swipeHandlers = useSwipeable({
+    onSwiped: (eventData) => {
+      const target = eventData.event.currentTarget;
+      const chatContentID = target.getAttribute('data-chat-content-id');
+      if (chatContentID) {
+        handleSwipe(chatContentID);
+      }
+    },
+  });
+
+  const handleSwipe = (chatContentID) => {
+    console.log(`Swiped Chat Content ID: ${chatContentID}`);
+    handleSwipe(chatContentID);
   };
 
 
@@ -553,6 +576,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 minute: '2-digit',
                 hour12: false,
             });
+
               // if (
               //     messageDate.getFullYear() === today.getFullYear() &&
               //     messageDate.getMonth() === today.getMonth() &&
@@ -581,7 +605,10 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                               }
                           }}
                       >
-                          <div className="message-bubble">
+                          <div className="message-bubble"
+                            data-chat-content-id={msg.ChatContentID}
+                            {...swipeHandlers}
+                          >
                               <p className={`message-text ${msg.DisplayFlag == 0 ? 'off' : 'on'}`}>{msg.Content}</p>
                               {msg.Image && (
                                   <img

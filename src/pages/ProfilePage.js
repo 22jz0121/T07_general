@@ -63,7 +63,7 @@ const ProfilePage = () => {
   //---------------------------------------------------
   const fetchUserProfile = async (userId) => {
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/user/${userId}`);
+      const response = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`);
       const data = await response.json(); // JSONデータを取得
       setUserProfile(data); // データをセット
       setItems(data.Items);
