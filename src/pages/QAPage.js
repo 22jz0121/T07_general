@@ -32,12 +32,14 @@ function QAPage() {
         return <div>Error: {error}</div>;
     }
 
-    // CreatedAtで新しい順にソート
-    const sortedFaqData = faqData.sort((a, b) => {
-        const dateA = new Date(a.CreatedAt);
-        const dateB = new Date(b.CreatedAt);
-        return dateB - dateA; // 新しい順にするためにbを前に
-    });
+    // DisplayFlagが1のものだけをフィルタリングし、CreatedAtで新しい順にソート
+    const sortedFaqData = faqData
+        .filter(faq => faq.DisplayFlag === 1) // DisplayFlagが1のものだけを選択
+        .sort((a, b) => {
+            const dateA = new Date(a.CreatedAt);
+            const dateB = new Date(b.CreatedAt);
+            return dateB - dateA; // 新しい順にするためにbを前に
+        });
 
     return (
         <div className="qa-page">

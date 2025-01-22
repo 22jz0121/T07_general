@@ -22,7 +22,7 @@ function RequestDetail() {
         setLoading(true);
 
         // Fetch current user first
-        const userResponse = await fetch('https://loopplus.mydns.jp/whoami', { credentials: 'include' });
+        const userResponse = await fetch('https://loopplus.mydns.jp/api/whoami', { credentials: 'include' });
         if (!userResponse.ok) throw new Error('Failed to fetch current user');
         const userData = await userResponse.json();
         setCurrentUser(userData); // Store current user's UserID
@@ -35,21 +35,21 @@ function RequestDetail() {
           });
         }
         else {
-          const requestResponse = await fetch(`https://loopplus.mydns.jp/request/${id}`);
+          const requestResponse = await fetch(`https://loopplus.mydns.jp/api/request/${id}`);
           if (!requestResponse.ok) throw new Error('ログインセッションが切れています。ログインし直してください。');
           const requestData = await requestResponse.json();
           setRequest(requestData);
         }
 
         // Fetch comments
-        const commentsResponse = await fetch(`https://loopplus.mydns.jp/request/${id}/comment`);
+        const commentsResponse = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`);
         if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
         const commentsData = await commentsResponse.json();
 
         // Fetch user info for each comment
         const updatedComments = await Promise.all(
           commentsData.map(async (comment) => {
-            const userResponse = await fetch(`https://loopplus.mydns.jp/user/${comment.UserID}`);
+            const userResponse = await fetch(`https://loopplus.mydns.jp/api/user/${comment.UserID}`);
             if (!userResponse.ok) throw new Error('Failed to fetch user info');
             const userData = await userResponse.json();
             return {
