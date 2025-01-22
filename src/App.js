@@ -62,7 +62,7 @@ function App() {
           <Route path="/history/:id" element={<PrivateRoute><HistoryPage /></PrivateRoute>} />
           <Route path="/qa" element={<PrivateRoute><QAPage /></PrivateRoute>} />
           <Route path="/test" element={<PrivateRoute><Push /></PrivateRoute>} />
-          <Route path="/error" element={<Ban setIsFooterVisible={setIsFooterVisible} />} />
+          <Route path="/excluded" element={<Ban setIsFooterVisible={setIsFooterVisible} />} />
         </Routes>
         {isFooterVisible && <Footer />}
       </div>

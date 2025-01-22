@@ -462,20 +462,15 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //　　　　　　スワイプ時の処理
   //---------------------------------------------------
   // スワイプハンドラーを定義
-  // const swipeHandlers = useSwipeable({
-  //   onSwiped: (eventData) => {
-  //     const target = eventData.event.currentTarget;
-  //     const chatContentID = target.getAttribute('data-chat-content-id');
-  //     if (chatContentID) {
-  //       handleSwipe(chatContentID);
-  //     }
-  //   },
-  // });
-
-  // const handleSwipe = (chatContentID) => {
-  //   console.log(`Swiped Chat Content ID: ${chatContentID}`);
-  //   handleSwipe(chatContentID);
-  // };
+  const handleSwipe = useSwipeable({
+    onSwiped: (event) => {
+      console.log(event);
+      if (event.dir == "") {
+        console.log('読み込みなおそうとしたな！貴様！')
+      }
+    },
+    trackMouse: true, //マウス操作でのスワイプを許可する場合はtrue
+  });
 
 
   return (

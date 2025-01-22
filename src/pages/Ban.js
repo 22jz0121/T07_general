@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/ban.css';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 function Ban() {
   return (
@@ -7,6 +8,13 @@ function Ban() {
         <h1>アクセス禁止</h1>
         <p>申し訳ありませんが、あなたのアカウントはBANされています。</p>
         <p>詳細についてはサポートにお問い合わせください。</p>
+        <div className="menu-item" onClick={() => window.location.href = 'https://forms.gle/4fm6jAafJ1APJYo69'}>
+            <HelpOutlineIcon className="menu-icon" />
+            <span className="menu-label">お問い合わせ</span>
+        </div>
+        <div className="menu-item" onClick={() => window.location.href = 'https://loopplus.mydns.jp/login'}>
+            <span className="menu-label">ログインページへ</span>
+        </div>
     </div>
   );
 }

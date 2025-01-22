@@ -1,5 +1,3 @@
-// src/pages/SearchResults.js
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -77,6 +75,13 @@ function SearchResults() {
     }
   };
 
+  // CreatedAtで新しい順にソート
+  const sortedResults = results.sort((a, b) => {
+    const dateA = new Date(a.CreatedAt);
+    const dateB = new Date(b.CreatedAt);
+    return dateB - dateA; // 新しい順にするためにbを前に
+  });
+
   return (
     <div className="search-results-container">
       <div className="top-navigation">
@@ -87,8 +92,8 @@ function SearchResults() {
       </div>
 
       <div className="items-list">
-        {results.length > 0 ? (
-          results.map(item => (
+        {sortedResults.length > 0 ? (
+          sortedResults.map(item => (
             <Item
               key={item.ItemID} 
               name={item.User ? item.User.UserName : '不明'} // ユーザー名を渡す
