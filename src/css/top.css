@@ -355,6 +355,9 @@ body {
 
 /* ItemList.css */
 
+ .select-container {
+    margin-top: 137px;
+ }
  
   .select-container select {
     margin-bottom: 10px;
