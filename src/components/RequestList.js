@@ -21,7 +21,7 @@ function RequestList({ showPostButton = true }) {
 
   const fetchRequests = async () => {
     try {
-      const response = await fetch('https://loopplus.mydns.jp/request');
+      const response = await fetch('https://loopplus.mydns.jp/api/request');
       if (!response.ok) {
         throw new Error('Failed to fetch requests');
       }
