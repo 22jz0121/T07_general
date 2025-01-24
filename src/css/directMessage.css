@@ -164,9 +164,22 @@
 
   
 /* Wrapper for each message */
-.message-wrapper {
+/* .message-wrapper {
   display: flex;
   flex-direction: column;
+} */
+.message-wrapper {
+  position: relative; /* 相対位置を設定 */
+}
+
+.delete-overlay {
+  position: absolute; /* 絶対位置を設定 */
+  top: 0; /* メッセージの上部に配置 */
+  left: 0; /* メッセージの左部に配置 */
+  right: 0; /* メッセージの右部に配置 */
+  bottom: 0; /* メッセージの下部に配置 */
+  background-color: rgba(255, 255, 255, 0); /* 透明な背景 */
+  cursor: pointer; /* マウスカーソルをポインターに */
 }
 
 /* Right aligned messages */

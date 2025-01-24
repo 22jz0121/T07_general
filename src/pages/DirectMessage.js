@@ -613,11 +613,21 @@ useEffect(() => {
                 className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
                 onContextMenu={(e) => {
                   e.preventDefault();
-                  if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                    handleLongPress(msg.ChatContentID);
-                  }
+                  // if (msg.UserID === myId && msg.DisplayFlag === 1) {
+                  //   handleLongPress(msg.ChatContentID);
+                  // }
                 }}
               >
+                {/* 透明なdivを追加 */}
+                <div
+                  className="delete-overlay"
+                  onClick={() => {
+                    // クリックで削除機能を呼び出す
+                    if (msg.UserID === myId && msg.DisplayFlag === 1) {
+                      deleteMessage(msg.ChatContentID);
+                    }
+                  }}
+                />
                 <div className="message-bubble"
                   data-chat-content-id={msg.ChatContentID}
                 >
