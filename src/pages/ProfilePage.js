@@ -388,7 +388,7 @@ const ProfilePage = () => {
       <div className="tab-content">
         {activeTab === 'listing' ? (
           <div>
-            <div className="pull-container">
+            <div className="pulls-container">
               <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
                 <option value={0}>出品中</option>
                 <option value={1}>取引中</option>
