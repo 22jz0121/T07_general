@@ -189,6 +189,7 @@
 .message-wrapper.right {
   align-self: flex-end; /* Aligns messages to the right */
   flex-direction: row-reverse;
+  margin-left: auto;
 }
 
   
@@ -243,7 +244,7 @@
 /* Time styling */
 .span-time {
   align-self: flex-end;
-  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .message-time {
