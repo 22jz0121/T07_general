@@ -607,43 +607,46 @@ useEffect(() => {
           // }
 
           return (
-            <div key={msg.ChatContentID} className='message-div'>
+            <div key={msg.ChatContentID} >
               {showDate && <div className="date-message">{formattedDateMessage}</div>} {/* 日付の表示 */}
-              <div
-                className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  
-                  // if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                  //   handleLongPress(msg.ChatContentID);
-                  // }
-                }}
-              >
-                {/* 透明なdivを追加 */}
+              <div className='message-div'>
                 <div
-                  className="delete-overlay"
-                  onClick={() => {
-                    // クリックで削除機能を呼び出す
-                    if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                      handleLongPress(msg.ChatContentID);
-                    }
+                  className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    
+                    // if (msg.UserID === myId && msg.DisplayFlag === 1) {
+                    //   handleLongPress(msg.ChatContentID);
+                    // }
                   }}
-                />
-                <div className="message-bubble"
-                  data-chat-content-id={msg.ChatContentID}
                 >
-                  <p className={`message-text ${msg.DisplayFlag == 0 ? 'off' : 'on'}`}>{msg.Content}</p>
-                  {msg.Image && (
-                    <img
-                      src={`https://loopplus.mydns.jp/${msg.Image}`}
-                      alt="メッセージ画像"
-                      className="message-image"
-                    />
-                  )}
+                  {/* 透明なdivを追加 */}
+                  <div
+                    className="delete-overlay"
+                    onClick={() => {
+                      // クリックで削除機能を呼び出す
+                      if (msg.UserID === myId && msg.DisplayFlag === 1) {
+                        handleLongPress(msg.ChatContentID);
+                      }
+                    }}
+                  />
+                  <div className="message-bubble"
+                    data-chat-content-id={msg.ChatContentID}
+                  >
+                    <p className={`message-text ${msg.DisplayFlag == 0 ? 'off' : 'on'}`}>{msg.Content}</p>
+                    {msg.Image && (
+                      <img
+                        src={`https://loopplus.mydns.jp/${msg.Image}`}
+                        alt="メッセージ画像"
+                        className="message-image"
+                      />
+                    )}
+                  </div>
+                  <div className="span-time">
+                    <span className="message-time">{formattedTime}</span>
+                  </div>
                 </div>
-                <div className="span-time">
-                  <span className="message-time">{formattedTime}</span>
-                </div>
+              
               </div>
             </div>
           );
