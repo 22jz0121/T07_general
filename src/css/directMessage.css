@@ -190,6 +190,7 @@
   align-self: flex-end; /* Aligns messages to the right */
   flex-direction: row-reverse;
   margin-left: auto;
+  display: flex;
 }
 
   
@@ -197,6 +198,7 @@
 .message-wrapper.left {
   align-self: flex-start; /* Aligns messages to the left */
   flex-direction: row;
+  display: flex;
 }
   
 /* Message bubble styling */
