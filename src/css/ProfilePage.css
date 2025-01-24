@@ -112,13 +112,11 @@
   margin-bottom: 60px;
 }
 
-.mypageitempull select {
+/* .mypageitempull select {
   padding: 10px;
-}
+} */
 
 #tradeFlag {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
@@ -126,4 +124,41 @@
   padding: 10px;
   transition: border-color .3s;
   /* margin-bottom: 10px; */
+}
+
+.mypageitempull {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  margin: 137px auto 0; /* 上部137px、左右自動で中央寄せ */
+  width: 95%;
+}
+
+.mypageitempull::after {
+  position: absolute;
+  right: 15px;
+  width: 10px;
+  height: 7px;
+  background-color: #535353;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: '';
+  pointer-events: none;
+}
+
+.mypageitempull select {
+  width: 100%;
+  appearance: none;
+  min-width: 230px;
+  height: 2.8em;
+  padding: .4em calc(.8em + 30px) .4em .8em;
+  border: none;
+  border-bottom: 2px solid #d0d0d0;
+  background-color: #fff;
+  color: #333333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.mypageitempull select:focus {
+  outline: none;
 }
