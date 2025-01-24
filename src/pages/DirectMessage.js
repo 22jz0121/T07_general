@@ -624,7 +624,7 @@ useEffect(() => {
                   onClick={() => {
                     // クリックで削除機能を呼び出す
                     if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                      deleteMessage(msg.ChatContentID);
+                      handleLongPress(msg.ChatContentID);
                     }
                   }}
                 />
