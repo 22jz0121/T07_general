@@ -184,6 +184,9 @@ const ProfilePage = () => {
         body: JSON.stringify(updatedProfile),
         credentials: 'include', // 必要に応じてクッキーを送信
       });
+      if(!response.ok) {
+        alert('対応していない形式の画像\nもしくは容量が大きすぎます。')
+      }
       const data = await response.json(); // JSONデータを取得
       if (data.status == 'success') {
         sessionStorage.setItem('MyProfPic', data.ProfilePicture);
