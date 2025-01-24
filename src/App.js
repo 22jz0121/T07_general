@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Top from './pages/top';
 import ItemList from './components/ItemList';
 import ListingDetail from './components/ListingDetail';
