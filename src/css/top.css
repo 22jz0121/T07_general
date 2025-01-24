@@ -107,7 +107,10 @@ body {
 }
 
 .listing {
-    padding: 10px;
+    display: flex; /* フレックスボックスを使用 */
+    flex-direction: column; /* 縦に並べる */
+    align-items: center; /* 中央寄せ */
+    padding: 10px; /* 必要に応じてパディングを追加 */
     padding-bottom: 60px;
 }
 
@@ -358,8 +361,8 @@ body {
     display: inline-flex;
     align-items: center;
     position: relative;
-    margin-top: 137px;
-    width: 80%;
+    margin: 137px auto 0; /* 上部137px、左右自動で中央寄せ */
+    width: 95%;
 }
 
 .select-container::after {
@@ -374,6 +377,7 @@ body {
 }
 
 .select-container select {
+    width: 100%;
     appearance: none;
     min-width: 230px;
     height: 2.8em;
@@ -389,6 +393,8 @@ body {
 .select-container select:focus {
     outline: none;
 }
+
+
 
 /* 
  .select-container {
