@@ -184,7 +184,7 @@ const ProfilePage = () => {
         body: JSON.stringify(updatedProfile),
         credentials: 'include', // 必要に応じてクッキーを送信
       });
-      if(!response.ok) {
+      if (!response.ok) {
         alert('対応していない形式の画像\nもしくは容量が大きすぎます。')
       }
       const data = await response.json(); // JSONデータを取得
@@ -317,7 +317,7 @@ const ProfilePage = () => {
 
 
 
-  
+
   return (
     <div className="profile-page">
       {/* Top Navigation */}
@@ -388,7 +388,7 @@ const ProfilePage = () => {
       <div className="tab-content">
         {activeTab === 'listing' ? (
           <div>
-            <div className="mypageitempull">
+            <div className="pull-container">
               <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
                 <option value={0}>出品中</option>
                 <option value={1}>取引中</option>

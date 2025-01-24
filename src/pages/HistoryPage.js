@@ -84,18 +84,28 @@ const HistoryPage = () => {
     }
   };
 
-  // 現在のタブとプルダウンの状態に基づいて取引履歴をフィルタリング
+  // ステート管理にselectedTradeFlagを追加
+  const [selectedTradeFlag, setSelectedTradeFlag] = useState(1); // 初期値を1（取引中）に設定
+
+  // プルダウンメニューの値変更時に呼び出される関数
+  const handleTradeFlagChange = (event) => {
+    const value = parseInt(event.target.value, 10); // プルダウンの選択値を取得
+    setSelectedTradeFlag(value); // ステートを更新
+    setItemFilter(value === 1 ? 'ongoing' : 'completed'); // フィルタを変更
+  };
+
+  // フィルタリング部分の修正（「出品中」を削除）
   const filteredItems = items.filter(item => {
-    const isOngoing = itemFilter === 'ongoing' && item.TradeFlag === 1;
-    const isCompleted = itemFilter === 'completed' && item.TradeFlag === 2;
+    const isOngoing = selectedTradeFlag === 1 && item.TradeFlag === 1; // 取引中
+    const isCompleted = selectedTradeFlag === 2 && item.TradeFlag === 2; // 取引完了
 
     const isOthersItem = item.TraderID === parseInt(myID); // 他人が出品した商品
     const isMyItem = item.UserID === parseInt(myID); // 自分が出品した商品
 
     if (activeTab === 'others' && isOthersItem) {
-      return isOngoing || isCompleted;
+      return isOngoing || isCompleted; // 選択された取引状態に一致
     } else if (activeTab === 'myItems' && isMyItem) {
-      return isOngoing || isCompleted;
+      return isOngoing || isCompleted; // 選択された取引状態に一致
     }
     return false;
   }).sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt)); // 新しい順にソート
@@ -127,14 +137,10 @@ const HistoryPage = () => {
       </div>
 
       {/* プルダウンメニュー */}
-      <div className="filter-dropdown">
-        <select
-          id="item-filter"
-          value={itemFilter}
-          onChange={(e) => setItemFilter(e.target.value)}
-        >
-          <option value="ongoing">取引中</option>
-          <option value="completed">取引完了</option>
+      <div className="pull-container">
+        <select id="tradeFlag" value={selectedTradeFlag} onChange={handleTradeFlagChange}>
+          <option value={1}>取引中</option>
+          <option value={2}>取引完了</option>
         </select>
       </div>
 

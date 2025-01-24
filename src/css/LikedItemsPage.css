@@ -23,23 +23,39 @@
     border-bottom: 1px solid #ddd;
 }
 
-.selects-container select {
-    margin-top: 15px;
-    margin-left: 20px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc; /* ボーダーの色 */
-    border-radius: 4px; /* 角を丸くする */
-    background-color: #f9f9f9; /* 背景色 */
-    cursor: pointer; /* カーソルをポインターに */
-    transition: border-color 0.3s; /* ボーダーの色の変化にトランジションを追加 */
-  }
-  
-  .select-container select:hover {
-    border-color: #888; /* ホバー時のボーダーの色 */
-  }
-  
-  .select-container select:focus {
-    outline: none; /* フォーカス時のアウトラインを消す */
-    border-color: #007bff; /* フォーカス時のボーダーの色 */
-  }
+.pull-container::after {
+  position: absolute;
+  right: 15px;
+  width: 10px;
+  height: 7px;
+  background-color: #535353;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: '';
+  pointer-events: none;
+}
+
+.pull-container select {
+  width: 100%;
+  appearance: none;
+  min-width: 230px;
+  height: 2.8em;
+  padding: .4em calc(.8em + 30px) .4em .8em;
+  border: none;
+  border-bottom: 2px solid #d0d0d0;
+  background-color: #fff;
+  color: #333333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.pull-container select:focus {
+  outline: none;
+}
+
+.pull-container {
+  align-items: center;
+  display: inline-flex;
+  position: relative;
+  width: 95%;
+  margin: 10px 10px 0px 10px;
+}
