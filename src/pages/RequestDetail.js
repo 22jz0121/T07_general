@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Send as SendIcon, ArrowBack as ArrowBackIcon, Add as AddIcon } from '@mui/icons-material';
@@ -21,44 +21,57 @@ function RequestDetail() {
       try {
         setLoading(true);
 
-        // Fetch current user first
+        // 現在のユーザー情報を取得
         const userResponse = await fetch('https://loopplus.mydns.jp/api/whoami', { credentials: 'include' });
         if (!userResponse.ok) throw new Error('Failed to fetch current user');
         const userData = await userResponse.json();
-        setCurrentUser(userData); // Store current user's UserID
+        setCurrentUser(userData);
 
-        // Fetch request data
+        // リクエストデータの取得
         if (location.state) {
           const { id, userId, name, time, content, imageSrc, userIcon } = location.state;
           setRequest({
             id, UserID: userId, UserName: name, CreatedAt: time, RequestContent: content, RequestImage: imageSrc, UserIcon: userIcon
           });
-        }
-        else {
+        } else {
           const requestResponse = await fetch(`https://loopplus.mydns.jp/api/request/${id}`);
           if (!requestResponse.ok) throw new Error('ログインセッションが切れています。ログインし直してください。');
           const requestData = await requestResponse.json();
           setRequest(requestData);
         }
 
-        // Fetch comments
+        // コメントデータを取得
         const commentsResponse = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`);
         if (!commentsResponse.ok) throw new Error('Failed to fetch comments');
         const commentsData = await commentsResponse.json();
 
-        // Fetch user info for each comment
-        const updatedComments = await Promise.all(
-          commentsData.map(async (comment) => {
-            const userResponse = await fetch(`https://loopplus.mydns.jp/api/user/${comment.UserID}`);
-            if (!userResponse.ok) throw new Error('Failed to fetch user info');
-            const userData = await userResponse.json();
-            return {
-              ...comment,
-              UserName: userData.Username,
-              UserIcon: userData.Icon,
-            };
-          })
-        );
+        // **まとめてフェッチ**：すべてのコメントに関連するユーザー情報を並列で取得
+        const userIds = [...new Set(commentsData.map(comment => comment.UserID))]; // 重複を排除したユーザーIDリスト
+        const userFetchPromises = userIds.map(async (userId) => {
+          const userResponse = await fetch(`https://loopplus.mydns.jp/api/user/${userId}`);
+          if (!userResponse.ok) throw new Error(`Failed to fetch user info for UserID: ${userId}`);
+          const userData = await userResponse.json();
+          return { userId, ...userData };
+        });
+
+        // すべてのユーザーデータを取得
+        const userDetails = await Promise.all(userFetchPromises);
+
+        // ユーザーIDをキーにしたマップを作成
+        const userMap = userDetails.reduce((map, user) => {
+          map[user.userId] = {
+            UserName: user.Username,
+            UserIcon: user.Icon,
+          };
+          return map;
+        }, {});
+
+        // コメントデータにユーザー情報を結合
+        const updatedComments = commentsData.map(comment => ({
+          ...comment,
+          UserName: userMap[comment.UserID]?.UserName || '不明',
+          UserIcon: userMap[comment.UserID]?.UserIcon || null,
+        }));
 
         setComments(updatedComments);
       } catch (err) {
@@ -73,16 +86,24 @@ function RequestDetail() {
 
   const [isSubmitting, setIsSubmitting] = useState(false); // 送信中の状態管理
 
+  // コメントセクションのリファレンスを作成
+  const commentsEndRef = useRef(null);
+
+  // コメントを送信した後に呼び出すスクロール関数
+  const scrollToBottom = () => {
+    commentsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // コメント送信後の処理にスクロールを追加
   const handleCommentSubmit = async () => {
-    if (isSubmitting || !newComment.trim()) return; // 送信中またはコメントが空の場合は処理しない
-  
+    if (isSubmitting || !newComment.trim()) return;
+
     const confirmPost = window.confirm('このコメントを投稿しますか？');
-    if (!confirmPost) {
-      return; // ユーザーがキャンセルを選択
-    }
-  
+    if (!confirmPost) return;
+
     try {
-      setIsSubmitting(true); // 送信処理開始
+      setIsSubmitting(true);
+
       const response = await fetch(`https://loopplus.mydns.jp/api/request/${id}/comment`, {
         method: 'POST',
         headers: {
@@ -91,14 +112,14 @@ function RequestDetail() {
         body: JSON.stringify({ text: newComment }),
         credentials: 'include',
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`コメントの送信に失敗しました: ${errorData.message || '不明なエラー'}`);
       }
-  
+
       const createdComment = await response.json();
-  
+
       const newCommentData = {
         ReplyID: createdComment.ReplyID || new Date().getTime(),
         UserID: currentUser.UserID,
@@ -107,16 +128,17 @@ function RequestDetail() {
         ReplyContent: newComment,
         CreatedAt: new Date().toISOString(),
       };
-  
+
       setComments((prevComments) => [...prevComments, newCommentData]);
       setNewComment('');
+      scrollToBottom(); // コメント追加後にスクロール
     } catch (err) {
       console.error('コメント送信エラー:', err.message);
     } finally {
-      setIsSubmitting(false); // 送信処理終了
+      setIsSubmitting(false);
     }
   };
- 
+
   const getIconSrc = (iconPath) => {
     return iconPath && iconPath.startsWith('storage/images/')
       ? `https://loopplus.mydns.jp/${iconPath}`
