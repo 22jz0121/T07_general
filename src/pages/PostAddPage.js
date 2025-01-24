@@ -56,7 +56,9 @@ function PostAddPage({ onRequestAdded }) {
       setIsSubmitting(true); // 送信中フラグをオン
       const formData = new FormData();
       formData.append('RequestContent', postText);
-      formData.append('RequestImage', image);
+      if(image) {
+        formData.append('RequestImage', image);
+      }
 
       try {
         const response = await fetch('https://loopplus.mydns.jp/api/request', {
