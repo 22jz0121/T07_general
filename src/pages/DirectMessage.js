@@ -607,14 +607,20 @@ useEffect(() => {
           // }
 
           return (
-            <div key={msg.ChatContentID}>
+            <div key={msg.ChatContentID} className='message-div'>
               {showDate && <div className="date-message">{formattedDateMessage}</div>} {/* 日付の表示 */}
               <div
                 className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
                 onContextMenu={(e) => {
                   e.preventDefault();
-                  {/* 透明なdivを追加 */}
-                  <div
+                  
+                  // if (msg.UserID === myId && msg.DisplayFlag === 1) {
+                  //   handleLongPress(msg.ChatContentID);
+                  // }
+                }}
+              >
+                {/* 透明なdivを追加 */}
+                <div
                   className="delete-overlay"
                   onClick={() => {
                     // クリックで削除機能を呼び出す
@@ -623,12 +629,6 @@ useEffect(() => {
                     }
                   }}
                 />
-                  // if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                  //   handleLongPress(msg.ChatContentID);
-                  // }
-                }}
-              >
-                
                 <div className="message-bubble"
                   data-chat-content-id={msg.ChatContentID}
                 >

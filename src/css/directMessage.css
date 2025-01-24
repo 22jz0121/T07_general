@@ -168,6 +168,9 @@
   display: flex;
   flex-direction: column;
 } */
+ .message-div {
+  display: flex;
+ }
 .message-wrapper {
   position: relative; /* 相対位置を設定 */
 }
