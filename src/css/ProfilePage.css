@@ -163,3 +163,40 @@
 .mypageitempull select:focus {
   outline: none;
 }
+
+.pulls-container::after {
+  position: absolute;
+  right: 15px;
+  width: 10px;
+  height: 7px;
+  background-color: #535353;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: '';
+  pointer-events: none;
+}
+
+.pulls-container select {
+  width: 100%;
+  appearance: none;
+  min-width: 230px;
+  height: 2.8em;
+  padding: .4em calc(.8em + 30px) .4em .8em;
+  border: none;
+  border-bottom: 2px solid #d0d0d0;
+  background-color: #fff;
+  color: #333333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.pulls-container select:focus {
+  outline: none;
+}
+
+.pulls-container {
+  align-items: center;
+  display: inline-flex;
+  position: relative;
+  width: 95%;
+  margin: 10px;
+}
