@@ -151,7 +151,6 @@ const HistoryPage = () => {
           filteredItems.map(item => (
             <div
               key={item.ItemID}
-              onClick={() => navigate(`/listing/${item.ItemID}`)} // 商品ページへ遷移
               style={{ cursor: 'pointer' }}
             >
               <Item
