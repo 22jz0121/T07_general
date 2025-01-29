@@ -43,6 +43,7 @@ function TransactionProcedure() {
         }
   
         const data = await createRoomResponse.json();
+        const item = data.Items;
         console.log(data.roomId);
         if (data.roomId) {
           console.log('data.roomId', data.roomId);
@@ -53,7 +54,7 @@ function TransactionProcedure() {
 
           alert('メッセージを送信しました！');
 
-          navigate(`/dm/${data.roomId}`, { state: { name, itemName, itemId, userId }}); // 新しく取得したroomIdを使用
+          navigate(`/dm/${data.roomId}`, { state: { name, item, userId }}); // 新しく取得したroomIdを使用
 
           await sendPushNotification(data.roomId);// ここでプッシュ通知を送信
         } else if (data.status === 'error') {

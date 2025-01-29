@@ -542,6 +542,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               <span className={`item-status`}>
                 現在 
                 <select
+                  className='selectbox-3'
                   value={selectedItemId}
                   onChange={(e) => {
                     const selectedId = e.target.value;
@@ -571,6 +572,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
+                    className='selectbox-3'
                     value={selectedItemId}
                     onChange={(e) => {
                       const selectedId = e.target.value;
@@ -606,6 +608,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               <span>
                 現在 
                 <select
+                  className='selectbox-3'
                   value={selectedItemId}
                   onChange={(e) => {
                     const selectedId = e.target.value;
@@ -633,6 +636,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               <span className={`item-status`}>
                 現在 
                 <select
+                  className='selectbox-3'
                   value={selectedItemId}
                   onChange={(e) => {
                     const selectedId = e.target.value; // e.target.valueは文字列
