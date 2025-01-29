@@ -22,7 +22,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   const itemName = item[0]?.ItemName;
   const itemId = item[0]?.ItemID;
   const hostUserId = item[0]?.UserID;
-  
+
   // プルダウンで選択されたアイテムのIDと名前の状態を管理
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [selectedItemName, setSelectedItemName] = useState('');
@@ -176,7 +176,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
 
   useEffect(() => {
     const fetchnewData = async () => {
-      if(selectedItemId == null) {
+      if (selectedItemId == null) {
         setSelectedItemId(itemId);
       }
       await fetchTraderId(); // traderIDを取得
@@ -531,6 +531,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
         <h1 className="page-title">{name}</h1>
       </div>
 
+      <details>
       <div className="top-buttons">
         {isLoaded && (
           <>
@@ -540,29 +541,31 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               </span>
             ) : selectedhostUserId === myId && TraderID === null ? (//自分が出品者かつ引き渡し予定者がいないとき--------------------------------------------------------------------------------
               <span className={`item-status`}>
-                現在 
-                <select
-                  className='selectbox-3'
-                  value={selectedItemId}
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    setSelectedItemId(selectedId); // 選択されたIDを設定
+                <div className='item-status-div'>
+                  現在
+                  <select
+                    className='selectbox-3'
+                    value={selectedItemId}
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      setSelectedItemId(selectedId); // 選択されたIDを設定
 
-                    // 選択されたアイテムを見つける
-                    const selectedItem = item.find(i => i.ItemID == selectedId);
-                    setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                    console.log(selectedhostUserId);
-                  }}
-                >
-                  {item.map((i) => (
-                    <option key={i.ItemID} value={i.ItemID}>
-                      {i.ItemName}
-                    </option>
-                  ))}
-                </select>
-                を取引しています
-                <br />
+                      // 選択されたアイテムを見つける
+                      const selectedItem = item.find(i => i.ItemID == selectedId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                      console.log(selectedhostUserId);
+                    }}
+                  >
+                    {item.map((i) => (
+                      <option key={i.ItemID} value={i.ItemID}>
+                        {i.ItemName}
+                      </option>
+                    ))}
+                  </select>
+                  を取引しています
+                  <br />
+                </div>
                 <button className="top-button primary" onClick={handleSetTrader} disabled={isProcessing}>
                   引渡し予定者にする
                 </button>
@@ -602,62 +605,66 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                     取引を完了する
                   </button>
                 </>
-                
+
               </span>
             ) : selectedhostUserId !== myId && TraderID === myId ? (//自分が引き渡し予定者の時-----------------------------------------------------------------------------------------
               <span>
-                現在 
-                <select
-                  className='selectbox-3'
-                  value={selectedItemId}
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    setSelectedItemId(selectedId); // 選択されたIDを設定
+                <div className='item-status-div'>
+                  現在
+                  <select
+                    className='selectbox-3'
+                    value={selectedItemId}
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      setSelectedItemId(selectedId); // 選択されたIDを設定
 
-                    // 選択されたアイテムを見つける
-                    const selectedItem = item.find(i => i.ItemID == selectedId);
-                    setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                    console.log(selectedhostUserId);
-                  }}
-                >
-                  {item.map((i) => (
-                    <option key={i.ItemID} value={i.ItemID}>
-                      {i.ItemName}
-                    </option>
-                  ))}
-                </select> 
-                の引渡し予定者に選ばれています
+                      // 選択されたアイテムを見つける
+                      const selectedItem = item.find(i => i.ItemID == selectedId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                      console.log(selectedhostUserId);
+                    }}
+                  >
+                    {item.map((i) => (
+                      <option key={i.ItemID} value={i.ItemID}>
+                        {i.ItemName}
+                      </option>
+                    ))}
+                  </select>
+                  の引渡し予定者に選ばれています
+                </div>
                 <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
                   取引をキャンセルする
                 </button>
               </span>
             ) : selectedhostUserId !== myId && TraderID === null && itemId !== null ? (//自分が取引希望者かつ引き渡し予定者未定の時---------------------------------------------------------
               <span className={`item-status`}>
-                現在 
-                <select
-                  className='selectbox-3'
-                  value={selectedItemId}
-                  onChange={(e) => {
-                    const selectedId = e.target.value; // e.target.valueは文字列
-                    setSelectedItemId(selectedId);
-                    
-                    // selectedIdを数値に変換して比較
-                    const selectedItem = item.find(i => i.ItemID == selectedId);
-                    console.log(selectedItem); // 選択されたアイテムをログ出力
-                    setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
-                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                    console.log(selectedhostUserId);
-                  }}
-                >
-                  {item.map((i) => (
-                    <option key={i.ItemID} value={i.ItemID}>
-                      {i.ItemName}
-                    </option>
-                  ))}
-                </select>
-                を取引しています
-                <br />
+                <div className='item-status-div'>
+                  現在
+                  <select
+                    className='selectbox-3'
+                    value={selectedItemId}
+                    onChange={(e) => {
+                      const selectedId = e.target.value; // e.target.valueは文字列
+                      setSelectedItemId(selectedId);
+
+                      // selectedIdを数値に変換して比較
+                      const selectedItem = item.find(i => i.ItemID == selectedId);
+                      console.log(selectedItem); // 選択されたアイテムをログ出力
+                      setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                      console.log(selectedhostUserId);
+                    }}
+                  >
+                    {item.map((i) => (
+                      <option key={i.ItemID} value={i.ItemID}>
+                        {i.ItemName}
+                      </option>
+                    ))}
+                  </select>
+                  を取引しています
+                  <br />
+                </div>
                 <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
                   取引をキャンセルする
                 </button>
@@ -670,6 +677,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
           </>
         )}
       </div>
+      </details>
 
 
       <div className="dm-messages">
@@ -740,7 +748,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                     <span className="message-time">{formattedTime}</span>
                   </div>
                 </div>
-              
+
               </div>
             </div>
           );
