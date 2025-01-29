@@ -66,6 +66,7 @@ function GoogleCallback({ setIsFooterVisible }) {
     <div className="google-callback-container">
       <img src='/logo.png' alt="Logo" width="100" id="logos" />
       <h1>LOOP+へようこそ</h1>
+      <img src='/wel_cat.gif'alt="gif" width="120" id="wel_gifs"></img>
     </div>
   );
 }
