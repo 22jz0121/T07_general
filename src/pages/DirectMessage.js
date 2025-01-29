@@ -516,7 +516,6 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //---------------------------------------------------
   const handleSwipe = useSwipeable({
     onSwiped: (event) => {
-        console.log(event);
         if (event.dir == "Up") {
           setIsShown(false)
         }

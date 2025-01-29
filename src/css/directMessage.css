@@ -91,7 +91,7 @@
   z-index: 1000; /* 他の要素の上に表示 */
 
   transform: scale(0);
-  transform-origin: top left;
+  transform-origin: top 50%;
 
   transition: transform 0.2s;
   
@@ -102,15 +102,21 @@
 
 .hidebutton {
   position: fixed;
+  width: 100%;
   z-index: 1000; 
   transform: scale(1);
-  transform-origin: top left;
+  transform-origin: top 50%;
 
   transition: transform 0.2s;
   
   &.shown {
     transform: scale(0);
   }
+}
+
+.hidebutton button {
+  width: 20%;
+  text-align: center;
 }
 
 .top-button.primary {
