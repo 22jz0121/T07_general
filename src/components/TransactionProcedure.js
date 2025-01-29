@@ -58,7 +58,7 @@ function TransactionProcedure() {
 
           await sendPushNotification(data.roomId);// ここでプッシュ通知を送信
         } else if (data.status === 'error') {
-          alert('そのユーザーとは現在取引中です。');
+          alert('その物品は現在取引中です。');
         } else {
           throw new Error('チャットIDが取得できませんでした。');
         }

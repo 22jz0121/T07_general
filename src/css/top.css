@@ -334,7 +334,7 @@ body {
   }
   .loading img {
     max-width: 90%;
-    /* max-height: 100px; */
+    max-height: 80%;
   }
 
   .remove-button {
