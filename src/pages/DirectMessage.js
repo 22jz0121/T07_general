@@ -514,16 +514,20 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //--------------------------------------------------
   //　　　　　　スワイプ時の処理
   //---------------------------------------------------
-  // スワイプハンドラーを定義
   const handleSwipe = useSwipeable({
     onSwiped: (event) => {
-      console.log(event);
-      if (event.dir == "") {
-        console.log('読み込みなおそうとしたな！貴様！')
-      }
+        console.log(event);
+        if (event.dir == "Up") {
+          setIsShown(false)
+        }
     },
     trackMouse: true, //マウス操作でのスワイプを許可する場合はtrue
   });
+
+
+  const handleToggleButtonClick = () => {
+    setIsShown(true)
+  }
 
   return (
     <div className="dm-container">
@@ -534,8 +538,13 @@ const DirectMessage = ({ setIsFooterVisible }) => {
         <h1 className="page-title">{name}</h1>
       </div>
 
-      <details>
-      <div className={`top-buttons ${isShown ? 'shown' : ''}`}>
+      <div className={`hidebutton ${isShown ? 'shown' : ''}`}>
+        <button onClick={handleToggleButtonClick}>
+          ヘッダーを出すよ～ん
+        </button>
+      </div>
+
+      <div className={`top-buttons ${isShown ? 'shown' : ''}`} {...handleSwipe}>
         {isLoaded && (
           <>
             {itemId == null ? (//取引中のアイテムがないとき---------------------------------------------------------------------------------------------------------------------------
@@ -680,8 +689,6 @@ const DirectMessage = ({ setIsFooterVisible }) => {
           </>
         )}
       </div>
-      </details>
-
 
       <div className="dm-messages">
         {messages.map((msg, index) => {
