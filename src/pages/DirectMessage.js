@@ -38,7 +38,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   const [TraderID, setTraderId] = useState(undefined); // traderIdを状態として管理
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentItemId, setCurrentItemId] = useState(itemId); // itemIdを状態として管理
- 
+
   //ヘッダー表示フラグ
   const [isShown, setIsShown] = useState(false)
 
@@ -516,9 +516,9 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //---------------------------------------------------
   const handleSwipe = useSwipeable({
     onSwiped: (event) => {
-        if (event.dir == "Up") {
-          setIsShown(false)
-        }
+      if (event.dir == "Up") {
+        setIsShown(false)
+      }
     },
     trackMouse: true, //マウス操作でのスワイプを許可する場合はtrue
   });
@@ -538,8 +538,8 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       </div>
 
       <div className={`hidebutton ${isShown ? 'shown' : ''}`}>
-        <button onClick={handleToggleButtonClick}>
-          ヘッダーを出すよ～ん
+        <button onClick={handleToggleButtonClick} className="button bgtop">
+          <span>取引情報を表示 ▼</span>
         </button>
       </div>
 

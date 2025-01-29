@@ -91,7 +91,7 @@
   z-index: 1000; /* 他の要素の上に表示 */
 
   transform: scale(0);
-  transform-origin: top 50%;
+  transform-origin: top left;
 
   transition: transform 0.2s;
   
@@ -413,22 +413,59 @@
   cursor: pointer;
 }
 
-.details-div {
-  position: fixed;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
+button.hidebuttons {
   position: relative;
-  width: 300px;
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+  max-width: 250px;
+  background: #FFFFFF;
+  margin: auto;
+  padding: 10px 30px;
+  font-family: "Noto Sans Japanese", sans-serif;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.8;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: ease 0.2s;
+  -webkit-text-size-adjust: 100%;
+  margin-top: 5px;
+
 }
 
-.arrows {
+.button.hidebuttons span {
+  position: relative;
+  z-index: 3;
+  color: #333;
+  -webkit-text-size-adjust: 100%;
+
+}
+
+.button.hidebuttons span {
+  color: #fff;
+  -webkit-text-size-adjust: 100%;
+
+}
+
+.bgtop::before {
+  content: '';
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
-  border-left: 2px solid black;
-  border-bottom: 2px solid black;
-  transform: rotate(-45deg);
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background: #333;
+  width: 100%;
+  height: 0;
+  transition: 0.3s cubic-bezier(0.8, 0, 0.2, 1) 0s;
+  -webkit-text-size-adjust: 100%;
+
+}
+
+.bgtop:hover::before {
+  height: 100%;
+  background-color: #333;
+  -webkit-text-size-adjust: 100%;
+
 }
