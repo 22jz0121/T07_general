@@ -531,7 +531,6 @@ const DirectMessage = ({ setIsFooterVisible }) => {
         <h1 className="page-title">{name}</h1>
       </div>
 
-      <details>
       <div className="top-buttons">
         {isLoaded && (
           <>
@@ -677,8 +676,6 @@ const DirectMessage = ({ setIsFooterVisible }) => {
           </>
         )}
       </div>
-      </details>
-
 
       <div className="dm-messages">
         {messages.map((msg, index) => {
