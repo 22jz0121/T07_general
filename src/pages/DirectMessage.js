@@ -550,7 +550,8 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                     // 選択されたアイテムを見つける
                     const selectedItem = item.find(i => i.ItemID == selectedId);
                     setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                    setSelectedhostUserId(selectedItem ? selectedItem.ItemName : '')
+                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                    console.log(selectedhostUserId);
                   }}
                 >
                   {item.map((i) => (
@@ -567,34 +568,37 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               </span>
             ) : TraderID === otherUserId ? (//相手が引き渡し予定者の時---------------------------------------------------------------------------------------------------------------
               <span className={`item-status`}>
-                現在
-                <select
-                  value={selectedItemId}
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    setSelectedItemId(selectedId); // 選択されたIDを設定
+                <div className='item-status-div'>
+                  現在
+                  <select
+                    value={selectedItemId}
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      setSelectedItemId(selectedId); // 選択されたIDを設定
 
-                    // 選択されたアイテムを見つける
-                    const selectedItem = item.find(i => i.ItemID == selectedId);
-                    setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                  }}
-                >
-                  {item.map((i) => (
-                    <option key={i.ItemID} value={i.ItemID}>
-                      {i.ItemName}
-                    </option>
-                  ))}
-                </select>
-                を取引しています
-                <br />
-                <>
-                  <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
-                    取引を中止する
-                  </button>
-                  <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
-                    取引を完了する
-                  </button>
-                </>
+                      // 選択されたアイテムを見つける
+                      const selectedItem = item.find(i => i.ItemID == selectedId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                    }}
+                  >
+                    {item.map((i) => (
+                      <option key={i.ItemID} value={i.ItemID}>
+                        {i.ItemName}
+                      </option>
+                    ))}
+                  </select>
+                  を取引しています
+                  <br />
+                  <>
+                    <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
+                      取引を中止する
+                    </button>
+                    <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
+                      取引を完了する
+                    </button>
+                  </>
+                </div>
+                
               </span>
             ) : hostUserId !== myId && TraderID === myId ? (//自分が引き渡し予定者の時-----------------------------------------------------------------------------------------
               <span>
