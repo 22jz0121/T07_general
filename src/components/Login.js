@@ -18,6 +18,7 @@ const Login = ({ setIsFooterVisible }) => {
   return (
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
       <div className='login-form'>
+        <img src='/Login_cat.gif'alt="gif" width="120" id="Login_gifs"></img>
         <img src='/logo.png' alt="Logo" width="100" id="logo"/>
         <div className='login-button'>
           <button onClick={handleButtonClick} >
