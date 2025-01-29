@@ -538,7 +538,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               <span className="item-status">
                 現在取引中の物品はありません
               </span>
-            ) : hostUserId === myId && TraderID === null ? (//自分が出品者かつ引き渡し予定者がいないとき--------------------------------------------------------------------------------
+            ) : selectedhostUserId === myId && TraderID === null ? (//自分が出品者かつ引き渡し予定者がいないとき--------------------------------------------------------------------------------
               <span className={`item-status`}>
                 現在 
                 <select
@@ -579,6 +579,8 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                       // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
                       setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                      console.log(selectedhostUserId);
                     }}
                   >
                     {item.map((i) => (
@@ -589,18 +591,18 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                   </select>
                   を取引しています
                   <br />
-                  <>
-                    <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
-                      取引を中止する
-                    </button>
-                    <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
-                      取引を完了する
-                    </button>
-                  </>
                 </div>
+                <>
+                  <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
+                    取引を中止する
+                  </button>
+                  <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
+                    取引を完了する
+                  </button>
+                </>
                 
               </span>
-            ) : hostUserId !== myId && TraderID === myId ? (//自分が引き渡し予定者の時-----------------------------------------------------------------------------------------
+            ) : selectedhostUserId !== myId && TraderID === myId ? (//自分が引き渡し予定者の時-----------------------------------------------------------------------------------------
               <span>
                 現在 
                 <select
@@ -612,6 +614,8 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                     // 選択されたアイテムを見つける
                     const selectedItem = item.find(i => i.ItemID == selectedId);
                     setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                    console.log(selectedhostUserId);
                   }}
                 >
                   {item.map((i) => (
@@ -625,7 +629,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                   取引をキャンセルする
                 </button>
               </span>
-            ) : hostUserId !== myId && TraderID === null && itemId !== null ? (//自分が取引希望者かつ引き渡し予定者未定の時---------------------------------------------------------
+            ) : selectedhostUserId !== myId && TraderID === null && itemId !== null ? (//自分が取引希望者かつ引き渡し予定者未定の時---------------------------------------------------------
               <span className={`item-status`}>
                 現在 
                 <select
@@ -638,6 +642,8 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                     const selectedItem = item.find(i => i.ItemID == selectedId);
                     console.log(selectedItem); // 選択されたアイテムをログ出力
                     setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
+                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                    console.log(selectedhostUserId);
                   }}
                 >
                   {item.map((i) => (
@@ -652,7 +658,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                   取引をキャンセルする
                 </button>
               </span>
-            ) : hostUserId !== myId && TraderID !== myId ? (//自分が取引希望者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
+            ) : selectedhostUserId !== myId && TraderID !== myId ? (//自分が取引希望者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
               <span>
                 現在他のユーザーが引渡し予定者に選ばれました
               </span>
