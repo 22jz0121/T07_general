@@ -17,7 +17,16 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { name, itemName, itemId, hostUserId, otherUserId } = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
+  // const { name, itemName, itemId, hostUserId, otherUserId } = location.state || {};//後で直す　ルームができたときに画面遷移したページは出品者のuserIdがhostUserIdと同じものだと認識できてない
+  const { name, item, otherUserId } = location.state || {};
+  const itemName = item[0]?.ItemName;
+  const itemId = item[0]?.ItemID;
+  const hostUserId = item[0]?.UserID;
+  
+  // プルダウンで選択されたアイテムのIDと名前の状態を管理
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [selectedItemName, setSelectedItemName] = useState('');
+
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -31,6 +40,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
 
   //Pusherの設定
   useEffect(() => {
+    console.log(item);
     const pusher = new Pusher('f155afe9e8a09487d9ea', {
       cluster: 'ap3',
     });
@@ -62,12 +72,21 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   }, [setIsFooterVisible]);
 
 
+  // アイテムがロードされたときに初期値を設定
+  useEffect(() => {
+    if (item && item.length > 0) {
+      setSelectedItemId(item[0].ItemID); // 最初のアイテムIDを初期値に設定
+      setSelectedItemName(item[0].ItemName); // 最初のアイテム名を初期値に設定
+    }
+  }, [item]);
+
+
 
   // itemIdを使ってtraderIDを取得する関数
   const fetchTraderId = async () => {
     if (itemId !== null) {
       try {
-        const response = await fetch(`https://loopplus.mydns.jp/api/item/${itemId}`);
+        const response = await fetch(`https://loopplus.mydns.jp/api/item/${selectedItemId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -106,46 +125,46 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   //　自動スクロールの条件
   //---------------------------------------------------
   // 初回ロード時とメッセージ更新後に限界までスクロールする
-useEffect(() => {
-  const forceScrollToBottom = () => {
-    const dmMessagesContainer = document.querySelector('.dm-messages');
-    if (dmMessagesContainer) {
-      dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
-    }
-  };
-
-  // 初回ロード時のスクロール（複数回試行）
-  setTimeout(forceScrollToBottom, 100);  // 100ms後
-  setTimeout(forceScrollToBottom, 300);  // 300ms後
-  setTimeout(forceScrollToBottom, 500);  // 500ms後
-}, []);  // 初回ロード時のみ
-
-useEffect(() => {
-  const scrollToBottomWithRetries = () => {
-    const dmMessagesContainer = document.querySelector('.dm-messages');
-    if (dmMessagesContainer) {
-      // 強制スクロール処理
-      dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
-
-      // 少し遅延させてさらにスクロール位置を強制
-      setTimeout(() => {
+  useEffect(() => {
+    const forceScrollToBottom = () => {
+      const dmMessagesContainer = document.querySelector('.dm-messages');
+      if (dmMessagesContainer) {
         dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
-        if (messageEndRef.current) {
-          messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
+      }
+    };
 
-  scrollToBottomWithRetries();  // メッセージ更新時に確実にスクロール
-}, [messages]);
+    // 初回ロード時のスクロール（複数回試行）
+    setTimeout(forceScrollToBottom, 100);  // 100ms後
+    setTimeout(forceScrollToBottom, 300);  // 300ms後
+    setTimeout(forceScrollToBottom, 500);  // 500ms後
+  }, []);  // 初回ロード時のみ
+
+  useEffect(() => {
+    const scrollToBottomWithRetries = () => {
+      const dmMessagesContainer = document.querySelector('.dm-messages');
+      if (dmMessagesContainer) {
+        // 強制スクロール処理
+        dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
+
+        // 少し遅延させてさらにスクロール位置を強制
+        setTimeout(() => {
+          dmMessagesContainer.scrollTop = dmMessagesContainer.scrollHeight;
+          if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    };
+
+    scrollToBottomWithRetries();  // メッセージ更新時に確実にスクロール
+  }, [messages]);
 
 
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchTraderId(); // traderIDを取得
+      // await fetchTraderId(); // traderIDを取得
       await fetchChatMessages(); // チャットメッセージを取得
       setIsLoaded(true); // データの取得が完了したらisLoadedをtrueに設定
     };
@@ -153,6 +172,17 @@ useEffect(() => {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    const fetchnewData = async () => {
+      if(selectedItemId == null) {
+        setSelectedItemId(itemId);
+      }
+      await fetchTraderId(); // traderIDを取得
+      setIsLoaded(true); // データの取得が完了したらisLoadedをtrueに設定
+    };
+
+    fetchnewData();
+  }, [selectedItemId]);
 
   //--------------------------------------------------
   //　　　　　　なにこれ！！
@@ -263,7 +293,7 @@ useEffect(() => {
     setIsProcessing(true);
 
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${selectedItemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -284,7 +314,7 @@ useEffect(() => {
         sessionStorage.setItem('TraderID', otherUserId); // ローカルストレージを更新
         console.log('Trader set successfully');
         console.log('Other User ID:', otherUserId);
-        const message = `あなたが${itemName}の引渡し予定者に選ばれました。`;
+        const message = `あなたが${selectedItemName}の引渡し予定者に選ばれました。`;
 
         sendPushNotification(otherUserId, message);
       } else {
@@ -309,7 +339,7 @@ useEffect(() => {
 
     // 取引を中止する処理をここに追加
     try {
-      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${selectedItemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -352,7 +382,7 @@ useEffect(() => {
 
     try {
       // 取引を完了する処理
-      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${itemId}`, {
+      const response = await fetch(`https://loopplus.mydns.jp/api/item/flag/${selectedItemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -369,7 +399,7 @@ useEffect(() => {
       if (data.result === 'success') {
         // 取引完了後にチャットのitemIDをnullに更新
         console.log('chatID : ', id);
-        const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
+        const updateResponse = await fetch(`https://loopplus.mydns.jp/api/chat/delete/${selectedItemId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -412,13 +442,13 @@ useEffect(() => {
 
     try {
       // ItemIDをnullにする処理
-      const response = await fetch(`https://loopplus.mydns.jp/api/chat/${itemId}`, {
+      const response = await fetch(`https://loopplus.mydns.jp/api/chat/${selectedItemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({ ItemID: null }), // ここでItemIDをnullに設定
+        body: JSON.stringify({ ChatID: id }), // ここでItemIDをnullに設定
         credentials: 'include',
       });
 
@@ -490,7 +520,6 @@ useEffect(() => {
     trackMouse: true, //マウス操作でのスワイプを許可する場合はtrue
   });
 
-
   return (
     <div className="dm-container">
       <div className="top-navigation">
@@ -501,53 +530,103 @@ useEffect(() => {
       </div>
 
       <div className="top-buttons">
-        {isLoaded && ( // isLoadedがtrueのときのみ表示
+        {isLoaded && (
           <>
-            {itemId === null ? (
+            {itemId == null ? (//取引中のアイテムがないとき
               <span className="item-status">
                 現在取引中の物品はありません
               </span>
-            ) : hostUserId === myId && TraderID === null ? (
-              <button className="top-button primary"
-                onClick={handleSetTrader}
-                disabled={isProcessing}
-              >
-                引渡し予定者にする
-              </button>
+            ) : hostUserId === myId && TraderID === null ? (//自分が出品者かつ引き渡し予定者が
+              <span className={`item-status`}>
+                現在 
+                <select
+                  value={selectedItemId}
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    setSelectedItemId(selectedId); // 選択されたIDを設定
+
+                    // 選択されたアイテムを見つける
+                    const selectedItem = item.find(i => i.ItemID == selectedId);
+                    setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                  }}
+                >
+                  {item.map((i) => (
+                    <option key={i.ItemID} value={i.ItemID}>
+                      {i.ItemName}
+                    </option>
+                  ))}
+                </select>
+                を取引しています
+                <br />
+                <button className="top-button primary" onClick={handleSetTrader} disabled={isProcessing}>
+                  引渡し予定者にする
+                </button>
+              </span>
             ) : TraderID === otherUserId ? (
-              <>
-                <button
-                  className="top-button secondary"
-                  onClick={handleCancelTrade}
-                  disabled={isProcessing}
-                >
-                  取引を中止する
-                </button>
-                <button
-                  className="top-button success"
-                  onClick={handleCompleteTrade}
-                  disabled={isProcessing}
-                >
-                  取引を完了する
-                </button>
-              </>
+              <span className={`item-status`}>
+                現在{selectedItemName}を取引しています
+                <br />
+                <>
+                  <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
+                    取引を中止する
+                  </button>
+                  <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
+                    取引を完了する
+                  </button>
+                </>
+              </span>
             ) : hostUserId !== myId && TraderID === myId ? (
               <span>
-                現在 {itemName} の引渡し予定者に選ばれています
-              </span>
-            ) : hostUserId !== myId && TraderID === null && itemId !== null ? (
-              <span className={`item-status`}>
-                現在 {itemName} を取引しています
-                <br />
-                <button
-                  className="top-button-stop"
-                  onClick={handleSetItemIDNull} // ItemIDをnullにする関数を呼び出す
-                  disabled={isProcessing}
+                現在 
+                <select
+                  value={selectedItemId}
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    setSelectedItemId(selectedId); // 選択されたIDを設定
+
+                    // 選択されたアイテムを見つける
+                    const selectedItem = item.find(i => i.ItemID == selectedId);
+                    setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
+                  }}
                 >
+                  {item.map((i) => (
+                    <option key={i.ItemID} value={i.ItemID}>
+                      {i.ItemName}
+                    </option>
+                  ))}
+                </select> 
+                の引渡し予定者に選ばれています
+                <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
                   取引をキャンセルする
                 </button>
               </span>
-
+            ) : hostUserId !== myId && TraderID === null && itemId !== null ? (
+              <span className={`item-status`}>
+                現在 
+                <select
+                  value={selectedItemId}
+                  onChange={(e) => {
+                    const selectedId = e.target.value; // e.target.valueは文字列
+                    setSelectedItemId(selectedId);
+                    
+                    // selectedIdを数値に変換して比較
+                    const selectedItem = item.find(i => i.ItemID == selectedId);
+                    console.log(selectedItem); // 選択されたアイテムをログ出力
+                    setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
+                  }}
+                >
+                  {item.map((i) => (
+                    <option key={i.ItemID} value={i.ItemID}>
+                      {i.ItemName}
+                    </option>
+                  ))}
+                </select>
+                を取引しています
+                <br />
+                <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
+                  取引をキャンセルする
+                </button>
+              </span>
             ) : hostUserId !== myId && TraderID !== myId ? (
               <span>
                 現在他のユーザーが引渡し予定者に選ばれました
@@ -590,22 +669,6 @@ useEffect(() => {
             hour12: false,
           });
 
-          // if (
-          //     messageDate.getFullYear() === today.getFullYear() &&
-          //     messageDate.getMonth() === today.getMonth() &&
-          //     messageDate.getDate() === today.getDate()
-          // ) {
-          //     // 今日の場合
-          //     formattedTime = messageDate.toLocaleTimeString('ja-JP', {
-          //         hour: '2-digit',
-          //         minute: '2-digit',
-          //         hour12: false,
-          //     });
-          // } else {
-          //     // 今日以外の日付の場合
-          //     formattedTime = `${messageDate.getMonth() + 1}/${messageDate.getDate()}`; // 月は0から始まるので1を足す
-          // }
-
           return (
             <div key={msg.ChatContentID} >
               {showDate && <div className="date-message">{formattedDateMessage}</div>} {/* 日付の表示 */}
@@ -614,10 +677,6 @@ useEffect(() => {
                   className={`message-wrapper ${msg.UserID === myId ? 'right' : 'left'}`}
                   onContextMenu={(e) => {
                     e.preventDefault();
-                    
-                    // if (msg.UserID === myId && msg.DisplayFlag === 1) {
-                    //   handleLongPress(msg.ChatContentID);
-                    // }
                   }}
                 >
                   {/* 透明なdivを追加 */}

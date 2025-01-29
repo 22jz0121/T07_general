@@ -333,8 +333,8 @@ body {
     text-align: center;
   }
   .loading img {
-    max-width: 80%;
-    max-height: 100px;
+    max-width: 90%;
+    /* max-height: 100px; */
   }
 
   .remove-button {

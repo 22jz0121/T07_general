@@ -51,9 +51,10 @@ const Messages = () => {
     fetchData();
   }, []);
 
-  const handleItemClick = (id, name, itemId, hostUserId, itemName, otherUserId) => {
+  const handleItemClick = (id, name, item, otherUserId) => {
+    console.log(item);
     navigate(`/dm/${id}`, {
-      state: { name, itemId, hostUserId, itemName, otherUserId },
+      state: { name, item, otherUserId },
     });
   };
 
@@ -102,13 +103,11 @@ const Messages = () => {
                     key={chat.ChatID}
                     className="message-item"
                     onClick={() => {
-                      if (chat.Item) {
+                      if (chat.Items) {
                         handleItemClick(
                           chat.ChatID,
                           chat.OtherUser.UserName,
-                          chat.Item.ItemID,
-                          chat.Item.UserID,
-                          chat.Item.ItemName,
+                          chat.Items,
                           chat.OtherUser.UserID
                         );
                       } else {
