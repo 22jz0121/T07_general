@@ -89,6 +89,15 @@
   background-color: #fff; /* 背景色 */
   border-bottom: 1px solid #e5e7eb; /* 下のボーダー */
   z-index: 1000; /* 他の要素の上に表示 */
+
+  transform: scale(0);
+  transform-origin: top left;
+
+  transition: transform 0.2s;
+  
+  &.shown {
+    transform: scale(1);
+  }
 }
 
 .top-button.primary {

@@ -38,6 +38,9 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   const [TraderID, setTraderId] = useState(undefined); // traderIdを状態として管理
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentItemId, setCurrentItemId] = useState(itemId); // itemIdを状態として管理
+ 
+  //ヘッダー表示フラグ
+  const [isShown, setIsShown] = useState(false)
 
   //Pusherの設定
   useEffect(() => {
@@ -532,7 +535,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       </div>
 
       <details>
-      <div className="top-buttons">
+      <div className={`top-buttons ${isShown ? 'shown' : ''}`}>
         {isLoaded && (
           <>
             {itemId == null ? (//取引中のアイテムがないとき---------------------------------------------------------------------------------------------------------------------------
