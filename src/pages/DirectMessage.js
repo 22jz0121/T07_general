@@ -612,14 +612,16 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                   を取引しています
                   <br />
                 </div>
-                <>
-                  <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
-                    取引を中止する
-                  </button>
-                  <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
-                    取引を完了する
-                  </button>
-                </>
+                <div className='trade-status-buttons'>
+                  <div>
+                    <button className="top-button secondary" onClick={handleCancelTrade} disabled={isProcessing}>
+                      取引を中止する
+                    </button>
+                    <button className="top-button success" onClick={handleCompleteTrade} disabled={isProcessing}>
+                      取引を完了する
+                    </button>
+                  </div>
+                </div>
 
               </span>
             ) : selectedhostUserId !== myId && TraderID === myId ? (//自分が引き渡し予定者の時-----------------------------------------------------------------------------------------
