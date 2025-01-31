@@ -382,13 +382,13 @@
   margin-top: 0
 }
 
-.selectbox-3 {
+select.selectbox-3 {
   display: inline-flex;
   align-items: center;
   position: relative;
 }
 
-.selectbox-3::after {
+select.selectbox-3::after {
   position: absolute;
   right: 15px;
   width: 10px;
@@ -399,11 +399,8 @@
   pointer-events: none;
 }
 
-.selectbox-3 select {
-  appearance: none;
-  min-width: 230px;
-  height: 2.8em;
-  padding: .4em calc(.8em + 30px) .4em .8em;
+select.selectbox-3 {
+  padding: .2em calc(.4em + 15px) .2em .2em;
   border: 1px solid #d0d0d0;
   border-radius: 3px;
   background-color: #fff;
