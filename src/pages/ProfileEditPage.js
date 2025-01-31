@@ -36,6 +36,10 @@ const ProfileEditPage = () => {
 
   //プロフ保存リクエスト
   const handleSave = async () => {
+    if (!name) {
+      alert('名前は必須です。'); // 名前が空の場合は警告を出す
+      return; // 保存処理を中断
+    }
     try {
       const updatedProfile = {
         'Username': name,

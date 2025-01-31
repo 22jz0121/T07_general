@@ -91,7 +91,7 @@
   z-index: 1000; /* 他の要素の上に表示 */
 
   transform: scale(0);
-  transform-origin: top left;
+  transform-origin: top 50%;
 
   transition: transform 0.2s;
   
