@@ -538,7 +538,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
       </div>
 
       <div className={`hidebutton ${isShown ? 'shown' : ''}`}>
-        <button onClick={handleToggleButtonClick} className="button bgtop">
+        <button onClick={handleToggleButtonClick} className="bgtop">
           <span>取引情報を表示 ▼</span>
         </button>
       </div>
