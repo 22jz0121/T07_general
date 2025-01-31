@@ -59,7 +59,12 @@ const ProfileEditPage = () => {
       if(data.status == 'success') {
         sessionStorage.setItem('MyName', data.Username);
         sessionStorage.setItem('MyIcon', data.Icon);
-        sessionStorage.setItem('MyComment', data.Comment);
+        if(data.Comment != null) {
+          sessionStorage.setItem('MyComment', data.Comment);
+        }
+        else {
+          sessionStorage.setItem('MyComment', 'こんにちは！');
+        }
         sessionStorage.setItem('MyProfPic', data.ProfilePicture);
         Imagechange(false);
 
@@ -126,6 +131,7 @@ const ProfileEditPage = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="名前を入力"
+            required
           />
         </label>
         <label className="edit-label">

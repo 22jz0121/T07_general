@@ -133,6 +133,7 @@
 .item-status {
   display: block;
   text-align: center;
+  max-width: 100%;
 }
 .top-button.secondary {
   text-align: center;
@@ -387,6 +388,7 @@
   display: inline-flex;
   align-items: center;
   position: relative;
+  max-width: 50%;
 }
 
 .selectbox-3::after {

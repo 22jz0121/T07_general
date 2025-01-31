@@ -33,7 +33,13 @@ function GoogleCallback({ setIsFooterVisible }) {
           sessionStorage.setItem('MyName', data.Username);
           sessionStorage.setItem('MyIcon', data.Icon);
           sessionStorage.setItem('MyMail', data.Email);
-          sessionStorage.setItem('MyComment', data.Comment);
+          if(data.Comment != null) {
+            sessionStorage.setItem('MyComment', data.Comment);
+          }
+          else {
+            sessionStorage.setItem('MyComment', 'こんにちは！');
+          }
+          
           sessionStorage.setItem('MyProfPic', data.ProfilePicture);
           if(localStorage.getItem('Notification')) {
             sessionStorage.setItem('Notification', 'enable');

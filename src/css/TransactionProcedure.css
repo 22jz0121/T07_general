@@ -76,3 +76,31 @@
     background-color: #48a9f8;
   }
   
+  .select-template {
+    margin-bottom: 20px;
+  }
+
+  .select-template p {
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+
+  .select-template-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10%;
+  }
+
+  .select-template-buttons button {
+    width: 20%;
+    padding: 8px 12px;
+    background-color: #cccccc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }

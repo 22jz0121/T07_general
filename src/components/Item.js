@@ -81,6 +81,10 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
     : <span>取引方法が選択されていません</span>;
 
 
+  const truncatedItemName = title.length > 16 
+  ? title.slice(0, 15) + '…' 
+  : title;
+
   const truncatedDescription = description.length > 36 
     ? description.slice(0, 35) + '…' 
     : description;
@@ -122,7 +126,7 @@ function Item({ itemId, userId, name, time, imageSrc, title, description, onLike
           <div className="item-content">
             <img src={imageSrc} alt="アイテム画像" className="item-image" />
             <div className="item-info">
-              <h3>{title}</h3>
+              <h3>{truncatedItemName}</h3>
               <p>{truncatedDescription}</p>
               <div className="action-buttons">
                 <div className="methods-display">{methodsDisplay}</div>

@@ -684,7 +684,32 @@ const DirectMessage = ({ setIsFooterVisible }) => {
               <span>
                 現在他のユーザーが引渡し予定者に選ばれました
               </span>
-            ) : null}
+            ) : selectedhostUserId == myId && TraderID !== otherUserId ? (//自分が取引希望者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
+              <span>
+                現在他のユーザーを引渡し予定者に選んでいます
+                <select
+                  className='selectbox-3'
+                  value={selectedItemId}
+                  onChange={(e) => {
+                    const selectedId = e.target.value; // e.target.valueは文字列
+                    setSelectedItemId(selectedId);
+
+                    // selectedIdを数値に変換して比較
+                    const selectedItem = item.find(i => i.ItemID == selectedId);
+                    console.log(selectedItem); // 選択されたアイテムをログ出力
+                    setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
+                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                    console.log(selectedhostUserId);
+                  }}
+                >
+                  {item.map((i) => (
+                    <option key={i.ItemID} value={i.ItemID}>
+                      {i.ItemName}
+                    </option>
+                  ))}
+                </select>
+              </span>
+            ): null}
           </>
         )}
       </div>

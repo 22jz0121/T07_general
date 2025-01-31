@@ -365,7 +365,7 @@ const ProfilePage = () => {
             ) : null}
           </div>
           <p className="profile-header-num">@{userProfile.Email}</p>
-          <p className="profile-header-bio">{userProfile.Comment}</p>
+          <p className="profile-header-bio">{userProfile.Comment? userProfile.Comment : "こんにちは！"}</p>
         </div>
       </div>
 

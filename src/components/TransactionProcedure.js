@@ -132,6 +132,12 @@ function TransactionProcedure() {
     }
   };
 
+
+  // 定型文を設定するための関数
+  const setPredefinedMessage = (text) => {
+    setMessage(text);
+  };
+
   return (
     <div className="transaction-procedure-container">
       <div className="top-navigation">
@@ -147,6 +153,15 @@ function TransactionProcedure() {
         <h2 className="transaction-procedure-item-title">{itemName}</h2>
           <span className="badge">譲渡</span>
           <p>{description}</p>
+        </div>
+      </div>
+
+      <div className='select-template'>
+        <p>定型文から選ぶ</p>
+        <div className='select-template-buttons'>
+          <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`こんにちは！ ${itemName}にすごく興味があります。\n取引していただけると嬉しいです！`)}>1</button>
+          <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`お世話になります！${itemName}が気になっています。\nお話しできたら嬉しいです！`)}>2</button>
+          <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`お世話になります！${itemName}が気になっています。\nお話しできたら嬉しいです！`)}>3</button>
         </div>
       </div>
 
