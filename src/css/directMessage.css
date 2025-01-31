@@ -382,58 +382,6 @@
   margin-top: 0
 }
 
-select.selectbox-3 {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  max-width: 50%;
-}
-
-.selectbox-3::before {
-  display: inline-block;
-  right: 0;
-  width: 2.8em;
-  height: 2.8em;
-  border-radius: 0 3px 3px 0;
-  background-color: #6edd55;
-}
-
-select.selectbox-3::after {
-  position: absolute;
-  right: 15px;
-  width: 10px;
-  height: 7px;
-
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  content: '';
-  pointer-events: none;
-  border-bottom: 3px solid #fff;
-  border-right: 3px solid #fff;
-}
-
-select.selectbox-3 {
-  padding: .2em calc(.4em + 15px) .2em .2em;
-  border: 1px solid #d0d0d0;
-  border-radius: 3px;
-  background-color: #fff;
-  color: #333333;
-  font-size: 1em;
-  cursor: pointer;
-}
-
-.selectbox-3 select {
-  appearance: none;
-  min-width: 230px;
-  height: 2.8em;
-  padding: .4em 3.6em .4em .8em;
-  border: none;
-  border-radius: 3px;
-  background-color: #f2f2f2;
-  color: #333;
-  font-size: 1em;
-  cursor: pointer;
-}
-
 button.bgtop {
   border-bottom: 1px solid #e5e7eb;
   background-color: #FFFFFF;
@@ -443,10 +391,6 @@ button.bgtop {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-}
-
-.selectbox-3 select:focus {
-  outline: 2px solid #6edd55;
 }
 
 .bgtop span {
@@ -467,4 +411,58 @@ button.bgtop {
   margin-top: 1rem;
   font-size: medium;
   color: #55adff;
+}
+
+
+select.selectbox-3 {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  max-width: 50%;
+  padding: .2em calc(.4em + 15px) .2em .2em;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #333333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.selectbox-3::before {
+  display: inline-block;
+  right: 0;
+  width: 2.8em;
+  height: 2.8em;
+  border-radius: 0 3px 3px 0;
+  background-color: #6edd55;
+}
+
+.selectbox-3::after {
+  position: absolute;
+  top: 50%;
+  right: 1.4em; /* 位置を調整 */
+  transform: translate(50%, -50%) rotate(45deg); /* 回転させる */
+  width: 6px; /* サイズを調整 */
+  height: 6px; /* サイズを調整 */
+  border-bottom: 3px solid #fff;
+  border-right: 3px solid #fff;
+  content: '';
+  pointer-events: none;
+}
+
+.selectbox-3 select {
+  appearance: none;
+  min-width: 230px;
+  height: 2.8em;
+  padding: .4em 3.6em .4em .8em;
+  border: none;
+  border-radius: 3px;
+  background-color: #f2f2f2;
+  color: #333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+select.selectbox-3:focus {
+  outline: 2px solid #6edd55; /* フォーカス時のアウトライン */
 }
