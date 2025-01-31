@@ -91,7 +91,6 @@
   z-index: 1000; /* 他の要素の上に表示 */
 
   transform: scale(0);
-  transform-origin: top 50%;
 
   transition: transform 0.2s;
   
@@ -390,6 +389,15 @@ select.selectbox-3 {
   max-width: 50%;
 }
 
+.selectbox-3::before {
+  display: inline-block;
+  right: 0;
+  width: 2.8em;
+  height: 2.8em;
+  border-radius: 0 3px 3px 0;
+  background-color: #6edd55;
+}
+
 select.selectbox-3::after {
   position: absolute;
   right: 15px;
@@ -399,6 +407,8 @@ select.selectbox-3::after {
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   content: '';
   pointer-events: none;
+  border-bottom: 3px solid #fff;
+  border-right: 3px solid #fff;
 }
 
 select.selectbox-3 {
@@ -407,6 +417,19 @@ select.selectbox-3 {
   border-radius: 3px;
   background-color: #fff;
   color: #333333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.selectbox-3 select {
+  appearance: none;
+  min-width: 230px;
+  height: 2.8em;
+  padding: .4em 3.6em .4em .8em;
+  border: none;
+  border-radius: 3px;
+  background-color: #f2f2f2;
+  color: #333;
   font-size: 1em;
   cursor: pointer;
 }
@@ -422,16 +445,14 @@ button.bgtop {
   transition: all 0.3s ease-in-out;
 }
 
+.selectbox-3 select:focus {
+  outline: 2px solid #6edd55;
+}
+
 .bgtop span {
   position: relative;
   z-index: 3;
   color: #333;
   -webkit-text-size-adjust: 100%;
 
-}
-
-.dm-warning {
-  margin-top: 1rem;
-  font-size: medium;
-  color: #ff5555;
 }
