@@ -106,9 +106,8 @@
   z-index: 1000; 
   transform: scale(1);
   transform-origin: top 50%;
-
+  border-bottom: 1px solid #e5e7eb;
   transition: transform 0.2s;
-  
   &.shown {
     transform: scale(0);
   }
@@ -414,15 +413,15 @@
 }
 
 button.bgtop {
-  color: white;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #FFFFFF;
+  color: #333;
   border: none;
   padding: 12px 24px;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .bgtop span {
