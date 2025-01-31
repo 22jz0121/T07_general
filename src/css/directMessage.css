@@ -431,20 +431,24 @@ select.selectbox-3 {
   padding: .2em calc(.4em + 15px) .2em .2em;
   border: 1px solid #d0d0d0;
   border-radius: 3px;
-  background-color: #fff;
+  background-color: #fff; /* 背景色 */
   color: #333333;
   font-size: 1em;
   cursor: pointer;
 }
 
 .selectbox-3::before {
+  content: ''; /* コンテンツの指定 */
   display: inline-block;
+  position: absolute; /* 絶対位置を設定 */
   right: 0;
+  top: 50%; /* 縦の位置を中央に */
+  transform: translateY(-50%); /* 中央揃え */
   width: 2.8em;
   height: 2.8em;
   border-radius: 0 3px 3px 0;
-  background-color: #6edd55;
-  z-index: 1; /* 他の要素より前に表示 */
+  background-color: #6edd55; /* 矢印の背景色 */
+  z-index: 1; /* 背景色を前面に */
 }
 
 .selectbox-3::after {
@@ -454,20 +458,20 @@ select.selectbox-3 {
   transform: translate(50%, -50%) rotate(45deg); /* 回転させる */
   width: 6px; /* サイズを調整 */
   height: 6px; /* サイズを調整 */
-  border-bottom: 3px solid #fff;
-  border-right: 3px solid #fff;
+  border-bottom: 3px solid #6edd55; /* 矢印の色を背景に合わせる */
+  border-right: 3px solid #6edd55; /* 矢印の色を背景に合わせる */
   content: '';
   pointer-events: none;
 }
 
-.selectbox-3 select {
+select.selectbox-3 select {
   appearance: none;
   min-width: 230px;
   height: 2.8em;
   padding: .4em 3.6em .4em .8em;
   border: none;
   border-radius: 3px;
-  background-color: #6edd55;
+  background-color: #fff; /* プルダウンの背景色 */
   color: #333;
   font-size: 1em;
   cursor: pointer;
