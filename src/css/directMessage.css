@@ -196,6 +196,7 @@
  }
 .message-wrapper {
   position: relative; /* 相対位置を設定 */
+  max-width: 70%;
 }
 
 .delete-overlay {
@@ -233,6 +234,7 @@
   width: fit-content;
   margin-left: 5px;
   margin-right: 5px;
+  max-width: 100%;
 }
 
 .message-wrapper.left .message-bubble {
