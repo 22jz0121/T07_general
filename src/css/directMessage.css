@@ -182,7 +182,7 @@
   overflow-y: auto; /* Allow vertical scrolling */
   flex-grow: 1; /* Fill remaining space */
   padding-bottom: 20px;
-  margin-top: 90px;
+  margin-top: 120px;
 }
 
   
@@ -380,17 +380,16 @@
 }
 
 button.bgtop {
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #e7e7e7;
-  color: #595959;
   border: none;
-  padding: 1px 0;
-  font-size: 16px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  color: #595959;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  font-size: 16px;
+  padding: 1px 0;
+  transition: all .3s ease-in-out;
   width: 100%;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  background: #f1f1f1;
 }
 
 .bgtop span {
@@ -414,17 +413,15 @@ button.bgtop {
 }
 
 .up-arrow {
-  color: #8f8f8f;
-  margin-top: 8px;
+  background: #f1f1f1;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  color: #595959;
+  margin-top: 10px;
   padding: 1px 0;
   text-align: center;
   width: 100%;
-  padding: 1px 0;
-  background: #e7e7e7;
-  border-top: #dbdbdb solid 0.1px;
-  color: #595959;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  box-shadow: black;
 }
 
 select.selectbox-3 {
