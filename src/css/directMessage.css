@@ -418,8 +418,9 @@ button.bgtop {
   text-align: center;
   width: 100%;
   height: 20px;
+  padding: 10px 0;
   background: #c9c9c9;
-  border-top: #696969 solid 0.1px;
+  border-top: #9e9e9e solid 0.1px;
 }
 
 select.selectbox-3 {
