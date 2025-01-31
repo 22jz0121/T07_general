@@ -86,8 +86,8 @@
   /* display: flex; */
   justify-content: space-around; /* 中央揃え */
   padding-top: 10px;
-  background-color: #fff; /* 背景色 */
-  border-bottom: 1px solid #e5e7eb; /* 下のボーダー */
+  background-color: #fbfbfb; /* 背景色 */
+  border-top: 1px solid #e5e7eb; /* 下のボーダー */
   z-index: 1000; /* 他の要素の上に表示 */
 
   transform: scale(0);
@@ -421,6 +421,8 @@ button.bgtop {
   background: #cdcdcd;
   border-top: #dbdbdb solid 0.1px;
   color: white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 select.selectbox-3 {
