@@ -619,7 +619,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
 
               </span>
             ) : selectedhostUserId !== myId && TraderID === myId ? (//自分が引き渡し予定者の時-----------------------------------------------------------------------------------------
-              <span>
+              <span className={`item-status`}>
                 <div className='item-status-div'>
                   現在
                   <select
@@ -685,29 +685,36 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 現在他のユーザーが引渡し予定者に選ばれました
               </span>
             ) : selectedhostUserId == myId && TraderID !== otherUserId ? (//自分が取引希望者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
-              <span>
-                現在他のユーザーを引渡し予定者に選んでいます
-                <select
-                  className='selectbox-3'
-                  value={selectedItemId}
-                  onChange={(e) => {
-                    const selectedId = e.target.value; // e.target.valueは文字列
-                    setSelectedItemId(selectedId);
+              <span className={`item-status`}>
+                <div className='item-status-div'>
+                  現在
+                  <select
+                    className='selectbox-3'
+                    value={selectedItemId}
+                    onChange={(e) => {
+                      const selectedId = e.target.value; // e.target.valueは文字列
+                      setSelectedItemId(selectedId);
 
-                    // selectedIdを数値に変換して比較
-                    const selectedItem = item.find(i => i.ItemID == selectedId);
-                    console.log(selectedItem); // 選択されたアイテムをログ出力
-                    setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
-                    setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                    console.log(selectedhostUserId);
-                  }}
-                >
-                  {item.map((i) => (
-                    <option key={i.ItemID} value={i.ItemID}>
-                      {i.ItemName}
-                    </option>
-                  ))}
-                </select>
+                      // selectedIdを数値に変換して比較
+                      const selectedItem = item.find(i => i.ItemID == selectedId);
+                      console.log(selectedItem); // 選択されたアイテムをログ出力
+                      setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                      console.log(selectedhostUserId);
+                    }}
+                  >
+                    {item.map((i) => (
+                      <option key={i.ItemID} value={i.ItemID}>
+                        {i.ItemName}
+                      </option>
+                    ))}
+                  </select>
+                  を取引しています
+                </div>
+                <p className='dm-warning'>その物品は他のユーザーを引渡し予定者に選んでいます</p>
+                <button className="top-button primary" onClick={handleSetTrader} disabled={isProcessing}>
+                  この人を引渡し予定者に変更する
+                </button>
               </span>
             ): null}
           </>

@@ -429,3 +429,9 @@ button.bgtop {
   -webkit-text-size-adjust: 100%;
 
 }
+
+.dm-warning {
+  margin-top: 1rem;
+  font-size: medium;
+  color: #ff5555;
+}
