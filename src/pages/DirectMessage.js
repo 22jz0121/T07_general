@@ -747,6 +747,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
             ): null}
           </>
         )}
+        <div className='up-arrow'>▲</div>
       </div>
 
       <div className="dm-messages">
