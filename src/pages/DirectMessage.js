@@ -642,8 +642,9 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                       </option>
                     ))}
                   </select>
-                  の引渡し予定者に選ばれています
+                  を取引しています
                 </div>
+                <p className='dm-okey'>あなたが引渡し予定者に選ばれています！</p>
                 <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
                   取引をキャンセルする
                 </button>
@@ -674,17 +675,44 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                     ))}
                   </select>
                   を取引しています
-                  <br />
                 </div>
                 <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
                   取引をキャンセルする
                 </button>
               </span>
             ) : selectedhostUserId !== myId && TraderID !== myId ? (//自分が取引希望者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
-              <span>
-                現在他のユーザーが引渡し予定者に選ばれました
+              <span className={`item-status`}>
+                <div className='item-status-div'>
+                  現在
+                  <select
+                    className='selectbox-3'
+                    value={selectedItemId}
+                    onChange={(e) => {
+                      const selectedId = e.target.value; // e.target.valueは文字列
+                      setSelectedItemId(selectedId);
+
+                      // selectedIdを数値に変換して比較
+                      const selectedItem = item.find(i => i.ItemID == selectedId);
+                      console.log(selectedItem); // 選択されたアイテムをログ出力
+                      setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
+                      console.log(selectedhostUserId);
+                    }}
+                  >
+                    {item.map((i) => (
+                      <option key={i.ItemID} value={i.ItemID}>
+                        {i.ItemName}
+                      </option>
+                    ))}
+                  </select>
+                  を取引しています
+                </div>
+                <p className='dm-warning'>現在他のユーザーが引渡し予定者に選ばれています</p>
+                <button className="top-button-stop" onClick={handleSetItemIDNull} disabled={isProcessing}>
+                  取引をキャンセルする
+                </button>
               </span>
-            ) : selectedhostUserId == myId && TraderID !== otherUserId ? (//自分が取引希望者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
+            ) : selectedhostUserId == myId && TraderID !== otherUserId ? (//自分が出品者かつ引き渡し予定者が他人の時---------------------------------------------------------------------------
               <span className={`item-status`}>
                 <div className='item-status-div'>
                   現在
