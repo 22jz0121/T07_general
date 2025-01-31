@@ -106,9 +106,8 @@
   z-index: 1000; 
   transform: scale(1);
   transform-origin: top 50%;
-
+  border-bottom: 1px solid #e5e7eb;
   transition: transform 0.2s;
-  
   &.shown {
     transform: scale(0);
   }
@@ -384,14 +383,14 @@
   margin-top: 0
 }
 
-.selectbox-3 {
+select.selectbox-3 {
   display: inline-flex;
   align-items: center;
   position: relative;
   max-width: 50%;
 }
 
-.selectbox-3::after {
+select.selectbox-3::after {
   position: absolute;
   right: 15px;
   width: 10px;
@@ -402,11 +401,8 @@
   pointer-events: none;
 }
 
-.selectbox-3 select {
-  appearance: none;
-  min-width: 230px;
-  height: 2.8em;
-  padding: .4em calc(.8em + 30px) .4em .8em;
+select.selectbox-3 {
+  padding: .2em calc(.4em + 15px) .2em .2em;
   border: 1px solid #d0d0d0;
   border-radius: 3px;
   background-color: #fff;
@@ -415,59 +411,21 @@
   cursor: pointer;
 }
 
-button.hidebuttons {
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
-  display: block;
-  max-width: 250px;
-  background: #FFFFFF;
-  margin: auto;
-  padding: 10px 30px;
-  font-family: "Noto Sans Japanese", sans-serif;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.8;
-  outline: none;
+button.bgtop {
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #FFFFFF;
+  color: #333;
   border: none;
+  padding: 12px 24px;
+  font-size: 16px;
   cursor: pointer;
-  transition: ease 0.2s;
-  -webkit-text-size-adjust: 100%;
-  margin-top: 5px;
-
+  transition: all 0.3s ease-in-out;
 }
 
-.button.hidebuttons span {
+.bgtop span {
   position: relative;
   z-index: 3;
   color: #333;
-  -webkit-text-size-adjust: 100%;
-
-}
-
-.button.hidebuttons span {
-  color: #fff;
-  -webkit-text-size-adjust: 100%;
-
-}
-
-.bgtop::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  background: #333;
-  width: 100%;
-  height: 0;
-  transition: 0.3s cubic-bezier(0.8, 0, 0.2, 1) 0s;
-  -webkit-text-size-adjust: 100%;
-
-}
-
-.bgtop:hover::before {
-  height: 100%;
-  background-color: #333;
   -webkit-text-size-adjust: 100%;
 
 }
