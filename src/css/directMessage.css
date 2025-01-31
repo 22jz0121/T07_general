@@ -79,24 +79,21 @@
 }
 
 .top-buttons {
-  position: fixed; /* 固定表示 */
-  top: 60px; /* top-navigationの高さに合わせて配置 */
+  background-color: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  justify-content: space-around;
   left: 0;
-  width: 100%; /* 幅を100%に設定 */
-  /* display: flex; */
-  justify-content: space-around; /* 中央揃え */
   padding-top: 10px;
-  background-color: #fdfdfd; /* 背景色 */
-  border-top: 1px solid #e5e7eb; /* 下のボーダー */
-  z-index: 1000; /* 他の要素の上に表示 */
-
+  position: fixed;
+  top: 60px;
+  -webkit-transform: scale(0);
   transform: scale(0);
-
-  transition: transform 0.2s;
-  
-  &.shown {
-    transform: scale(1);
-  }
+  transition: -webkit-transform .2s;
+  transition: transform .2s;
+  transition: transform .2s, -webkit-transform .2s;
+  width: 100%;
+  z-index: 1000;
+  border-radius: 0 0 20px 20px;
 }
 
 .hidebutton {
@@ -417,7 +414,9 @@ button.bgtop {
 }
 
 .up-arrow {
-  margin-top: 15px;
+  color: #8f8f8f;
+  margin-top: 8px;
+  padding: 1px 0;
   text-align: center;
   width: 100%;
   padding: 1px 0;
