@@ -111,7 +111,7 @@ body {
     flex-direction: column; /* 縦に並べる */
     align-items: center; /* 中央寄せ */
     padding: 10px; /* 必要に応じてパディングを追加 */
-    padding-bottom: 60px;
+    padding-bottom: 40px;
 }
 
 .p {
