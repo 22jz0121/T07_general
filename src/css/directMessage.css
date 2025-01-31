@@ -419,7 +419,6 @@ button.bgtop {
   border: none;
   padding: 12px 24px;
   font-size: 16px;
-  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
@@ -430,23 +429,4 @@ button.bgtop {
   color: #333;
   -webkit-text-size-adjust: 100%;
 
-}
-
-.bgtop::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  background: #333;
-  width: 100%;
-  height: 0;
-  transition: 0.3s cubic-bezier(0.8, 0, 0.2, 1) 0s;
-  -webkit-text-size-adjust: 100%;
-}
-
-.bgtop:hover::before {
-  height: 100%;
-  background-color: #333;
-  -webkit-text-size-adjust: 100%;
 }
