@@ -74,16 +74,13 @@
     color: white;
 }
 
-.hidden {
-  display: none; /* 要素を非表示にする */
-}
 
 .top-buttons {
   position: fixed; /* 固定表示 */
   top: 60px; /* top-navigationの高さに合わせて配置 */
   left: 0;
   width: 100%; /* 幅を100%に設定 */
-  /* display: flex; */
+  display: block;
   justify-content: space-around; /* 中央揃え */
   padding-top: 10px;
   background-color: #fdfdfd; /* 背景色 */

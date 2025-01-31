@@ -40,7 +40,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
   const [currentItemId, setCurrentItemId] = useState(itemId); // itemIdを状態として管理
 
   //ヘッダー表示フラグ
-  const [isShown, setIsShown] = useState(false)
+  const [isShown, setIsShown] = useState(true)
 
   //Pusherの設定
   useEffect(() => {
