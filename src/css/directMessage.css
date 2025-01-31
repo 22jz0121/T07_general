@@ -403,7 +403,7 @@ select.selectbox-3::after {
   right: 15px;
   width: 10px;
   height: 7px;
-  background-color: #535353;
+
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   content: '';
   pointer-events: none;
