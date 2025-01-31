@@ -528,6 +528,10 @@ const DirectMessage = ({ setIsFooterVisible }) => {
     setIsShown(true)
   }
 
+  const handleheaderHide = () => {
+    setIsShown(false)
+  }
+
   return (
     <div className="dm-container">
       <div className="top-navigation">
@@ -539,7 +543,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
 
       <div className={`hidebutton ${isShown ? 'shown' : ''}`}>
         <button onClick={handleToggleButtonClick} className="bgtop">
-          <span>取引情報を表示 ▼</span>
+          <span>▼</span>
         </button>
       </div>
 
@@ -747,7 +751,7 @@ const DirectMessage = ({ setIsFooterVisible }) => {
             ): null}
           </>
         )}
-        <div className='up-arrow'>▲</div>
+        <div className='up-arrow' onClick={handleheaderHide}>▲</div>
       </div>
 
       <div className="dm-messages">

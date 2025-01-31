@@ -105,7 +105,7 @@
   z-index: 1000; 
   transform: scale(1);
   transform-origin: top 50%;
-  border-bottom: 1px solid #e5e7eb;
+  /* border-bottom: 1px solid #e5e7eb; */
   transition: transform 0.2s;
   &.shown {
     transform: scale(0);
@@ -384,19 +384,22 @@
 
 button.bgtop {
   border-bottom: 1px solid #e5e7eb;
-  background-color: #FFFFFF;
-  color: #333;
+  background-color: #e7e7e7;
+  color: #595959;
   border: none;
-  padding: 12px 24px;
+  padding: 1px 0;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  width: 100%;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .bgtop span {
   position: relative;
   z-index: 3;
-  color: #333;
+  color: #595959;
   -webkit-text-size-adjust: 100%;
 
 }
@@ -421,8 +424,8 @@ button.bgtop {
   background: #e7e7e7;
   border-top: #dbdbdb solid 0.1px;
   color: #595959;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 select.selectbox-3 {
