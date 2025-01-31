@@ -11,6 +11,7 @@ function TransactionProcedure() {
   const [success, setSuccess] = useState(null);
   const [chatId, setChatId] = useState(null);
   const [isSending, setIsSending] = useState(false); // 送信中の状態を管理
+  const MyName = sessionStorage.getItem('MyName');
 
   // location.stateからデータを取得
   const { itemId, userId, name, time, description, imageSrc,  itemName} = location.state || {}; // stateがundefinedの場合に備える
@@ -161,7 +162,7 @@ function TransactionProcedure() {
         <div className='select-template-buttons'>
           <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`こんにちは！ ${itemName}にすごく興味があります。\n取引していただけると嬉しいです！`)}>1</button>
           <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`お世話になります！${itemName}が気になっています。\nお話しできたら嬉しいです！`)}>2</button>
-          <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`お世話になります！${itemName}が気になっています。\nお話しできたら嬉しいです！`)}>3</button>
+          <button className="transaction-procedure-template-message-button" onClick={() => setPredefinedMessage(`こんにちは！${MyName}と申します。\n${itemName}について詳しくお話しさせていただきたいです！`)}>3</button>
         </div>
       </div>
 
