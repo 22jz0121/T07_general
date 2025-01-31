@@ -25,6 +25,7 @@ body {
   flex-direction: column;
   padding: 10px;
   overflow-y: auto;
+  padding-bottom: 30px;
   /* Scrollable area */
 }
 
