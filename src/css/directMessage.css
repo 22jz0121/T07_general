@@ -444,6 +444,7 @@ select.selectbox-3 {
   height: 2.8em;
   border-radius: 0 3px 3px 0;
   background-color: #6edd55;
+  z-index: 1; /* 他の要素より前に表示 */
 }
 
 .selectbox-3::after {
