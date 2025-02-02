@@ -73,6 +73,21 @@ const Messages = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="message-list">
+        <div className="top-navigation">
+          <button className="back-button" onClick={() => navigate('/')}>
+            <ArrowBackIcon className="back-icon" />
+          </button>
+          <h1 className="page-title">メッセージ</h1>
+        </div>
+        <div className='loading'><img src='/Loading.gif' alt="Loading" /></div>
+      </div>
+      
+    );
+  }
+
 
   return (
     <div className="message-list">
@@ -83,81 +98,75 @@ const Messages = () => {
         <h1 className="page-title">メッセージ</h1>
       </div>
       <PullToRefresh onRefresh={fetchMyChats} pullingContent={<></>}>
-        {loading ? (
-          <div className="loading">
-            <img src="/Loading.gif" alt="Loading" />
-          </div>
-        ) : (
-          <div className="messages-list">
-            {error ? (
-              <p className="error-message">{error}</p>
-            ) : myChats.length > 0 ? (
-              myChats.map((chat) => {
-                const iconSrc =
-                  chat.OtherUser.Icon && chat.OtherUser.Icon.startsWith('storage/images/')
-                    ? `https://loopplus.mydns.jp/${chat.OtherUser.Icon}`
-                    : chat.OtherUser.Icon;
+        <div className="messages-list">
+          {error ? (
+            <p className="error-message">{error}</p>
+          ) : myChats.length > 0 ? (
+            myChats.map((chat) => {
+              const iconSrc =
+                chat.OtherUser.Icon && chat.OtherUser.Icon.startsWith('storage/images/')
+                  ? `https://loopplus.mydns.jp/${chat.OtherUser.Icon}`
+                  : chat.OtherUser.Icon;
 
-                return (
-                  <div
-                    key={chat.ChatID}
-                    className="message-item"
-                    onClick={() => {
-                      if (chat.Items) {
-                        handleItemClick(
-                          chat.ChatID,
-                          chat.OtherUser.UserName,
-                          chat.Items,
-                          chat.OtherUser.UserID
-                        );
-                      } else {
-                        handleItemClick(
-                          chat.ChatID,
-                          chat.OtherUser.UserName,
-                          null,
-                          null,
-                          null,
-                          chat.OtherUser.UserID
-                        );
-                      }
-                    }}
-                  >
-                    {chat.OtherUser.Icon ? (
-                      <img
-                        src={iconSrc}
-                        alt="User Icon"
-                        className="avatar-icon"
-                        style={{ width: '36px', height: '36px', borderRadius: '50%' }}
-                      />
-                    ) : (
-                      <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
-                    )}
-                    <div className="message-info">
-                      <div className="message-header">
-                        <span className="names">{chat.OtherUser.UserName}</span>
-                        <span className="time">
-                          {chat.LastContent ? formatDateMessage(chat.LastContent.CreatedAt) : '-- : --'}
-                        </span>
-                      </div>
-                      <p className="message-content">
-                        {chat.LastContent?.Image
-                          ? '画像が送信されました'
-                          : chat.LastContent?.Content
-                          ? chat.LastContent.Content.length > 16
-                            ? `${chat.LastContent.Content.slice(0, 16)}…`
-                            : chat.LastContent.Content
-                          : 'メッセージがありません'}
-                      </p>
+              return (
+                <div
+                  key={chat.ChatID}
+                  className="message-item"
+                  onClick={() => {
+                    if (chat.Items) {
+                      handleItemClick(
+                        chat.ChatID,
+                        chat.OtherUser.UserName,
+                        chat.Items,
+                        chat.OtherUser.UserID
+                      );
+                    } else {
+                      handleItemClick(
+                        chat.ChatID,
+                        chat.OtherUser.UserName,
+                        null,
+                        null,
+                        null,
+                        chat.OtherUser.UserID
+                      );
+                    }
+                  }}
+                >
+                  {chat.OtherUser.Icon ? (
+                    <img
+                      src={iconSrc}
+                      alt="User Icon"
+                      className="avatar-icon"
+                      style={{ width: '36px', height: '36px', borderRadius: '50%' }}
+                    />
+                  ) : (
+                    <AccountCircleIcon className="avatar-icon" style={{ fontSize: '36px' }} />
+                  )}
+                  <div className="message-info">
+                    <div className="message-header">
+                      <span className="names">{chat.OtherUser.UserName}</span>
+                      <span className="time">
+                        {chat.LastContent ? formatDateMessage(chat.LastContent.CreatedAt) : '-- : --'}
+                      </span>
                     </div>
-                    <span className="arrow">›</span>
+                    <p className="message-content">
+                      {chat.LastContent?.Image
+                        ? '画像が送信されました'
+                        : chat.LastContent?.Content
+                        ? chat.LastContent.Content.length > 16
+                          ? `${chat.LastContent.Content.slice(0, 16)}…`
+                          : chat.LastContent.Content
+                        : 'メッセージがありません'}
+                    </p>
                   </div>
-                );
-              })
-            ) : (
-              <p className="no-transactions">チャットがありません。</p>
-            )}
-          </div>
-        )}
+                  <span className="arrow">›</span>
+                </div>
+              );
+            })
+          ) : (
+            <p className="no-transactions">チャットがありません。</p>
+          )}
+        </div>
       </PullToRefresh>
     </div>
   );
