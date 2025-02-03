@@ -439,6 +439,7 @@ select.selectbox-3 {
   color: #333333;
   font-size: 1em;
   cursor: pointer;
+  outline: none;
   &.-selected {
     outline: 2px solid #6edd55;
   }
