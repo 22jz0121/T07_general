@@ -434,7 +434,7 @@ select.selectbox-3 {
   max-width: 50%;
   padding: .2em calc(.4em + 15px) .2em .2em;
   border: 1px solid #d0d0d0;
-  border-radius: 3px;
+  border-radius: 5px;
   background-color: #fff; /* 背景色 */
   color: #333333;
   font-size: 1em;
@@ -454,7 +454,7 @@ select.selectbox-3 {
   transform: translateY(-50%); /* 中央揃え */
   width: 2.8em;
   height: 2.8em;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 5px 5px 0;
   background-color: #6edd55; /* 矢印の背景色 */
   z-index: 1; /* 背景色を前面に */
 }
@@ -467,7 +467,7 @@ select.selectbox-3 {
   width: 6px; /* サイズを調整 */
   height: 6px; /* サイズを調整 */
   border-bottom: 3px solid #6edd55; /* 矢印の色を背景に合わせる */
-  border-right: 3px solid #6edd55; /* 矢印の色を背景に合わせる */
+  border-right: 5px solid #6edd55; /* 矢印の色を背景に合わせる */
   content: '';
   pointer-events: none;
 }
@@ -478,7 +478,7 @@ select.selectbox-3 select {
   height: 2.8em;
   padding: .4em 3.6em .4em .8em;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
   background-color: #fff; /* プルダウンの背景色 */
   color: #333;
   font-size: 1em;
