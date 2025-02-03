@@ -559,25 +559,25 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
-                    className='selectbox-3'
+                    className={`selectbox-3 ${item.find(i => i.ItemID == selectedItemId)?.UserID === myId ? '-selected' : ''}`}
                     value={selectedItemId}
                     onChange={(e) => {
                       const selectedId = e.target.value;
-                      setSelectedItemId(selectedId); // 選択されたIDを設定
+                      setSelectedItemId(selectedId);
 
                       // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
-                      setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                      console.log(selectedhostUserId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : '');
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null);
                     }}
                   >
                     {item.map((i) => (
                       <option key={i.ItemID} value={i.ItemID}>
-                        {i.ItemName}
+                        {i.UserID === myId ? `(You) ` : ''}{i.ItemName}
                       </option>
                     ))}
                   </select>
+
                   を取引しています
                   <br />
                 </div>
@@ -590,22 +590,21 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
-                    className='selectbox-3'
+                    className={`selectbox-3 ${item.find(i => i.ItemID == selectedItemId)?.UserID === myId ? '-selected' : ''}`}
                     value={selectedItemId}
                     onChange={(e) => {
                       const selectedId = e.target.value;
-                      setSelectedItemId(selectedId); // 選択されたIDを設定
+                      setSelectedItemId(selectedId);
 
                       // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
-                      setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                      console.log(selectedhostUserId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : '');
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null);
                     }}
                   >
                     {item.map((i) => (
                       <option key={i.ItemID} value={i.ItemID}>
-                        {i.ItemName}
+                        {i.UserID === myId ? `(You) ` : ''}{i.ItemName}
                       </option>
                     ))}
                   </select>
@@ -629,22 +628,21 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
-                    className='selectbox-3'
+                    className={`selectbox-3 ${item.find(i => i.ItemID == selectedItemId)?.UserID === myId ? '-selected' : ''}`}
                     value={selectedItemId}
                     onChange={(e) => {
                       const selectedId = e.target.value;
-                      setSelectedItemId(selectedId); // 選択されたIDを設定
+                      setSelectedItemId(selectedId);
 
                       // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
-                      setSelectedItemName(selectedItem ? selectedItem.ItemName : ''); // アイテム名を更新
-                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                      console.log(selectedhostUserId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : '');
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null);
                     }}
                   >
                     {item.map((i) => (
                       <option key={i.ItemID} value={i.ItemID}>
-                        {i.ItemName}
+                        {i.UserID === myId ? `(You) ` : ''}{i.ItemName}
                       </option>
                     ))}
                   </select>
@@ -660,23 +658,21 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
-                    className='selectbox-3'
+                    className={`selectbox-3 ${item.find(i => i.ItemID == selectedItemId)?.UserID === myId ? '-selected' : ''}`}
                     value={selectedItemId}
                     onChange={(e) => {
-                      const selectedId = e.target.value; // e.target.valueは文字列
+                      const selectedId = e.target.value;
                       setSelectedItemId(selectedId);
 
-                      // selectedIdを数値に変換して比較
+                      // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
-                      console.log(selectedItem); // 選択されたアイテムをログ出力
-                      setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
-                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                      console.log(selectedhostUserId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : '');
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null);
                     }}
                   >
                     {item.map((i) => (
                       <option key={i.ItemID} value={i.ItemID}>
-                        {i.ItemName}
+                        {i.UserID === myId ? `(You) ` : ''}{i.ItemName}
                       </option>
                     ))}
                   </select>
@@ -691,23 +687,21 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
-                    className='selectbox-3'
+                    className={`selectbox-3 ${item.find(i => i.ItemID == selectedItemId)?.UserID === myId ? '-selected' : ''}`}
                     value={selectedItemId}
                     onChange={(e) => {
-                      const selectedId = e.target.value; // e.target.valueは文字列
+                      const selectedId = e.target.value;
                       setSelectedItemId(selectedId);
 
-                      // selectedIdを数値に変換して比較
+                      // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
-                      console.log(selectedItem); // 選択されたアイテムをログ出力
-                      setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
-                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                      console.log(selectedhostUserId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : '');
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null);
                     }}
                   >
                     {item.map((i) => (
                       <option key={i.ItemID} value={i.ItemID}>
-                        {i.ItemName}
+                        {i.UserID === myId ? `(You) ` : ''}{i.ItemName}
                       </option>
                     ))}
                   </select>
@@ -723,23 +717,21 @@ const DirectMessage = ({ setIsFooterVisible }) => {
                 <div className='item-status-div'>
                   現在
                   <select
-                    className='selectbox-3'
+                    className={`selectbox-3 ${item.find(i => i.ItemID == selectedItemId)?.UserID === myId ? '-selected' : ''}`}
                     value={selectedItemId}
                     onChange={(e) => {
-                      const selectedId = e.target.value; // e.target.valueは文字列
+                      const selectedId = e.target.value;
                       setSelectedItemId(selectedId);
 
-                      // selectedIdを数値に変換して比較
+                      // 選択されたアイテムを見つける
                       const selectedItem = item.find(i => i.ItemID == selectedId);
-                      console.log(selectedItem); // 選択されたアイテムをログ出力
-                      setSelectedItemName(selectedItem?.ItemName || ''); // 選択されたアイテム名の更新
-                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null)
-                      console.log(selectedhostUserId);
+                      setSelectedItemName(selectedItem ? selectedItem.ItemName : '');
+                      setSelectedhostUserId(selectedItem ? selectedItem.UserID : null);
                     }}
                   >
                     {item.map((i) => (
                       <option key={i.ItemID} value={i.ItemID}>
-                        {i.ItemName}
+                        {i.UserID === myId ? `(You) ` : ''}{i.ItemName}
                       </option>
                     ))}
                   </select>
