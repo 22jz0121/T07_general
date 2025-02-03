@@ -439,7 +439,11 @@ select.selectbox-3 {
   color: #333333;
   font-size: 1em;
   cursor: pointer;
-}
+  outline: 2px rgb(214, 55, 55);
+  &.-selected {
+    outline: 2px solid #6edd55;
+  }
+} 
 
 .selectbox-3::before {
   content: ''; /* コンテンツの指定 */
@@ -482,7 +486,7 @@ select.selectbox-3 select {
 }
 
 select.selectbox-3:focus {
-  outline: 2px solid #6edd55; /* フォーカス時のアウトライン */
+  /* outline: 2px solid #6edd55;  フォーカス時のアウトライン */
 }
 
 .trade-status-buttons {
