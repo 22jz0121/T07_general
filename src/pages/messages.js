@@ -73,6 +73,7 @@ const Messages = () => {
     }
   };
 
+  //ロード中
   if (loading) {
     return (
       <div className="message-list">
