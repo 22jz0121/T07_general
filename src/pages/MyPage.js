@@ -10,6 +10,7 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import {Notifications as NotificationsIcon} from '@mui/icons-material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import Footer from '../components/Footer';
 import '../css/MyPage.css';
 
@@ -18,7 +19,7 @@ const MyPage = () => {
     const myID= sessionStorage.getItem('MyID');
     const myName = sessionStorage.getItem('MyName');
     const myIcon = sessionStorage.getItem('MyIcon');
-    const [NTFstatus, setNotification] = useState();
+    const [NTFstatus, setNotification] = useState(false);
     
 
     //--------------------------------------------------
@@ -65,7 +66,7 @@ const MyPage = () => {
             if (newStatus) {
                 await getPushSubscription();
             } else {
-                // プッシュ通知を切るメソッドを追加する
+                await deleteSubscription();
             }
         }
     };
@@ -133,6 +134,28 @@ const MyPage = () => {
     };
 
 
+    //--------------------------------------------------
+    //　　　　　　プッシュ通知のための情報を削除
+    //---------------------------------------------------
+    const deleteSubscription = async () => {
+        try {
+            const response = await fetch('https://loopplus.mydns.jp/api/deletesubscribe', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            if (!data.success) {
+                alert('サブスクリプションの削除に失敗しました。');
+            }
+        } catch (error) {
+            console.error('エラー:', error);
+            alert('エラーが発生しました。');
+        }
+    };
 
     //--------------------------------------------------
     //　　　　　　ログアウト処理
@@ -205,7 +228,7 @@ const MyPage = () => {
                 </div>
 
                 <div className="menu-item" onClick={changeNotification}>
-                    <NotificationsIcon className="menu-icon" />
+                    {NTFstatus === true ? <NotificationsIcon className="menu-icon" /> : <NotificationsOffIcon className="menu-icon" />}
                     <span className="menu-label">プッシュ通知</span>
                 </div>
 
